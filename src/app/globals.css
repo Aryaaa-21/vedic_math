@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #622B14;
+  --color-secondary: #995F2F;
+  --color-accent: #978F66;
+  --color-background: #E4D6A9;
+  
+  --color-primary-foreground: #ffffff;
+  --color-secondary-foreground: #ffffff;
+  --color-accent-foreground: #1b1c17;
+
+  /* Card Surfaces: slightly lighter/warmer than the background beige */
+  --color-card: #FAF6E8;
+  --color-card-foreground: #1b1c17;
+
+  /* Text variants */
+  --color-muted: #D1BE8E;
+  --color-muted-foreground: #534439;
+
+  /* Success and Error States */
+  --color-success: #2A9D8F;
+  --color-success-foreground: #ffffff;
+  --color-error: #BA1A1A;
+  --color-error-foreground: #ffffff;
+
+  /* Font mapping */
+  --font-sans: var(--font-plus-jakarta-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+
+  /* Custom Border Radius */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+}
+
+:root {
+  --background: #E4D6A9;
+  --foreground: #1B1C17;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Custom Styles */
+.vedic-pattern {
+  background-image: radial-gradient(#622B14 0.5px, transparent 0.5px);
+  background-size: 24px 24px;
+}
+
+.vedic-mandala {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l2.5 17.5L50 10l-7.5 20L60 32.5 42.5 35 50 50l-17.5-2.5L30 60l-2.5-17.5L10 50l7.5-20L0 27.5 17.5 25 10 10l17.5 2.5z' fill='%23622B14' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.pressable-button {
+  box-shadow: 0 4px 0 #3a1608;
+}
+
+.pressable-button:active {
+  box-shadow: 0 0px 0 #3a1608;
+  transform: translateY(4px);
+}
+
+.pressable-button-secondary {
+  box-shadow: 0 4px 0 #6d3f1a;
+}
+
+.pressable-button-secondary:active {
+  box-shadow: 0 0px 0 #6d3f1a;
+  transform: translateY(4px);
+}
+
+.timer-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(98, 43, 20, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 10px rgba(98, 43, 20, 0);
+  }
+}
+
+.shake {
+  animation: shake-anim 0.4s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake-anim {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+.success-float {
+  animation: float-up 0.8s ease-out forwards;
+}
+
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+}
