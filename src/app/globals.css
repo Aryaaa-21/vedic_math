@@ -1,28 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #622B14;
-  --color-secondary: #995F2F;
-  --color-accent: #978F66;
-  --color-background: #E4D6A9;
+  --color-primary: rgb(var(--primary-rgb));
+  --color-secondary: rgb(var(--secondary-rgb));
+  --color-accent: rgb(var(--accent-rgb));
+  --color-background: rgb(var(--background-rgb));
   
-  --color-primary-foreground: #ffffff;
-  --color-secondary-foreground: #ffffff;
-  --color-accent-foreground: #1b1c17;
+  --color-primary-foreground: rgb(var(--primary-foreground-rgb));
+  --color-secondary-foreground: rgb(var(--secondary-foreground-rgb));
+  --color-accent-foreground: rgb(var(--accent-foreground-rgb));
 
   /* Card Surfaces: slightly lighter/warmer than the background beige */
-  --color-card: #FAF6E8;
-  --color-card-foreground: #1b1c17;
+  --color-card: rgb(var(--card-rgb));
+  --color-card-foreground: rgb(var(--card-foreground-rgb));
 
   /* Text variants */
-  --color-muted: #D1BE8E;
-  --color-muted-foreground: #534439;
+  --color-muted: rgb(var(--muted-rgb));
+  --color-muted-foreground: rgb(var(--muted-foreground-rgb));
 
   /* Success and Error States */
-  --color-success: #2A9D8F;
-  --color-success-foreground: #ffffff;
-  --color-error: #BA1A1A;
-  --color-error-foreground: #ffffff;
+  --color-success: rgb(var(--success-rgb));
+  --color-success-foreground: rgb(var(--success-foreground-rgb));
+  --color-error: rgb(var(--error-rgb));
+  --color-error-foreground: rgb(var(--error-foreground-rgb));
 
   /* Font mapping */
   --font-sans: var(--font-plus-jakarta-sans), system-ui, -apple-system, sans-serif;
@@ -35,19 +35,97 @@
 }
 
 :root {
-  --background: #E4D6A9;
-  --foreground: #1B1C17;
+  --background-rgb: 228 214 169;
+  --foreground-rgb: 27 28 23;
+  --primary-rgb: 98 43 20;
+  --secondary-rgb: 153 95 47;
+  --accent-rgb: 151 143 102;
+  --primary-foreground-rgb: 255 255 255;
+  --secondary-foreground-rgb: 255 255 255;
+  --accent-foreground-rgb: 27 28 23;
+  --card-rgb: 250 246 232;
+  --card-foreground-rgb: 27 28 23;
+  --muted-rgb: 209 190 142;
+  --muted-foreground-rgb: 83 68 57;
+  --success-rgb: 42 157 143;
+  --success-foreground-rgb: 255 255 255;
+  --error-rgb: 186 26 26;
+  --error-foreground-rgb: 255 255 255;
+  color-scheme: light;
+}
+
+:root[data-theme="light"] {
+  --background-rgb: 228 214 169;
+  --foreground-rgb: 27 28 23;
+  --primary-rgb: 98 43 20;
+  --secondary-rgb: 153 95 47;
+  --accent-rgb: 151 143 102;
+  --primary-foreground-rgb: 255 255 255;
+  --secondary-foreground-rgb: 255 255 255;
+  --accent-foreground-rgb: 27 28 23;
+  --card-rgb: 250 246 232;
+  --card-foreground-rgb: 27 28 23;
+  --muted-rgb: 209 190 142;
+  --muted-foreground-rgb: 83 68 57;
+  --success-rgb: 42 157 143;
+  --success-foreground-rgb: 255 255 255;
+  --error-rgb: 186 26 26;
+  --error-foreground-rgb: 255 255 255;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --background-rgb: 19 17 15;
+  --foreground-rgb: 243 234 217;
+  --primary-rgb: 212 122 72;
+  --secondary-rgb: 181 115 59;
+  --accent-rgb: 177 164 131;
+  --primary-foreground-rgb: 255 251 245;
+  --secondary-foreground-rgb: 255 251 245;
+  --accent-foreground-rgb: 24 20 17;
+  --card-rgb: 33 28 23;
+  --card-foreground-rgb: 243 234 217;
+  --muted-rgb: 63 53 45;
+  --muted-foreground-rgb: 194 180 159;
+  --success-rgb: 46 179 160;
+  --success-foreground-rgb: 255 255 255;
+  --error-rgb: 226 84 84;
+  --error-foreground-rgb: 255 255 255;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --background-rgb: 19 17 15;
+    --foreground-rgb: 243 234 217;
+    --primary-rgb: 212 122 72;
+    --secondary-rgb: 181 115 59;
+    --accent-rgb: 177 164 131;
+    --primary-foreground-rgb: 255 251 245;
+    --secondary-foreground-rgb: 255 251 245;
+    --accent-foreground-rgb: 24 20 17;
+    --card-rgb: 33 28 23;
+    --card-foreground-rgb: 243 234 217;
+    --muted-rgb: 63 53 45;
+    --muted-foreground-rgb: 194 180 159;
+    --success-rgb: 46 179 160;
+    --success-foreground-rgb: 255 255 255;
+    --error-rgb: 226 84 84;
+    --error-foreground-rgb: 255 255 255;
+    color-scheme: dark;
+  }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: rgb(var(--background-rgb));
+  color: rgb(var(--foreground-rgb));
   font-family: var(--font-sans);
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* Custom Styles */
 .vedic-pattern {
-  background-image: radial-gradient(#622B14 0.5px, transparent 0.5px);
+  background-image: radial-gradient(rgb(var(--primary-rgb) / 0.5) 0.5px, transparent 0.5px);
   background-size: 24px 24px;
 }
 
@@ -56,20 +134,20 @@ body {
 }
 
 .pressable-button {
-  box-shadow: 0 4px 0 #3a1608;
+  box-shadow: 0 4px 0 rgb(var(--primary-rgb) / 0.6);
 }
 
 .pressable-button:active {
-  box-shadow: 0 0px 0 #3a1608;
+  box-shadow: 0 0px 0 rgb(var(--primary-rgb) / 0.6);
   transform: translateY(4px);
 }
 
 .pressable-button-secondary {
-  box-shadow: 0 4px 0 #6d3f1a;
+  box-shadow: 0 4px 0 rgb(var(--secondary-rgb) / 0.7);
 }
 
 .pressable-button-secondary:active {
-  box-shadow: 0 0px 0 #6d3f1a;
+  box-shadow: 0 0px 0 rgb(var(--secondary-rgb) / 0.7);
   transform: translateY(4px);
 }
 
@@ -79,10 +157,10 @@ body {
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(98, 43, 20, 0.4);
+    box-shadow: 0 0 0 0 rgb(var(--primary-rgb) / 0.4);
   }
   50% {
-    box-shadow: 0 0 20px 10px rgba(98, 43, 20, 0);
+    box-shadow: 0 0 20px 10px rgb(var(--primary-rgb) / 0);
   }
 }
 

@@ -11,7 +11,6 @@ import {
   Zap,
   BookOpen,
   ArrowRight,
-  Sparkles,
   Rocket,
   Compass,
   Trophy
@@ -41,8 +40,7 @@ export default function LandingPage() {
               transition={{ duration: 0.6 }}
               className="inline-flex items-center gap-1.5 px-4.5 py-1.5 bg-primary/10 text-primary rounded-full border border-primary/20 text-xs font-bold uppercase tracking-wider shadow-sm"
             >
-              <Sparkles className="w-4 h-4 text-secondary fill-secondary" />
-              <span>Ancient Mathematics • Modern Speed</span>
+              <span>Ancient Mathematics for Modern Speed</span>
             </motion.div>
 
             <motion.h1

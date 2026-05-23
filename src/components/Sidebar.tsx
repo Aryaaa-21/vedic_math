@@ -17,6 +17,7 @@ import {
   Flame
 } from "lucide-react";
 import { motion } from "framer-motion";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -72,6 +73,8 @@ export default function Sidebar() {
             <span>{user.xp} XP</span>
           </div>
         </div>
+
+        <ThemeToggle />
       </div>
 
       {/* Navigation Menu */}

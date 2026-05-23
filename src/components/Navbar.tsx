@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useStore } from "@/store/useStore";
 import { Menu, X, Flame, Trophy, Award, User, Settings, LogOut, BookOpen, LayoutDashboard, Timer } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -104,6 +105,8 @@ export default function Navbar() {
             className="w-9 h-9 rounded-full object-cover border border-primary/20 hover:scale-105 transition-transform"
           />
         </Link>
+
+        <ThemeToggle compact />
       </div>
 
       {/* Mobile Drawer Navigation Overlay */}
