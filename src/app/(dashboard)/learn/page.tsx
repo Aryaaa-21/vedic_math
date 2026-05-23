@@ -287,18 +287,16 @@ function LearnPageContent() {
                 {isLocked(selectedTech) ? (
                   <button
                     disabled
-                    className="flex-1 py-3 bg-muted text-muted-foreground font-extrabold rounded-xl text-xs uppercase tracking-wider cursor-not-allowed flex items-center justify-center gap-1.5 border-b-4 border-muted-foreground/20"
+                    className="flex-1 py-3 bg-muted text-muted-foreground font-extrabold rounded-xl text-xs uppercase tracking-wider cursor-not-allowed flex items-center justify-center border-b-4 border-muted-foreground/20"
                   >
                     <span>Locked (Lvl {selectedTech.difficulty === "Intermediate" ? "5" : "10"}+)</span>
-                    <Lock className="w-3.5 h-3.5" />
                   </button>
                 ) : (
                   <button
                     onClick={() => handleStartPractice(selectedTech)}
-                    className="flex-1 py-3 bg-primary hover:bg-primary/95 text-white font-extrabold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-md flex items-center justify-center gap-1.5 border-b-4 border-primary/40"
+                    className="flex-1 py-3 bg-primary hover:bg-primary/95 text-white font-extrabold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-md flex items-center justify-center border-b-4 border-primary/40"
                   >
                     <span>Practice Sutra</span>
-                    <Play className="w-3.5 h-3.5 fill-current" />
                   </button>
                 )}
               </div>

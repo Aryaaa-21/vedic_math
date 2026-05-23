@@ -311,16 +311,14 @@ export default function PracticePage() {
             <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <button
                 onClick={handleRetry}
-                className="flex-1 py-3.5 bg-card hover:bg-card/90 text-primary border border-primary/20 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                className="flex-1 py-3.5 bg-card hover:bg-card/90 text-primary border border-primary/20 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all flex items-center justify-center"
               >
-                <RotateCcw className="w-4 h-4" />
                 <span>Practice Again</span>
               </button>
               
               <Link href="/learn" className="flex-grow">
-                <button className="w-full py-3.5 bg-primary hover:bg-primary/95 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-md flex items-center justify-center gap-1.5 border-b-4 border-primary/40">
+                <button className="w-full py-3.5 bg-primary hover:bg-primary/95 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-md flex items-center justify-center border-b-4 border-primary/40">
                   <span>Learn Another Sutra</span>
-                  <ArrowRight className="w-4 h-4" />
                 </button>
               </Link>
             </div>

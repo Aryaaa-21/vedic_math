@@ -63,8 +63,7 @@ export default function ProfilePage() {
             >
               Edit Profile
             </button>
-            <button className="px-5 py-2.5 bg-card hover:bg-card/90 text-primary border border-primary/20 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all flex items-center gap-1.5">
-              <Share2 className="w-4 h-4" />
+            <button className="px-5 py-2.5 bg-card hover:bg-card/90 text-primary border border-primary/20 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all flex items-center justify-center">
               <span>Share Statistics</span>
             </button>
           </div>

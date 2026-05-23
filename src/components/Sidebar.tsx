@@ -14,7 +14,8 @@ import {
   Settings,
   HelpCircle,
   LogOut,
-  Flame
+  Flame,
+  ArrowLeft
 } from "lucide-react";
 import { motion } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -42,16 +43,17 @@ export default function Sidebar() {
 
   return (
     <aside className="hidden lg:flex flex-col h-screen w-66 fixed left-0 top-0 bg-card border-r border-primary/10 p-5 z-40 text-foreground">
-      {/* Brand Logo */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-md">
-          <span className="font-mono text-xl font-bold">V</span>
+      {/* Brand Logo / Back to Landing */}
+      <Link href="/" className="flex items-center gap-3 mb-6 group cursor-pointer">
+        <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-all flex-shrink-0 relative">
+          <span className="font-mono text-xl font-bold group-hover:opacity-0 transition-opacity">V</span>
+          <ArrowLeft className="w-5 h-5 absolute inset-0 m-auto opacity-0 group-hover:opacity-100 transition-opacity text-white" />
         </div>
         <div>
-          <h1 className="font-sans text-xl font-extrabold text-primary tracking-tight">VedaX</h1>
+          <h1 className="font-sans text-xl font-extrabold text-primary tracking-tight group-hover:text-primary/80 transition-colors">VedaX</h1>
           <p className="text-[10px] text-primary/70 font-semibold tracking-widest uppercase">Vedic Arithmetic</p>
         </div>
-      </div>
+      </Link>
 
       {/* User Quick Info */}
       <div className="flex items-center gap-3 p-2 bg-background/50 rounded-2xl border border-primary/5 mb-6">

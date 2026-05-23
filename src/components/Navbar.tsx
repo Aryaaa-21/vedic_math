@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useStore } from "@/store/useStore";
-import { Menu, X, Flame, Trophy, Award, User, Settings, LogOut, BookOpen, LayoutDashboard, Timer } from "lucide-react";
+import { Menu, X, Flame, Trophy, Award, User, Settings, LogOut, BookOpen, LayoutDashboard, Timer, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -41,11 +41,12 @@ export default function Navbar() {
         >
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-mono font-bold text-lg">
-            V
+        <Link href="/" className="flex items-center gap-2 group cursor-pointer">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-mono font-bold text-lg relative group-hover:scale-105 transition-all">
+            <span className="group-hover:opacity-0 transition-opacity">V</span>
+            <ArrowLeft className="w-4.5 h-4.5 absolute inset-0 m-auto opacity-0 group-hover:opacity-100 transition-opacity text-white" />
           </div>
-          <span className="font-sans text-lg font-black tracking-wider text-primary">VedaX</span>
+          <span className="font-sans text-lg font-black tracking-wider text-primary group-hover:text-primary/80 transition-colors">VedaX</span>
         </Link>
       </div>
 

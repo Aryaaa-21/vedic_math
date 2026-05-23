@@ -11,8 +11,6 @@ import {
   Zap,
   BookOpen,
   ArrowRight,
-  Rocket,
-  Compass,
   Trophy
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -69,16 +67,14 @@ export default function LandingPage() {
               className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
             >
               <Link href="/dashboard" className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-extrabold rounded-xl shadow-md cursor-pointer pressable-button transition-all hover:brightness-110 flex items-center justify-center gap-2 text-base tracking-wide border-b-4 border-primary/40">
+                <button className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-extrabold rounded-xl shadow-md cursor-pointer pressable-button transition-all hover:brightness-110 flex items-center justify-center text-base tracking-wide border-b-4 border-primary/40">
                   <span>Enter Dashboard</span>
-                  <Rocket className="w-5 h-5 text-accent" />
                 </button>
               </Link>
               
               <Link href="/learn" className="w-full sm:w-auto">
-                <button className="w-full sm:w-auto px-8 py-4 border-2 border-secondary text-secondary font-extrabold rounded-xl hover:bg-secondary/5 cursor-pointer transition-all active:scale-95 text-base flex items-center justify-center gap-2">
+                <button className="w-full sm:w-auto px-8 py-4 border-2 border-secondary text-secondary font-extrabold rounded-xl hover:bg-secondary/5 cursor-pointer transition-all active:scale-95 text-base flex items-center justify-center">
                   <span>Explore Modules</span>
-                  <Compass className="w-5 h-5" />
                 </button>
               </Link>
             </motion.div>

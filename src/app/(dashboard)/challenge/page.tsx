@@ -147,10 +147,9 @@ export default function ChallengePage() {
 
             <button
               onClick={handleStartGame}
-              className="px-8 py-4 bg-primary hover:bg-primary/95 text-white font-extrabold rounded-xl text-sm uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-md flex items-center justify-center gap-2 mx-auto border-b-4 border-primary/40"
+              className="px-8 py-4 bg-primary hover:bg-primary/95 text-white font-extrabold rounded-xl text-sm uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-md flex items-center justify-center mx-auto border-b-4 border-primary/40"
             >
               <span>Begin Speed Trial</span>
-              <Play className="w-4 h-4 fill-current" />
             </button>
           </motion.div>
         ) : challengeIsPlaying && challengeCurrentQuestion ? (
@@ -315,17 +314,15 @@ export default function ChallengePage() {
             <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto justify-center">
               <button
                 onClick={handleStartGame}
-                className="flex-1 py-3.5 bg-card hover:bg-card/90 text-primary border border-primary/20 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                className="flex-1 py-3.5 bg-card hover:bg-card/90 text-primary border border-primary/20 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all flex items-center justify-center"
               >
-                <RotateCcw className="w-4 h-4" />
                 <span>Play Again</span>
               </button>
               
               <button
                 onClick={() => router.push("/dashboard")}
-                className="flex-1 py-3.5 bg-primary hover:bg-primary/95 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-md flex items-center justify-center gap-1.5 border-b-4 border-primary/40"
+                className="flex-1 py-3.5 bg-primary hover:bg-primary/95 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-md flex items-center justify-center border-b-4 border-primary/40"
               >
-                <Home className="w-4 h-4" />
                 <span>Go to Dashboard</span>
               </button>
             </div>
