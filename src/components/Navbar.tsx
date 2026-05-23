@@ -45,7 +45,7 @@ export default function Navbar() {
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-mono font-bold text-lg">
             V
           </div>
-          <span className="font-sans text-lg font-black tracking-wider text-primary">VEDAX</span>
+          <span className="font-sans text-lg font-black tracking-wider text-primary">VedaX</span>
         </Link>
       </div>
 

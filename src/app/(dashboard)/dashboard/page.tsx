@@ -75,7 +75,7 @@ export default function DashboardPage() {
             Namaste, अर्जुन
           </h1>
           <p className="text-muted-foreground font-medium">
-            Welcome back to Vedax. Your mental calculation speeds are sharpening!
+            Welcome back to VedaX. Your mental calculation speeds are sharpening!
           </p>
         </div>
         

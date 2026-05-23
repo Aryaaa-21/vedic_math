@@ -50,7 +50,7 @@ export default function LandingPage() {
               whileHover={{ scale: 1.02 }}
               className="font-sans text-5xl md:text-7xl font-extrabold text-primary tracking-tight"
             >
-              VEDAX
+              VedaX
             </motion.h1>
 
             <motion.p

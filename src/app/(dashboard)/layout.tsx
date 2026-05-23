@@ -1,9 +1,8 @@
-"use client";
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
+import BottomNavigation from "@/components/BottomNavigation";
 import VedicPattern from "@/components/VedicPattern";
 
 export default function DashboardLayout({
@@ -25,7 +24,7 @@ export default function DashboardLayout({
       <Sidebar />
 
       {/* Main Content Area */}
-      <div className="flex-grow flex flex-col pt-16 lg:pt-0 lg:pl-66 min-h-screen">
+      <div className="flex-grow flex flex-col pt-16 lg:pt-0 lg:pl-66 min-h-screen pb-20 lg:pb-0">
         <main className="flex-grow px-4 md:px-8 py-8 max-w-7xl mx-auto w-full relative z-10">
           {children}
         </main>
@@ -33,6 +32,9 @@ export default function DashboardLayout({
         {/* Footer */}
         <Footer isDashboard={true} />
       </div>
+
+      {/* Bottom Navigation on mobile */}
+      <BottomNavigation />
     </div>
   );
 }

@@ -13,14 +13,15 @@ import {
   Cpu,
   TrendingUp,
   X,
-  Play
+  Play,
+  Lock
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function LearnPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { selectTechnique, startPractice } = useStore();
+  const { selectTechnique, startPractice, user } = useStore();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [filterDifficulty, setFilterDifficulty] = useState<string>("All");
@@ -37,6 +38,12 @@ function LearnPageContent() {
     }
   }, [searchParams]);
 
+  const isLocked = (tech: Technique) => {
+    if (tech.difficulty === "Intermediate" && user.level < 5) return true;
+    if (tech.difficulty === "Advanced" && user.level < 10) return true;
+    return false;
+  };
+
   const filteredTechniques = VEDIC_TECHNIQUES.filter((tech) => {
     const matchesSearch =
       tech.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -50,6 +57,7 @@ function LearnPageContent() {
   });
 
   const handleStartPractice = (tech: Technique) => {
+    if (isLocked(tech)) return;
     selectTechnique(tech);
     startPractice();
     router.push("/practice");
@@ -99,43 +107,67 @@ function LearnPageContent() {
 
       {/* Bento Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredTechniques.map((tech) => (
-          <motion.div
-            key={tech.id}
-            whileHover={{ y: -4 }}
-            onClick={() => setSelectedTech(tech)}
-            className="bg-card p-6 rounded-3xl border border-primary/10 cursor-pointer hover:border-primary/30 transition-all flex flex-col justify-between h-72 shadow-sm"
-          >
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="px-2.5 py-0.5 bg-accent/20 text-primary-foreground text-[9px] font-extrabold rounded-full uppercase tracking-wider">
-                  {tech.difficulty}
-                </span>
-                <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase">{tech.tag}</span>
-              </div>
-              
-              <div className="space-y-1">
-                <h3 className="font-sans text-lg font-extrabold text-primary">{tech.name}</h3>
-                <p className="text-xs text-primary/70 font-bold italic font-mono">{tech.sutra}</p>
+        {filteredTechniques.map((tech) => {
+          const locked = isLocked(tech);
+          return (
+            <motion.div
+              key={tech.id}
+              whileHover={locked ? undefined : { y: -4 }}
+              onClick={() => setSelectedTech(tech)}
+              className={`bg-card p-6 rounded-3xl border transition-all flex flex-col justify-between h-72 shadow-sm ${
+                locked 
+                  ? "opacity-80 border-primary/5 cursor-not-allowed select-none bg-card/60" 
+                  : "border-primary/10 cursor-pointer hover:border-primary/30"
+              }`}
+            >
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-1.5">
+                    <span className="px-2.5 py-0.5 bg-accent/20 text-primary-foreground text-[9px] font-extrabold rounded-full uppercase tracking-wider">
+                      {tech.difficulty}
+                    </span>
+                    {locked && (
+                      <span className="flex items-center gap-0.5 px-2 py-0.5 bg-error/15 text-error text-[9px] font-extrabold rounded-full uppercase tracking-wider">
+                        <Lock className="w-2.5 h-2.5" />
+                        <span>Locked</span>
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase">{tech.tag}</span>
+                </div>
+                
+                <div className="space-y-1">
+                  <h3 className="font-sans text-lg font-extrabold text-primary">
+                    <span>{tech.name}</span>
+                  </h3>
+                  <p className="text-xs text-primary/70 font-bold italic font-mono">{tech.sutra}</p>
+                </div>
+
+                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 font-medium">
+                  {tech.description}
+                </p>
               </div>
 
-              <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3 font-medium">
-                {tech.description}
-              </p>
-            </div>
-
-            <div className="pt-4 border-t border-primary/5 flex items-center justify-between text-xs font-bold">
-              <div className="flex items-center gap-1.5 text-muted-foreground text-[10px]">
-                <Cpu className="w-3.5 h-3.5" />
-                <span>{tech.mentalLoad}</span>
+              <div className="pt-4 border-t border-primary/5 flex items-center justify-between text-xs font-bold">
+                <div className="flex items-center gap-1.5 text-muted-foreground text-[10px]">
+                  <Cpu className="w-3.5 h-3.5" />
+                  <span>{tech.mentalLoad}</span>
+                </div>
+                {locked ? (
+                  <span className="text-muted-foreground flex items-center gap-1 text-[10px]">
+                    <Lock className="w-3.5 h-3.5" />
+                    <span>Lvl {tech.difficulty === "Intermediate" ? "5" : "10"}+ Req</span>
+                  </span>
+                ) : (
+                  <span className="text-primary flex items-center gap-1">
+                    <span>View Details</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </span>
+                )}
               </div>
-              <span className="text-primary flex items-center gap-1">
-                <span>View Details</span>
-                <ChevronRight className="w-4 h-4" />
-              </span>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          );
+        })}
 
         {filteredTechniques.length === 0 && (
           <div className="col-span-full py-16 text-center text-muted-foreground font-semibold flex flex-col items-center gap-2">
@@ -252,13 +284,23 @@ function LearnPageContent() {
                 >
                   Close Walkthrough
                 </button>
-                <button
-                  onClick={() => handleStartPractice(selectedTech)}
-                  className="flex-1 py-3 bg-primary hover:bg-primary/95 text-white font-extrabold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-md flex items-center justify-center gap-1.5 border-b-4 border-primary/40"
-                >
-                  <span>Practice Sutra</span>
-                  <Play className="w-3.5 h-3.5 fill-current" />
-                </button>
+                {isLocked(selectedTech) ? (
+                  <button
+                    disabled
+                    className="flex-1 py-3 bg-muted text-muted-foreground font-extrabold rounded-xl text-xs uppercase tracking-wider cursor-not-allowed flex items-center justify-center gap-1.5 border-b-4 border-muted-foreground/20"
+                  >
+                    <span>Locked (Lvl {selectedTech.difficulty === "Intermediate" ? "5" : "10"}+)</span>
+                    <Lock className="w-3.5 h-3.5" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleStartPractice(selectedTech)}
+                    className="flex-1 py-3 bg-primary hover:bg-primary/95 text-white font-extrabold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-md flex items-center justify-center gap-1.5 border-b-4 border-primary/40"
+                  >
+                    <span>Practice Sutra</span>
+                    <Play className="w-3.5 h-3.5 fill-current" />
+                  </button>
+                )}
               </div>
             </motion.div>
           </>

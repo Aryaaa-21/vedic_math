@@ -1,0 +1,9 @@
+[
+  { "rank": 1, "name": "Ishaan K.", "initials": "IK", "accuracy": 99, "xp": 16800, "streak": 21 },
+  { "rank": 2, "name": "Priya M.", "initials": "PM", "accuracy": 96, "xp": 14250, "streak": 15 },
+  { "rank": 3, "name": "Zara L.", "initials": "ZL", "accuracy": 95, "xp": 12100, "streak": 12 },
+  { "rank": 4, "name": "Ananya Misra", "initials": "AM", "accuracy": 98, "xp": 11400, "streak": 10 },
+  { "rank": 5, "name": "Rahul H.", "initials": "RH", "accuracy": 94, "xp": 10950, "streak": 9 },
+  { "rank": 42, "name": "Arjun Sharma", "initials": "AS", "accuracy": 88, "xp": 4240, "streak": 5, "isCurrentUser": true },
+  { "rank": 100, "name": "Siddharth J.", "initials": "SJ", "accuracy": 72, "xp": 1820, "streak": 2 }
+]

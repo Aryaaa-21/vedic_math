@@ -13,8 +13,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vedax - Master Mental Math with Vedic Speed",
-  description: "Learn Vedic math techniques, practice speed calculation, maintain streaks, and climb the leaderboard with Vedax.",
+  title: "VedaX - Master Mental Math with Vedic Speed",
+  description: "Learn Vedic math techniques, practice speed calculation, maintain streaks, and climb the leaderboard with VedaX.",
 };
 
 export default function RootLayout({

@@ -48,7 +48,7 @@ export default function Sidebar() {
           <span className="font-mono text-xl font-bold">V</span>
         </div>
         <div>
-          <h1 className="font-sans text-xl font-extrabold text-primary tracking-tight">VEDAX</h1>
+          <h1 className="font-sans text-xl font-extrabold text-primary tracking-tight">VedaX</h1>
           <p className="text-[10px] text-primary/70 font-semibold tracking-widest uppercase">Vedic Arithmetic</p>
         </div>
       </div>

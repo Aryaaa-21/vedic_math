@@ -1,135 +1,37 @@
 import { create } from "zustand";
+import VEDIC_TECHNIQUES_JSON from "@/data/techniques.json";
+import USER_JSON from "@/data/users.json";
+import LEADERBOARD_JSON from "@/data/leaderboard.json";
+import ACHIEVEMENTS_JSON from "@/data/achievements.json";
 
 export interface Technique {
   id: string;
   name: string;
+  title?: string;
   sutra: string;
+  sanskritName?: string;
   difficulty: "Beginner" | "Intermediate" | "Advanced";
-  tag: "Multiplication" | "Division" | "Squaring";
+  category?: "Beginner" | "Intermediate" | "Advanced";
+  tag: string;
+  applicationType?: string;
   description: string;
   formula: string;
   level: number;
   unlockedAtStreak: number;
   speedGain: string;
   mentalLoad: string;
+  memoryLoad?: string;
+  practiceCount?: number;
+  estimatedMastery?: number;
   example: {
     problem: string;
     steps: { step: number; title: string; desc: string; detail: string }[];
     answer: number;
   };
+  examples?: { problem: string; answer: number }[];
 }
 
-export const VEDIC_TECHNIQUES: Technique[] = [
-  {
-    id: "vertically-crosswise",
-    name: "Vertically and Crosswise",
-    sutra: "Urdhva Tiryak",
-    difficulty: "Beginner",
-    tag: "Multiplication",
-    description: "The universal multiplication method for numbers of any size.",
-    formula: "Multiply vertically, cross-multiply and add, then multiply vertically.",
-    level: 1,
-    unlockedAtStreak: 0,
-    speedGain: "4.5x faster",
-    mentalLoad: "Low Memory",
-    example: {
-      problem: "23 × 27",
-      steps: [
-        { step: 1, title: "Vertical (Right)", desc: "Multiply units digit:", detail: "3 × 7 = 21 (Write 1, carry 2)" },
-        { step: 2, title: "Crosswise", desc: "Multiply crosswise and add with carry:", detail: "(2 × 7) + (3 × 2) + 2 (carry) = 14 + 6 + 2 = 22 (Write 2, carry 2)" },
-        { step: 3, title: "Vertical (Left)", desc: "Multiply tens digit with carry:", detail: "(2 × 2) + 2 (carry) = 6" }
-      ],
-      answer: 621
-    }
-  },
-  {
-    id: "nikhilam-subtraction",
-    name: "All from 9 and Last from 10",
-    sutra: "Nikhilam Navatashcaramam Dashatah",
-    difficulty: "Intermediate",
-    tag: "Multiplication",
-    description: "The base method for rapid multiplication of numbers close to powers of 10.",
-    formula: "Subtract both numbers from the base (10, 100, etc.), cross-subtract, and multiply deficits.",
-    level: 2,
-    unlockedAtStreak: 0,
-    speedGain: "5.2x faster",
-    mentalLoad: "Medium Memory",
-    example: {
-      problem: "94 × 97",
-      steps: [
-        { step: 1, title: "Find Deficits", desc: "Find deficits from base 100:", detail: "94 is -6, 97 is -3" },
-        { step: 2, title: "Left Part", desc: "Cross-subtract deficit from either number:", detail: "94 - 3 = 91 (or 97 - 6 = 91)" },
-        { step: 3, title: "Right Part", desc: "Multiply the deficits:", detail: "-6 × -3 = 18. Combine left and right: 9118" }
-      ],
-      answer: 9118
-    }
-  },
-  {
-    id: "ekadhikena-purvena",
-    name: "By One More than the Previous",
-    sutra: "Ekadhikena Purvena",
-    difficulty: "Beginner",
-    tag: "Squaring",
-    description: "Instant method for squaring numbers that end in 5.",
-    formula: "Multiply first digits by (first digits + 1) and append 25.",
-    level: 1,
-    unlockedAtStreak: 0,
-    speedGain: "8.0x faster",
-    mentalLoad: "Negligible",
-    example: {
-      problem: "45 × 45",
-      steps: [
-        { step: 1, title: "First Part", desc: "Multiply tens digit by (tens digit + 1):", detail: "4 × (4 + 1) = 4 × 5 = 20" },
-        { step: 2, title: "Last Part", desc: "Square the units digit:", detail: "5 × 5 = 25" },
-        { step: 3, title: "Combine", desc: "Append the two parts together:", detail: "20 and 25 = 2025" }
-      ],
-      answer: 2025
-    }
-  },
-  {
-    id: "anurupyena",
-    name: "Proportionality Sub-Base",
-    sutra: "Anurupyena",
-    difficulty: "Intermediate",
-    tag: "Multiplication",
-    description: "Method used for multiplication when numbers are close to a sub-base like 50, 250, etc.",
-    formula: "Apply Nikhilam from sub-base, scale left part proportionally.",
-    level: 3,
-    unlockedAtStreak: 3,
-    speedGain: "3.5x faster",
-    mentalLoad: "High Memory",
-    example: {
-      problem: "48 × 46",
-      steps: [
-        { step: 1, title: "Find Deficits", desc: "Deficits from sub-base 50 (100 / 2):", detail: "48 is -2, 46 is -4" },
-        { step: 2, title: "Cross-subtract", desc: "Cross-subtract deficits:", detail: "48 - 4 = 44" },
-        { step: 3, title: "Scale and Combine", desc: "Divide left part by 2 (since 50 = 100/2) and append product of deficits:", detail: "44 / 2 = 22. Deficits product: -2 × -4 = 08. Result: 2208" }
-      ],
-      answer: 2208
-    }
-  },
-  {
-    id: "antyayoreva",
-    name: "Only the Last Terms",
-    sutra: "Antyayoreva",
-    difficulty: "Advanced",
-    tag: "Division",
-    description: "Rapid division techniques for numbers showing specific last-digit relations.",
-    formula: "Compare final digits of divisors and simplify fractions immediately.",
-    level: 4,
-    unlockedAtStreak: 5,
-    speedGain: "4.0x faster",
-    mentalLoad: "High Memory",
-    example: {
-      problem: "35 / 5",
-      steps: [
-        { step: 1, title: "Vedic Ratio", desc: "Observe the divisor properties:", detail: "Compare last digit directly." },
-        { step: 2, title: "Solve", desc: "Direct division:", detail: "Answer is 7" }
-      ],
-      answer: 7
-    }
-  }
-];
+export const VEDIC_TECHNIQUES = VEDIC_TECHNIQUES_JSON as Technique[];
 
 interface LeaderboardUser {
   rank: number;
@@ -227,41 +129,15 @@ interface StoreState {
 }
 
 export const useStore = create<StoreState>((set, get) => ({
-  user: {
-    name: "Arjun Sharma",
-    level: 12,
-    xp: 1240,
-    streak: 5,
-    accuracy: 88,
-    avgSpeed: 2.1,
-    completedLessons: 4,
-    avatar: "https://lh3.googleusercontent.com/aida-public/AB6AXuCUJdXomDSgDSUuwC4zKIgGBC_y_q3dq3V0RreliV6w9CkT-lwY_UD3b1EH0gkfzoefHNiOVAPZnxg9BEBkpN69m7DfLfZJur6EJZC9NK1AHMx0PuvGUfqCoLd7TbiSJQZx9LypcOp4C-9MTg6CWwRM7rBWA_0ZHTRnoU82PuHFTEGeEkRm7g6NqXc13talluw4kQdZnBOfVr22_Z_N2XOnGn_WrbnkmRlYpaW4zM23Bxe0p8lZSTdJ1EPe1W6D5nTwYJbpwPucbcRS"
-  },
+  user: USER_JSON,
   recentActivities: [
     { id: "1", type: "practice", title: "Practice: Squaring", desc: "Mastered Ekadhikena method", date: "Today", xpAwarded: 50 },
     { id: "2", type: "challenge", title: "Timed Speed Trial", desc: "Scored 1,240 XP (New High Score)", date: "Yesterday", xpAwarded: 150 },
     { id: "3", type: "achievement", title: "Badge Unlocked: Speed Demon", desc: "Completed a round in under 1.5s avg", date: "2 days ago", xpAwarded: 100 },
     { id: "4", type: "practice", title: "Mini-Lesson: Nikhilam", desc: "All from 9 and Last from 10 deficits", date: "3 days ago", xpAwarded: 30 }
   ],
-  badges: [
-    { id: "sutra-master", name: "Sutra Master", desc: "Mastered 15 Ekadhikena operations", icon: "Award", unlocked: true, unlockedAt: "May 20, 2026", category: "Lessons" },
-    { id: "century-club", name: "Century Club", desc: "Solved 100 problems in one day", icon: "Zap", unlocked: true, unlockedAt: "May 21, 2026", category: "Lessons" },
-    { id: "speed-demon", name: "Speed Demon", desc: "Under 1.5s average in Level 3 calculations", icon: "Gauge", unlocked: true, unlockedAt: "May 22, 2026", category: "Speed" },
-    { id: "quick-starter", name: "Quick Starter", desc: "Start learning on day 1", icon: "Flame", unlocked: true, unlockedAt: "May 18, 2026", category: "Streak" },
-    { id: "mental-giant", name: "Mental Giant", desc: "Reach Level 10 Mathlete", icon: "BookOpen", unlocked: true, unlockedAt: "May 19, 2026", category: "Lessons" },
-    { id: "streak-saviour", name: "Streak Legend", desc: "Maintain streak for 15 days", icon: "Calendar", unlocked: false, category: "Streak" },
-    { id: "perfectionist", name: "Perfectionist", desc: "Achieve 100% accuracy in a timed challenge", icon: "CheckCircle", unlocked: false, category: "Speed" },
-    { id: "grandmaster", name: "Vedic Grandmaster", desc: "Unlock all 16 word sutras", icon: "Crown", unlocked: false, category: "Lessons" }
-  ],
-  leaderboard: [
-    { rank: 1, name: "Ishaan K.", initials: "IK", accuracy: 99, xp: 16800, streak: 21 },
-    { rank: 2, name: "Priya M.", initials: "PM", accuracy: 96, xp: 14250, streak: 15 },
-    { rank: 3, name: "Zara L.", initials: "ZL", accuracy: 95, xp: 12100, streak: 12 },
-    { rank: 4, name: "Ananya Misra", initials: "AM", accuracy: 98, xp: 11400, streak: 10 },
-    { rank: 5, name: "Rahul H.", initials: "RH", accuracy: 94, xp: 10950, streak: 9 },
-    { rank: 42, name: "Arjun Sharma", initials: "AS", accuracy: 88, xp: 4240, streak: 5, isCurrentUser: true },
-    { rank: 100, name: "Siddharth J.", initials: "SJ", accuracy: 72, xp: 1820, streak: 2 }
-  ],
+  badges: ACHIEVEMENTS_JSON as Badge[],
+  leaderboard: LEADERBOARD_JSON as LeaderboardUser[],
   
   activeTechnique: null,
   practiceIndex: 0,
@@ -351,8 +227,22 @@ export const useStore = create<StoreState>((set, get) => ({
           answer: n1 * n2,
           hint: `Find deficits: ${100 - n1} and ${100 - n2}. Left: ${n1} - ${100 - n2}. Right: deficits product.`
         });
-      } else {
-        // Default small multiplication
+      } else if (tech.id === "yavadunam") {
+        const deficiency = Math.floor(Math.random() * 6) + 1; // 1 to 6
+        const num = 100 - deficiency;
+        questions.push({
+          question: `${num} × ${num}`,
+          answer: num * num,
+          hint: `Deficit is ${deficiency}. Calculate (${num} - ${deficiency}) and append (${deficiency}²)`
+        });
+      } else if (tech.id === "ekanyunena-purvena") {
+        const num = Math.floor(Math.random() * 80) + 11;
+        questions.push({
+          question: `${num} × 99`,
+          answer: num * 99,
+          hint: `Left part: ${num} - 1. Right part: 99 - (${num} - 1)`
+        });
+      } else if (tech.id === "vertically-crosswise") {
         const n1 = Math.floor(Math.random() * 15) + 11;
         const n2 = Math.floor(Math.random() * 15) + 11;
         questions.push({
@@ -360,6 +250,35 @@ export const useStore = create<StoreState>((set, get) => ({
           answer: n1 * n2,
           hint: "Solve vertically and crosswise."
         });
+      } else if (tech.id === "anurupyena") {
+        const n1 = Math.floor(Math.random() * 8) + 41; // 41 to 48 (sub-base 50)
+        const n2 = Math.floor(Math.random() * 8) + 41;
+        questions.push({
+          question: `${n1} × ${n2}`,
+          answer: n1 * n2,
+          hint: `Compare to sub-base 50. Deficits are ${50 - n1} and ${50 - n2}.`
+        });
+      } else {
+        // Fallback for algebra and other techniques: load from predefined examples
+        const examplesList = tech.examples || [];
+        if (examplesList.length > 0) {
+          const ex = examplesList[i % examplesList.length];
+          questions.push({
+            key: i,
+            question: ex.problem,
+            answer: ex.answer,
+            hint: tech.formula
+          } as any);
+        } else {
+          // Absolute fallback
+          const n1 = Math.floor(Math.random() * 10) + 2;
+          const n2 = Math.floor(Math.random() * 10) + 2;
+          questions.push({
+            question: `${n1} × ${n2}`,
+            answer: n1 * n2,
+            hint: tech.formula || "Solve step-by-step."
+          });
+        }
       }
     }
 

@@ -20,10 +20,10 @@ export default function Footer({ className = "", isDashboard = false }: FooterPr
             <div className="w-6 h-6 bg-primary rounded flex items-center justify-center text-white font-mono font-bold text-xs">
               V
             </div>
-            <span className="font-sans text-sm font-extrabold tracking-wider text-primary">VEDAX</span>
+            <span className="font-sans text-sm font-extrabold tracking-wider text-primary">VedaX</span>
           </div>
           <p className="text-[12px] text-muted-foreground mt-1 font-medium">
-            © 2026 Vedax Education. Harmonizing ancient wisdom with modern speed.
+            © 2026 VedaX Education. Harmonizing ancient wisdom with modern speed.
           </p>
         </div>
 

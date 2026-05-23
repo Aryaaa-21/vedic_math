@@ -53,7 +53,7 @@ export default function SignupPage() {
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-mono font-bold text-xl shadow-md">
                 V
               </div>
-              <span className="font-sans text-2xl font-black tracking-wider text-primary">VEDAX</span>
+              <span className="font-sans text-2xl font-black tracking-wider text-primary">VedaX</span>
             </Link>
           </div>
 
@@ -217,7 +217,7 @@ export default function SignupPage() {
 
       {/* Auth Footer */}
       <footer className="py-6 px-4 border-t border-primary/10 bg-card flex flex-col md:flex-row justify-between items-center text-[10px] text-muted-foreground font-semibold uppercase tracking-wider relative z-10 gap-3">
-        <span>© 2026 Vedax Education.</span>
+        <span>© 2026 VedaX Education.</span>
         <div className="flex gap-4">
           <Link href="/privacy" className="hover:text-primary">Privacy Policy</Link>
           <Link href="/terms" className="hover:text-primary">Terms of Service</Link>
