@@ -53,7 +53,7 @@ npm run dev
 
 Create `.env.local` at the root if needed:
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5000/api
 ```
 
 Open [http://localhost:5173](http://localhost:5173) for the frontend.
@@ -63,9 +63,11 @@ Open [http://localhost:5173](http://localhost:5173) for the frontend.
 ### Backend
 
 * Railway or Render work well for the API.
-* Required environment variables: `PORT`, `MONGODB_URI`, `JWT_SECRET`, `NODE_ENV`.
+* Required environment variables: `MONGODB_URI`, `JWT_SECRET`, `NODE_ENV`.
+* Optional environment variables: `PORT`, `CLIENT_URL`, `DNS_SERVERS`.
+* If Railway deploys from the repository root, use the root `railway.json`. If Railway root directory is set to `backend`, use `backend/railway.json`.
 
 ### Frontend
 
 * Deploy the Vite app to your static host of choice.
-* Set `NEXT_PUBLIC_API_URL` to the deployed backend URL, for example `https://vedax-backend.up.railway.app/api`.
+* Set `VITE_API_URL` to the deployed backend URL, for example `https://vedax-backend.up.railway.app/api`.

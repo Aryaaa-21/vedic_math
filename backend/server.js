@@ -3,13 +3,13 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const dns = require("dns");
 
+// Load env vars before reading deployment config.
+dotenv.config();
+
 // Use public DNS resolvers so MongoDB Atlas SRV lookups do not depend on a flaky local resolver.
 dns.setServers((process.env.DNS_SERVERS || "8.8.8.8,1.1.1.1").split(","));
 
 const connectDB = require("./config/db");
-
-// Load env vars
-dotenv.config();
 
 // Connect to database
 connectDB();
