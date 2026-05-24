@@ -107,7 +107,7 @@ interface Badge {
   icon: string;
   unlocked: boolean;
   unlockedAt?: string;
-  category: "Speed" | "Streak" | "Lessons";
+  category: string;
 }
 
 interface StoreState {

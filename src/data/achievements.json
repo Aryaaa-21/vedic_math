@@ -1,10 +1,18 @@
 [
-  { "id": "sutra-master", "name": "Sutra Master", "desc": "Mastered 15 Ekadhikena operations", "icon": "Award", "unlocked": true, "unlockedAt": "May 20, 2026", "category": "Lessons" },
-  { "id": "century-club", "name": "Century Club", "desc": "Solved 100 problems in one day", "icon": "Zap", "unlocked": true, "unlockedAt": "May 21, 2026", "category": "Lessons" },
-  { "id": "speed-demon", "name": "Speed Demon", "desc": "Under 1.5s average in Level 3 calculations", "icon": "Gauge", "unlocked": true, "unlockedAt": "May 22, 2026", "category": "Speed" },
-  { "id": "quick-starter", "name": "Quick Starter", "desc": "Start learning on day 1", "icon": "Flame", "unlocked": true, "unlockedAt": "May 18, 2026", "category": "Streak" },
-  { "id": "mental-giant", "name": "Mental Giant", "desc": "Reach Level 10 Mathlete", "icon": "BookOpen", "unlocked": true, "unlockedAt": "May 19, 2026", "category": "Lessons" },
-  { "id": "streak-saviour", "name": "Streak Legend", "desc": "Maintain streak for 15 days", "icon": "Calendar", "unlocked": false, "category": "Streak" },
-  { "id": "perfectionist", "name": "Perfectionist", "desc": "Achieve 100% accuracy in a timed challenge", "icon": "CheckCircle", "unlocked": false, "category": "Speed" },
-  { "id": "grandmaster", "name": "Vedic Grandmaster", "desc": "Unlock all 16 word sutras", "icon": "Crown", "unlocked": false, "category": "Lessons" }
+  { "id": "ekadhikena-purvena", "name": "Ekadhikena Master", "desc": "Master the ending-in-5 squaring sutra.", "icon": "Award", "unlocked": false, "category": "Sutra" },
+  { "id": "nikhilam-subtraction", "name": "Nikhilam Navigator", "desc": "Use base subtraction for fast multiplication.", "icon": "Zap", "unlocked": false, "category": "Sutra" },
+  { "id": "sankalana-vyavakalanabhyam", "name": "Sankalana Solver", "desc": "Balance interchanged equations with ease.", "icon": "BookOpen", "unlocked": false, "category": "Sutra" },
+  { "id": "yavadunam", "name": "Yavadunam Squarer", "desc": "Square numbers near a base instantly.", "icon": "Flame", "unlocked": false, "category": "Sutra" },
+  { "id": "ekanyunena-purvena", "name": "Ekanyunena Runner", "desc": "Multiply by 9s with clean left-right structure.", "icon": "Calendar", "unlocked": false, "category": "Sutra" },
+  { "id": "vyastisamastih", "name": "Vyastisamastih Thinker", "desc": "Break and rebuild expressions quickly.", "icon": "CheckCircle", "unlocked": false, "category": "Sutra" },
+  { "id": "vertically-crosswise", "name": "Crosswise Pilot", "desc": "Apply the universal multiplication pattern.", "icon": "Crown", "unlocked": false, "category": "Sutra" },
+  { "id": "anurupyena", "name": "Anurupyena Adapter", "desc": "Scale sub-base work proportionally.", "icon": "Award", "unlocked": false, "category": "Sutra" },
+  { "id": "puranapuranabhyam", "name": "Completer", "desc": "Finish equations by completing structure.", "icon": "Zap", "unlocked": false, "category": "Sutra" },
+  { "id": "sesanyankena-caramena", "name": "Decimal Decoder", "desc": "Resolve denominators ending in 9.", "icon": "BookOpen", "unlocked": false, "category": "Sutra" },
+  { "id": "sopantyadvayamantyam", "name": "Symmetry Seeker", "desc": "Solve mirrored denominator equations.", "icon": "Flame", "unlocked": false, "category": "Sutra" },
+  { "id": "paravartya-yojayet", "name": "Transpose Tactician", "desc": "Flip signs and progress through division.", "icon": "Calendar", "unlocked": false, "category": "Sutra" },
+  { "id": "sunyam-samyasamuccaye", "name": "Zero Balance Keeper", "desc": "Use zero balance in special symmetries.", "icon": "CheckCircle", "unlocked": false, "category": "Sutra" },
+  { "id": "chalana-kalanabhyam", "name": "Flow Controller", "desc": "Shift values with timed mental motion.", "icon": "Crown", "unlocked": false, "category": "Sutra" },
+  { "id": "gunitasamuccayah", "name": "Aggregator", "desc": "Combine factors and products cleanly.", "icon": "Award", "unlocked": false, "category": "Sutra" },
+  { "id": "gunakasamuccayah", "name": "Multiplier Sage", "desc": "Bring together factor paths and totals.", "icon": "Zap", "unlocked": false, "category": "Sutra" }
 ]

@@ -4,6 +4,6 @@
   { "rank": 3, "name": "Zara L.", "initials": "ZL", "accuracy": 95, "xp": 12100, "streak": 12 },
   { "rank": 4, "name": "Ananya Misra", "initials": "AM", "accuracy": 98, "xp": 11400, "streak": 10 },
   { "rank": 5, "name": "Rahul H.", "initials": "RH", "accuracy": 94, "xp": 10950, "streak": 9 },
-  { "rank": 42, "name": "Arjun Sharma", "initials": "AS", "accuracy": 88, "xp": 4240, "streak": 5, "isCurrentUser": true },
-  { "rank": 100, "name": "Siddharth J.", "initials": "SJ", "accuracy": 72, "xp": 1820, "streak": 2 }
+  { "rank": 6, "name": "Siddharth J.", "initials": "SJ", "accuracy": 72, "xp": 1820, "streak": 2 },
+  { "rank": 999, "name": "Guest Mathlete", "initials": "GM", "accuracy": 0, "xp": 0, "streak": 0, "isCurrentUser": true }
 ]

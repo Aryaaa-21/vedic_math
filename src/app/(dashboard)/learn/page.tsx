@@ -195,10 +195,10 @@ function LearnPageContent() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 w-full max-w-xl h-full bg-card shadow-2xl border-l border-primary/10 z-50 flex flex-col overflow-y-auto"
+              className="fixed top-16 lg:top-0 right-0 w-full max-w-xl h-[calc(100dvh-4rem)] lg:h-full bg-card shadow-2xl border-l border-primary/10 z-50 flex flex-col overflow-y-auto"
             >
               {/* Drawer Header */}
-              <div className="p-6 border-b border-primary/10 flex justify-between items-center bg-background/50">
+              <div className="p-4 sm:p-6 border-b border-primary/10 flex justify-between items-center bg-background/50 sticky top-0 z-10 backdrop-blur-sm">
                 <div>
                   <span className="px-3 py-1 bg-accent/25 text-primary-foreground text-[10px] font-extrabold rounded-full uppercase tracking-wider">
                     {selectedTech.difficulty}
@@ -215,7 +215,7 @@ function LearnPageContent() {
               </div>
 
               {/* Drawer Content */}
-              <div className="p-6 space-y-6 flex-grow">
+              <div className="p-4 sm:p-6 space-y-6 flex-grow pb-8">
                 {/* Visual Stats Row */}
                 <div className="grid grid-cols-2 gap-4 bg-background/60 p-4 rounded-2xl border border-primary/5">
                   <div className="flex items-center gap-3">
@@ -277,7 +277,7 @@ function LearnPageContent() {
               </div>
 
               {/* Drawer Action */}
-              <div className="p-6 border-t border-primary/10 bg-background/50 flex gap-4">
+              <div className="p-4 sm:p-6 border-t border-primary/10 bg-background/90 backdrop-blur-sm flex flex-col sm:flex-row gap-3 sticky bottom-0 z-10">
                 <button
                   onClick={() => setSelectedTech(null)}
                   className="flex-1 py-3 border border-primary/20 hover:bg-primary/5 text-primary font-extrabold rounded-xl text-xs uppercase tracking-wider cursor-pointer transition-all"

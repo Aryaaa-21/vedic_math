@@ -116,7 +116,7 @@ export default function LeaderboardPage() {
   );
 
   // Sorting
-  const sortedLeaderboard = [...filteredLeaderboard].sort((a, b) => b.xp - a.xp);
+  const sortedLeaderboard = [...filteredLeaderboard].sort((a, b) => a.rank - b.rank);
 
   // Extract top 3
   const rank1 = sortedLeaderboard.find((u) => u.rank === 1);

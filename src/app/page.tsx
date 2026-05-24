@@ -3,7 +3,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import VedicPattern from "@/components/VedicPattern";
 import { useStore, VEDIC_TECHNIQUES } from "@/store/useStore";
 import {
@@ -235,8 +234,6 @@ export default function LandingPage() {
         </section>
       </main>
 
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }

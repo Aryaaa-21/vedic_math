@@ -254,15 +254,6 @@ export default function SignupPage() {
         </div>
       </main>
 
-      {/* Auth Footer */}
-      <footer className="py-6 px-4 border-t border-primary/10 bg-card flex flex-col md:flex-row justify-between items-center text-[10px] text-muted-foreground font-semibold uppercase tracking-wider relative z-10 gap-3">
-        <span>© 2026 VedaX Education.</span>
-        <div className="flex gap-4">
-          <Link to="/privacy" className="hover:text-primary">Privacy Policy</Link>
-          <Link to="/terms" className="hover:text-primary">Terms of Service</Link>
-          <Link to="/support" className="hover:text-primary">Contact Support</Link>
-        </div>
-      </footer>
     </div>
   );
 }

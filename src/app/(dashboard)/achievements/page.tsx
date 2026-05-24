@@ -29,14 +29,9 @@ const iconMap: Record<string, React.ComponentType<any>> = {
 
 export default function AchievementsPage() {
   const { badges } = useStore();
-  const [activeCategory, setActiveCategory] = useState<string>("All");
 
   const unlockedCount = badges.filter((b) => b.unlocked).length;
   const progressPercent = Math.round((unlockedCount / badges.length) * 100);
-
-  const filteredBadges = badges.filter(
-    (b) => activeCategory === "All" || b.category === activeCategory
-  );
 
   return (
     <div className="space-y-8">
@@ -44,27 +39,11 @@ export default function AchievementsPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="font-sans text-3xl font-extrabold text-primary tracking-tight">
-            Vedic Achievements
+            16 Sutra Badges
           </h1>
           <p className="text-muted-foreground font-medium">
-            Climb the master hierarchy. Unlocking badges rewards significant bonus XP.
+            Each sutra has one badge. No extra achievement tiers are shown.
           </p>
-        </div>
-
-        <div className="flex bg-card p-1 rounded-xl border border-primary/10">
-          {["All", "Lessons", "Speed", "Streak"].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg cursor-pointer transition-all ${
-                activeCategory === cat
-                  ? "bg-primary text-white shadow-sm"
-                  : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
         </div>
       </div>
 
@@ -91,7 +70,7 @@ export default function AchievementsPage() {
 
       {/* Badges Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredBadges.map((badge) => {
+        {badges.map((badge) => {
           const BadgeIcon = iconMap[badge.icon] || Award;
           
           return (

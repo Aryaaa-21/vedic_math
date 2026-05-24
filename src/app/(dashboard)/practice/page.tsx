@@ -18,6 +18,13 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { playAudioFeedback, triggerVibrationFeedback } from "@/utils/audio";
 
+const practiceBands = [
+  { label: "Easy", minLevel: 1, maxLevel: 4 },
+  { label: "Medium", minLevel: 5, maxLevel: 8 },
+  { label: "Hard", minLevel: 9, maxLevel: 12 },
+  { label: "Super Hard", minLevel: 13, maxLevel: 16 }
+];
+
 export default function PracticePage() {
   const {
     user,
@@ -46,6 +53,7 @@ export default function PracticePage() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const startTimeRef = useRef<number>(0);
+  const activeBand = practiceBands.find((band) => activeTechnique && activeTechnique.level >= band.minLevel && activeTechnique.level <= band.maxLevel)?.label || "Easy";
 
   // Initialize practice questions on mount or when technique changes
   useEffect(() => {
@@ -129,6 +137,14 @@ export default function PracticePage() {
     startTimeRef.current = Date.now();
   };
 
+  const handleBandSelect = (bandLabel: string) => {
+    const band = practiceBands.find((item) => item.label === bandLabel);
+    if (!band) return;
+
+    const nextTechnique = VEDIC_TECHNIQUES.find((tech) => tech.level >= band.minLevel && tech.level <= band.maxLevel) || VEDIC_TECHNIQUES[0];
+    selectTechnique(nextTechnique);
+  };
+
   if (!activeTechnique || !currentQ) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
@@ -152,6 +168,23 @@ export default function PracticePage() {
           <Flame className="w-4 h-4 fill-primary text-primary" />
           <span>Streak: {practiceStreak}</span>
         </div>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {practiceBands.map((band) => (
+          <button
+            key={band.label}
+            type="button"
+            onClick={() => handleBandSelect(band.label)}
+            className={`rounded-xl border px-3 py-2 text-[10px] font-extrabold uppercase tracking-wider transition-all ${
+              activeBand === band.label
+                ? "bg-primary text-white border-primary shadow-sm"
+                : "bg-card text-muted-foreground border-primary/10 hover:text-primary hover:border-primary/25"
+            }`}
+          >
+            {band.label}
+          </button>
+        ))}
       </div>
 
       <AnimatePresence mode="wait">
@@ -220,7 +253,7 @@ export default function PracticePage() {
                 {/* Equation Math Display */}
                 <div className="space-y-2">
                   <span className="text-xs font-mono font-bold text-muted-foreground uppercase">Evaluate</span>
-                  <div className="font-mono text-5xl font-black text-primary tracking-wide">
+                  <div className="font-mono text-6xl md:text-7xl font-black text-primary tracking-wide leading-none">
                     {currentQ.question}
                   </div>
                 </div>
