@@ -21,8 +21,8 @@ import { playAudioFeedback, triggerVibrationFeedback } from "@/utils/audio";
 const practiceBands = [
   { label: "Easy", minLevel: 1, maxLevel: 4 },
   { label: "Medium", minLevel: 5, maxLevel: 8 },
-  { label: "Hard", minLevel: 9, maxLevel: 12 },
-  { label: "Super Hard", minLevel: 13, maxLevel: 16 }
+  { label: "Hard", minLevel: 7, maxLevel: 8 },
+  { label: "Super Hard", minLevel: 9, maxLevel: 10 }
 ];
 
 export default function PracticePage() {
@@ -142,6 +142,9 @@ export default function PracticePage() {
     if (!band) return;
 
     const nextTechnique = VEDIC_TECHNIQUES.find((tech) => tech.level >= band.minLevel && tech.level <= band.maxLevel) || VEDIC_TECHNIQUES[0];
+    setSessionCompleted(false);
+    setInputVal("");
+    setShowHint(false);
     selectTechnique(nextTechnique);
   };
 

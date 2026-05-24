@@ -37,6 +37,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
+  const isSeedActivity = (activity: any) => {
+    const seedTitles = new Set([
+      "Practice: Squaring",
+      "Timed Speed Trial",
+      "Badge Unlocked: Speed Demon",
+      "Mini-Lesson: Nikhilam"
+    ]);
+
+    return seedTitles.has(activity?.title) || seedTitles.has(activity?.desc);
+  };
+
+  const stripSeedActivities = (activities: any[] = []) => activities.filter((activity) => !isSeedActivity(activity));
+
   const isDashboardRoute = (path: string) => {
     const dashboardPaths = [
       "/dashboard",
@@ -134,7 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       completedLessons: dbUser.completedLessons || 0,
       avatar: dbUser.avatar || "https://lh3.googleusercontent.com/a/default-user"
     };
-    let finalActivities = dbUser.recentActivities || [];
+    let finalActivities = stripSeedActivities(dbUser.recentActivities || []);
     let finalBadges = dbUser.badges || [];
     let finalChallengeHighScore = dbUser.challengeHighScore || 0;
 
@@ -148,7 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       finalChallengeHighScore = Math.max(finalChallengeHighScore, guestDataToMigrate.challengeHighScore || 0);
 
       if (guestDataToMigrate.recentActivities) {
-        const combined = [...guestDataToMigrate.recentActivities, ...finalActivities];
+        const combined = [...stripSeedActivities(guestDataToMigrate.recentActivities), ...finalActivities];
         const seen = new Set();
         finalActivities = combined.filter((act: any) => {
           const key = `${act.title}-${act.desc}`;
@@ -296,7 +309,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 completedLessons: data.completedLessons || 0,
                 avatar: data.avatar || "https://lh3.googleusercontent.com/a/default-user"
               },
-              recentActivities: data.recentActivities || [],
+              recentActivities: stripSeedActivities(data.recentActivities || []),
               challengeHighScore: data.challengeHighScore || 0
             });
 
@@ -494,7 +507,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           guestUser = { ...guestUser, ...savedState.user };
         }
         useStore.setState({
-          recentActivities: savedState.recentActivities || [],
+          recentActivities: stripSeedActivities(savedState.recentActivities || []),
           badges: savedState.badges || useStore.getState().badges,
           challengeHighScore: savedState.challengeHighScore || 0
         });

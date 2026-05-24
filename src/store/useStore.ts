@@ -178,10 +178,7 @@ interface StoreState {
 export const useStore = create<StoreState>((set, get) => ({
   user: USER_JSON,
   recentActivities: [
-    { id: "1", type: "practice", title: "Practice: Squaring", desc: "Mastered Ekadhikena method", date: "Today", xpAwarded: 50 },
-    { id: "2", type: "challenge", title: "Timed Speed Trial", desc: "Scored 1,240 XP (New High Score)", date: "Yesterday", xpAwarded: 150 },
-    { id: "3", type: "achievement", title: "Badge Unlocked: Speed Demon", desc: "Completed a round in under 1.5s avg", date: "2 days ago", xpAwarded: 100 },
-    { id: "4", type: "practice", title: "Mini-Lesson: Nikhilam", desc: "All from 9 and Last from 10 deficits", date: "3 days ago", xpAwarded: 30 }
+    
   ],
   badges: ACHIEVEMENTS_JSON as Badge[],
   leaderboard: LEADERBOARD_JSON as LeaderboardUser[],
@@ -278,7 +275,9 @@ export const useStore = create<StoreState>((set, get) => ({
     
     // Generate questions based on technique
     const questions: StoreState["practiceQuestions"] = [];
-    for (let i = 0; i < 10; i++) {
+    const totalQuestions = 15;
+
+    for (let i = 0; i < totalQuestions; i++) {
       if (tech.id === "ekadhikena-purvena") {
         // Numbers ending in 5
         const tens = Math.floor(Math.random() * 8) + 1; // 1 to 8
@@ -354,7 +353,7 @@ export const useStore = create<StoreState>((set, get) => ({
 
     return {
       practiceIndex: 0,
-      practiceTotal: 10,
+      practiceTotal: totalQuestions,
       practiceStreak: 0,
       practiceCorrect: 0,
       practiceHistory: [],

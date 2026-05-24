@@ -31,6 +31,19 @@ export default function DashboardPage() {
   const { user, recentActivities, badges, leaderboard, startChallenge } = useStore();
   const [mounted, setMounted] = useState(false);
 
+  const isSeedActivity = (activity: any) => {
+    const seedTitles = new Set([
+      "Practice: Squaring",
+      "Timed Speed Trial",
+      "Badge Unlocked: Speed Demon",
+      "Mini-Lesson: Nikhilam"
+    ]);
+
+    return seedTitles.has(activity?.title) || seedTitles.has(activity?.desc);
+  };
+
+  const realRecentActivities = recentActivities.filter((activity) => !isSeedActivity(activity));
+
   // Prevent SSR issues with recharts
   useEffect(() => {
     setMounted(true);
@@ -46,7 +59,7 @@ export default function DashboardPage() {
 
   // Compute dynamic solving speed from recent activities
   const getChartData = () => {
-    const challenges = recentActivities
+    const challenges = realRecentActivities
       .filter((act) => act.type === "challenge")
       .map((act) => {
         const match = act.desc.match(/Solved (\d+) questions/);
@@ -97,31 +110,16 @@ export default function DashboardPage() {
   const getCalendarDays = () => {
     const daysOfWeek = ["M", "T", "W", "T", "F", "S", "S"];
     const todayIndex = (new Date().getDay() + 6) % 7; // Convert Sunday=0 to Sunday=6, Monday=0
+    const streakDays = Math.min(Math.max(user.streak, 0), 7);
     
     return daysOfWeek.map((name, index) => {
-      // Today is active if there is an activity today
-      if (index === todayIndex) {
-        const hasActivityToday = recentActivities.some(
-          (act) => act.date === "Today" || act.date === new Date().toLocaleDateString()
-        );
-        return { name, active: hasActivityToday };
+      const diff = todayIndex - index;
+
+      if (diff < 0) {
+        return { name, active: false };
       }
-      
-      // For past days in current week: active if streak covers it or there is matching activity date
-      if (index < todayIndex) {
-        const diff = todayIndex - index;
-        if (user.streak >= diff + 1) {
-          return { name, active: true };
-        }
-        if (diff === 1 && recentActivities.some(act => act.date === "Yesterday")) {
-          return { name, active: true };
-        }
-        if (diff > 1 && recentActivities.some(act => act.date === `${diff} days ago`)) {
-          return { name, active: true };
-        }
-      }
-      
-      return { name, active: false };
+
+      return { name, active: diff < streakDays };
     });
   };
 
@@ -375,7 +373,7 @@ export default function DashboardPage() {
           <h3 className="font-sans text-lg font-extrabold text-primary mb-4">Recent Activity</h3>
           
           <div className="space-y-3.5 flex-grow">
-            {recentActivities.map((act) => (
+            {realRecentActivities.length > 0 ? realRecentActivities.map((act) => (
               <div key={act.id} className="flex justify-between items-start gap-4 p-2.5 bg-background/40 hover:bg-background/80 rounded-xl border border-primary/5 transition-colors">
                 <div>
                   <h4 className="text-xs font-extrabold text-primary">{act.title}</h4>
@@ -386,7 +384,12 @@ export default function DashboardPage() {
                   <p className="text-[9px] text-muted-foreground font-bold uppercase mt-0.5">{act.date}</p>
                 </div>
               </div>
-            ))}
+            )) : (
+              <div className="rounded-2xl border border-dashed border-primary/10 bg-background/40 p-5 text-center">
+                <p className="text-sm font-semibold text-primary">No recent activity yet.</p>
+                <p className="text-[11px] text-muted-foreground mt-1">Complete a practice session or challenge to populate this section.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
