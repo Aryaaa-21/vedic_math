@@ -10,7 +10,8 @@ interface AuthContextType {
   isGuest: boolean;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
-  loginWithGoogle: () => Promise<void>;
+  loginWithGoogle: (name?: string) => Promise<void>;
+  continueAsGuest: (name?: string) => void;
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
 }
@@ -22,6 +23,7 @@ const AuthContext = createContext<AuthContextType>({
   logout: async () => {},
   resetPassword: async () => {},
   loginWithGoogle: async () => {},
+  continueAsGuest: () => {},
   login: async () => {},
   signup: async () => {},
 });
@@ -448,16 +450,76 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await new Promise((resolve) => setTimeout(resolve, 800));
   };
 
-  const loginWithGoogle = async () => {
+  const loginWithGoogle = async (name?: string) => {
     setLoading(true);
     try {
-      throw new Error("Google sign-in is not configured yet. Use email and password sign-in.");
+      const res = await fetch(`${getApiUrl()}/auth/google-login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name?.trim() || "Google Mathlete" })
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Failed to sign in with Google");
+      }
+
+      const data = await res.json();
+      localStorage.setItem("vedax_token", data.token);
+      localStorage.removeItem("guestMode");
+      setIsGuest(false);
+
+      const profile = {
+        uid: data.user.id,
+        email: data.user.email,
+        displayName: data.user.name
+      };
+      setAuthUser(profile);
+
+      await mergeGuestDataAndSync(data.token, data.user);
+      navigate("/dashboard");
     } catch (error) {
       setLoading(false);
       throw error;
     } finally {
       setLoading(false);
     }
+  };
+
+  const continueAsGuest = (name?: string) => {
+    setIsGuest(true);
+    localStorage.setItem("guestMode", "true");
+
+    let guestUser = {
+      name: name?.trim() || "Guest Mathlete",
+      level: 1,
+      xp: 0,
+      streak: 0,
+      accuracy: 0,
+      avgSpeed: 0,
+      completedLessons: 0,
+      avatar: "https://lh3.googleusercontent.com/a/default-user"
+    };
+
+    const savedStateStr = localStorage.getItem("vedax-guest-state");
+    if (savedStateStr) {
+      try {
+        const savedState = JSON.parse(savedStateStr);
+        if (savedState.user) {
+          guestUser = { ...guestUser, ...savedState.user, name: name?.trim() || savedState.user.name || guestUser.name };
+        }
+        useStore.setState({
+          recentActivities: stripSeedActivities(savedState.recentActivities || []),
+          badges: savedState.badges || useStore.getState().badges,
+          challengeHighScore: savedState.challengeHighScore || 0
+        });
+      } catch (e) {
+        console.error("Error parsing guest state on continue:", e);
+      }
+    }
+
+    useStore.setState({ user: guestUser });
+    navigate("/dashboard");
   };
 
   return (
@@ -468,6 +530,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       logout,
       resetPassword,
       loginWithGoogle,
+      continueAsGuest,
       login,
       signup
     }}>

@@ -89,8 +89,9 @@ const authUser = async (req, res) => {
 
 const googleLogin = async (req, res) => {
   try {
-    const email = "google.mathlete@vedax.edu";
-    const name = "Google Mathlete";
+    const rawName = (req.body && req.body.name ? String(req.body.name) : "").trim();
+    const name = rawName || "Google Mathlete";
+    const email = `google.${name.toLowerCase().replace(/[^a-z0-9]+/g, ".").replace(/^\.|\.$/g, "") || "mathlete"}@vedax.edu`;
 
     let user = await User.findOne({ email });
 
@@ -101,7 +102,7 @@ const googleLogin = async (req, res) => {
         email,
         password,
         joinedDate: new Date().toLocaleDateString(),
-        avatar: "https://lh3.googleusercontent.com/a/default-user"
+        avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}`
       });
     }
 

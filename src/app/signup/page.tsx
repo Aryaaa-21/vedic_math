@@ -51,7 +51,7 @@ export default function SignupPage() {
     setIsLoading(true);
     setError("");
     try {
-      await loginWithGoogle();
+      await loginWithGoogle(name || undefined);
       navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
