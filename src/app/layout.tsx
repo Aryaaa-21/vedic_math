@@ -29,7 +29,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans select-none overflow-x-hidden">
+      <body suppressHydrationWarning className="min-h-full flex flex-col font-sans select-none overflow-x-hidden">
         <AuthProvider>
           {children}
         </AuthProvider>
