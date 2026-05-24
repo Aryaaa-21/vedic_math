@@ -10,26 +10,57 @@ import {
   Eye,
   EyeOff,
   Sparkles,
-  Info
+  Info,
+  AlertCircle
 } from "lucide-react";
 import { motion } from "framer-motion";
 import VedicPattern from "@/components/VedicPattern";
+import { useAuth } from "@/contexts/AuthContext";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/firebase/firebase";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { loginWithGoogle, continueAsGuest } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API authorization
-    setTimeout(() => {
-      setIsLoading(false);
+    setError("");
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
       router.push("/dashboard");
-    }, 1000);
+    } catch (err: any) {
+      console.error(err);
+      if (err.code === "auth/invalid-credential" || err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
+        setError("Invalid email or password. Please try again.");
+      } else if (err.code === "auth/invalid-email") {
+        setError("The email address is invalid.");
+      } else {
+        setError(err.message || "Failed to sign in. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    setError("");
+    try {
+      await loginWithGoogle();
+      router.push("/dashboard");
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Failed to sign in with Google.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -62,6 +93,13 @@ export default function LoginPage() {
                 Sign in to resume your journey toward mental arithmetic mastery.
               </p>
             </div>
+
+            {error && (
+              <div className="flex items-center gap-2 p-3 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 text-xs font-semibold">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email / Username field */}
@@ -130,6 +168,14 @@ export default function LoginPage() {
                   </>
                 )}
               </button>
+
+              <button
+                type="button"
+                onClick={continueAsGuest}
+                className="w-full border-2 border-secondary text-secondary hover:bg-secondary/5 font-extrabold py-3.5 rounded-xl cursor-pointer active:scale-95 transition-all text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 mt-2"
+              >
+                <span>Continue as Guest</span>
+              </button>
             </form>
 
             <div className="relative my-4 flex items-center justify-center">
@@ -144,7 +190,8 @@ export default function LoginPage() {
             {/* Social Logins */}
             <div className="grid grid-cols-2 gap-4">
               <button
-                onClick={() => router.push("/dashboard")}
+                type="button"
+                onClick={handleGoogleLogin}
                 className="flex items-center justify-center gap-2 py-3 border border-primary/10 hover:bg-primary/5 rounded-xl cursor-pointer transition-colors text-xs font-bold text-primary"
               >
                 <img
@@ -156,7 +203,8 @@ export default function LoginPage() {
               </button>
               
               <button
-                onClick={() => router.push("/dashboard")}
+                type="button"
+                onClick={() => alert("Apple Login is currently a prototype.")}
                 className="flex items-center justify-center gap-2 py-3 border border-primary/10 hover:bg-primary/5 rounded-xl cursor-pointer transition-colors text-xs font-bold text-primary"
               >
                 <div className="w-4 h-4 bg-primary text-white text-[9px] rounded flex items-center justify-center font-mono font-bold">

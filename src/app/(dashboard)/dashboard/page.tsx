@@ -27,16 +27,6 @@ import {
 } from "recharts";
 import { motion } from "framer-motion";
 
-// Sample chart data for weekly solving speed (lower is better)
-const chartData = [
-  { day: "Mon", speed: 4.2 },
-  { day: "Tue", speed: 3.8 },
-  { day: "Wed", speed: 3.2 },
-  { day: "Thu", speed: 2.8 },
-  { day: "Fri", speed: 2.4 },
-  { day: "Sat", speed: 2.1 }
-];
-
 export default function DashboardPage() {
   const router = useRouter();
   const { user, recentActivities, badges, leaderboard, startChallenge } = useStore();
@@ -53,18 +43,98 @@ export default function DashboardPage() {
   };
 
   const unlockedBadgesCount = badges.filter((b) => b.unlocked).length;
-  const userRank = leaderboard.find((u) => u.isCurrentUser)?.rank || 42;
+  const userRank = leaderboard.find((u) => u.isCurrentUser)?.rank || 1;
+
+  // Compute dynamic solving speed from recent activities
+  const getChartData = () => {
+    const challenges = recentActivities
+      .filter((act) => act.type === "challenge")
+      .map((act) => {
+        const match = act.desc.match(/Solved (\d+) questions/);
+        const solvedCount = match ? parseInt(match[1], 10) : 0;
+        const speed = solvedCount > 0 ? parseFloat((60 / solvedCount).toFixed(1)) : 0;
+        return {
+          day: act.date === "Today" ? "Today" : act.date.substring(0, 3),
+          speed: speed
+        };
+      });
+
+    // Reverse to chronological order
+    const computed = challenges.reverse().filter(c => c.speed > 0);
+
+    const defaultBaselines = [
+      { day: "Mon", speed: 4.2 },
+      { day: "Tue", speed: 3.8 },
+      { day: "Wed", speed: 3.2 },
+      { day: "Thu", speed: 2.8 },
+      { day: "Fri", speed: 2.4 },
+      { day: "Sat", speed: 2.1 }
+    ];
+    
+    if (computed.length === 0) {
+      return defaultBaselines;
+    }
+    
+    if (computed.length < 5) {
+      const needed = 5 - computed.length;
+      const padding = defaultBaselines.slice(0, needed);
+      return [...padding, ...computed];
+    }
+    
+    return computed;
+  };
+
+  const chartData = getChartData();
 
   // Mini calendar days representation
-  const calendarDays = [
-    { name: "M", active: true },
-    { name: "T", active: true },
-    { name: "W", active: true },
-    { name: "T", active: true },
-    { name: "F", active: true }, // Today
-    { name: "S", active: false },
-    { name: "S", active: false }
-  ];
+  const getCalendarDays = () => {
+    const daysOfWeek = ["M", "T", "W", "T", "F", "S", "S"];
+    const todayIndex = (new Date().getDay() + 6) % 7; // Convert Sunday=0 to Sunday=6, Monday=0
+    
+    return daysOfWeek.map((name, index) => {
+      // Today is active if there is an activity today
+      if (index === todayIndex) {
+        const hasActivityToday = recentActivities.some(
+          (act) => act.date === "Today" || act.date === new Date().toLocaleDateString()
+        );
+        return { name, active: hasActivityToday };
+      }
+      
+      // For past days in current week: active if streak covers it or there is matching activity date
+      if (index < todayIndex) {
+        const diff = todayIndex - index;
+        if (user.streak >= diff + 1) {
+          return { name, active: true };
+        }
+        if (diff === 1 && recentActivities.some(act => act.date === "Yesterday")) {
+          return { name, active: true };
+        }
+        if (diff > 1 && recentActivities.some(act => act.date === `${diff} days ago`)) {
+          return { name, active: true };
+        }
+      }
+      
+      return { name, active: false };
+    });
+  };
+
+  const calendarDays = getCalendarDays();
+
+  // Dynamic milestone messaging based on levels
+  const getMilestoneText = () => {
+    if (user.level < 5) {
+      const remaining = 5 - user.level;
+      return `You are ${remaining} level${remaining > 1 ? "s" : ""} away from unlocking the Intermediate Sutras (Level 5). Keep up the practice!`;
+    } else if (user.level < 10) {
+      const remaining = 10 - user.level;
+      return `You are ${remaining} level${remaining > 1 ? "s" : ""} away from unlocking the Advanced Sutras (Level 10). Your speed is growing!`;
+    } else {
+      return "Congratulations! You have unlocked all Beginner, Intermediate, and Advanced Vedic Mathematics Sutras!";
+    }
+  };
+
+  // Level progress percentage calculations
+  const levelProgressPercent = Math.floor(((user.xp % 500) / 500) * 100);
 
   return (
     <div className="space-y-8">
@@ -72,7 +142,7 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="font-sans text-3xl font-extrabold text-primary tracking-tight">
-            Namaste, अर्जुन
+            Namaste, {user.name.split(" ")[0]}
           </h1>
           <p className="text-muted-foreground font-medium">
             Welcome back to VedaX. Your mental calculation speeds are sharpening!
@@ -248,7 +318,7 @@ export default function DashboardPage() {
               <span>Streak Milestone</span>
             </h4>
             <p className="text-[11px] text-muted-foreground font-medium">
-              You are 10 days away from unlocking the <strong>Anurupyena Sub-Base Sutra</strong>. Keep up the practice!
+              {getMilestoneText()}
             </p>
           </div>
         </div>
@@ -268,10 +338,10 @@ export default function DashboardPage() {
                 <span>Level {user.level + 1}</span>
               </div>
               <div className="h-3 w-full bg-background rounded-full overflow-hidden border border-primary/5">
-                <div className="h-full bg-primary" style={{ width: "65%" }} />
+                <div className="h-full bg-primary" style={{ width: `${levelProgressPercent}%` }} />
               </div>
               <p className="text-[10px] text-muted-foreground font-semibold text-right">
-                {user.xp} / {user.level * 500} XP (65% toward next level)
+                {user.xp % 500} / 500 XP ({levelProgressPercent}% toward next level)
               </p>
             </div>
 

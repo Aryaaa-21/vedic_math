@@ -20,10 +20,13 @@ import {
 import { motion } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 
+import { useAuth } from "@/contexts/AuthContext";
+
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, startChallenge } = useStore();
+  const { logout, isGuest } = useAuth();
 
   const menuItems = [
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -127,10 +130,26 @@ export default function Sidebar() {
             <HelpCircle className="w-4 h-4 text-primary/60" />
             <span>Help Center</span>
           </Link>
-          <Link href="/login" className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-error hover:bg-error/5 transition-all">
-            <LogOut className="w-4 h-4" />
-            <span>Logout</span>
-          </Link>
+          {isGuest ? (
+            <>
+              <Link href="/login" className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-primary hover:bg-primary/5 transition-all">
+                <LogOut className="w-4 h-4 rotate-180" />
+                <span>Sign In</span>
+              </Link>
+              <Link href="/signup" className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-primary hover:bg-primary/5 transition-all">
+                <User className="w-4 h-4" />
+                <span>Create Account</span>
+              </Link>
+            </>
+          ) : (
+            <button
+              onClick={logout}
+              className="w-full text-left flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-error hover:bg-error/5 transition-all cursor-pointer border-none bg-transparent"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Logout</span>
+            </button>
+          )}
         </div>
       </div>
     </aside>

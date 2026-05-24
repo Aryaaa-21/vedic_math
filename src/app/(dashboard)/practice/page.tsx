@@ -16,9 +16,11 @@ import {
   Award
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { playAudioFeedback, triggerVibrationFeedback } from "@/utils/audio";
 
 export default function PracticePage() {
   const {
+    user,
     activeTechnique,
     practiceQuestions,
     practiceIndex,
@@ -31,7 +33,8 @@ export default function PracticePage() {
     nextPracticeQuestion,
     addXp,
     addActivity,
-    selectTechnique
+    selectTechnique,
+    setUserStats
   } = useStore();
 
   const [inputVal, setInputVal] = useState("");
@@ -75,6 +78,10 @@ export default function PracticePage() {
 
     const { isCorrect } = submitPracticeAnswer(numericAns);
 
+    // Trigger audio and tactile feedback
+    playAudioFeedback(isCorrect);
+    triggerVibrationFeedback(isCorrect);
+
     if (isCorrect) {
       setIsSuccess(true);
       setTimeout(() => {
@@ -88,10 +95,19 @@ export default function PracticePage() {
           setSessionCompleted(true);
           const xpEarned = practiceCorrect * 5 + 10; // 5 XP per correct + 10 XP bonus
           addXp(xpEarned);
+
+          // Increment completed lessons if accuracy is at least 70% (7/10 correct)
+          if (practiceCorrect >= 7) {
+            const nextCompleted = Math.min(16, user.completedLessons + 1);
+            if (nextCompleted > user.completedLessons) {
+              setUserStats({ completedLessons: nextCompleted });
+            }
+          }
+
           addActivity({
             type: "practice",
             title: `Practice: ${activeTechnique?.name || "Vedic Math"}`,
-            desc: `Solved ${practiceCorrect + 1}/${practiceTotal} questions successfully.`,
+            desc: `Solved ${practiceCorrect}/${practiceTotal} questions successfully.`,
             xpAwarded: xpEarned
           });
         }

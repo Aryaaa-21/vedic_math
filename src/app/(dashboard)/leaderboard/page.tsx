@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useStore } from "@/store/useStore";
 import {
   Trophy,
@@ -13,28 +13,159 @@ import {
   Award
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { collection, query, orderBy, limit, getDocs, getDoc, doc, where, getCountFromServer } from "firebase/firestore";
+import { db, auth } from "@/firebase/firebase";
 
 export default function LeaderboardPage() {
-  const { leaderboard } = useStore();
+  const [leaderboard, setLeaderboard] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"weekly" | "monthly" | "allTime">("weekly");
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const usersRef = collection(db, "users");
+        const q = query(usersRef, orderBy("xp", "desc"), limit(20));
+        const querySnapshot = await getDocs(q);
+        
+        let fetchedUsers: any[] = [];
+        let rank = 1;
+        
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const name = data.name || "Mathlete";
+          const initials = name
+            .split(" ")
+            .map((n: string) => n[0])
+            .join("")
+            .substring(0, 2)
+            .toUpperCase() || "M";
+            
+          fetchedUsers.push({
+            rank,
+            name,
+            initials,
+            avatar: data.profileImage || "",
+            accuracy: data.accuracy || 0,
+            xp: data.xp || 0,
+            streak: data.streak || 0,
+            isCurrentUser: auth.currentUser ? docSnap.id === auth.currentUser.uid : false
+          });
+          rank++;
+        });
+
+        // Insert current authenticated user or Guest user with their rank
+        const currentUser = auth.currentUser;
+        const isGuestSaved = typeof window !== "undefined" && localStorage.getItem("guestMode") === "true";
+
+        if (currentUser) {
+          const userInTop20 = fetchedUsers.some(u => u.isCurrentUser);
+          if (!userInTop20) {
+            const userDocSnap = await getDoc(doc(db, "users", currentUser.uid));
+            if (userDocSnap.exists()) {
+              const uData = userDocSnap.data();
+              const userXp = uData.xp || 0;
+              
+              // Count users with higher XP to find global rank
+              const rankQuery = query(usersRef, where("xp", ">", userXp));
+              const countSnap = await getCountFromServer(rankQuery);
+              const userRank = countSnap.data().count + 1;
+              
+              const initials = (uData.name || "Mathlete")
+                .split(" ")
+                .map((n: string) => n[0])
+                .join("")
+                .substring(0, 2)
+                .toUpperCase() || "M";
+
+              fetchedUsers.push({
+                rank: userRank,
+                name: uData.name || "Mathlete",
+                initials,
+                avatar: uData.profileImage || "",
+                accuracy: uData.accuracy || 0,
+                xp: uData.xp || 0,
+                streak: uData.streak || 0,
+                isCurrentUser: true
+              });
+            }
+          }
+        } else if (isGuestSaved) {
+          const guestUserStore = useStore.getState().user;
+          const guestXp = guestUserStore.xp || 0;
+          
+          const rankQuery = query(usersRef, where("xp", ">", guestXp));
+          const countSnap = await getCountFromServer(rankQuery);
+          const guestRank = countSnap.data().count + 1;
+          
+          const initials = (guestUserStore.name || "Guest")
+            .split(" ")
+            .map((n: string) => n[0])
+            .join("")
+            .substring(0, 2)
+            .toUpperCase() || "G";
+            
+          const guestItem = {
+            rank: guestRank,
+            name: guestUserStore.name || "Guest Mathlete",
+            initials,
+            avatar: guestUserStore.avatar || "",
+            accuracy: guestUserStore.accuracy || 0,
+            xp: guestXp,
+            streak: guestUserStore.streak || 0,
+            isCurrentUser: true
+          };
+
+          if (guestRank <= 20) {
+            fetchedUsers.splice(guestRank - 1, 0, guestItem);
+            for (let i = guestRank; i < fetchedUsers.length; i++) {
+              fetchedUsers[i].rank = i + 1;
+            }
+            fetchedUsers = fetchedUsers.slice(0, 20);
+          } else {
+            fetchedUsers.push(guestItem);
+          }
+        }
+        
+        setLeaderboard(fetchedUsers);
+      } catch (e) {
+        console.error("Error fetching leaderboard:", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchLeaderboard();
+  }, []);
 
   const filteredLeaderboard = leaderboard.filter((user) =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Sorting: Top 3 for the podium, the rest for the table list
+  // Sorting
   const sortedLeaderboard = [...filteredLeaderboard].sort((a, b) => b.xp - a.xp);
 
-  // Extract top 3 for podium
+  // Extract top 3
   const rank1 = sortedLeaderboard.find((u) => u.rank === 1);
   const rank2 = sortedLeaderboard.find((u) => u.rank === 2);
   const rank3 = sortedLeaderboard.find((u) => u.rank === 3);
 
-  // Filter out top 3 for table (except if searching, where we show all results)
+  // Filter out top 3
   const tableData = searchQuery 
     ? sortedLeaderboard 
-    : sortedLeaderboard.filter((u) => u.rank > 3 || u.rank === 42); // keep user Arjun Sharma for visibility in table
+    : sortedLeaderboard.filter((u) => u.rank > 3 || u.isCurrentUser);
+
+  if (loading) {
+    return (
+      <div className="min-h-[400px] flex flex-col items-center justify-center space-y-4">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+          Querying Sages...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">

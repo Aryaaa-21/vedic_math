@@ -10,33 +10,89 @@ import {
   ArrowRight,
   Eye,
   EyeOff,
-  Sparkles
+  Sparkles,
+  AlertCircle
 } from "lucide-react";
 import { motion } from "framer-motion";
 import VedicPattern from "@/components/VedicPattern";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db } from "@/firebase/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function SignupPage() {
   const router = useRouter();
+  const { loginWithGoogle, continueAsGuest } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
       return;
     }
     
     setIsLoading(true);
-    // Simulate registration
-    setTimeout(() => {
-      setIsLoading(false);
+    setError("");
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      await updateProfile(user, {
+        displayName: name
+      });
+
+      // Create default user document in Firestore
+      const defaultUserData = {
+        name: name,
+        email: email,
+        joinedDate: new Date().toLocaleDateString(),
+        profileImage: "https://lh3.googleusercontent.com/a/default-user",
+        level: 1,
+        xp: 0,
+        accuracy: 0,
+        streak: 0,
+        badges: [],
+        completedTechniques: [],
+        totalScore: 0
+      };
+      await setDoc(doc(db, "users", user.uid), defaultUserData);
+
       router.push("/dashboard");
-    }, 1000);
+    } catch (err: any) {
+      console.error(err);
+      if (err.code === "auth/email-already-in-use") {
+        setError("This email address is already in use.");
+      } else if (err.code === "auth/invalid-email") {
+        setError("The email address is invalid.");
+      } else if (err.code === "auth/weak-password") {
+        setError("The password is too weak. Choose at least 6 characters.");
+      } else {
+        setError(err.message || "Failed to create account. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    setError("");
+    try {
+      await loginWithGoogle();
+      router.push("/dashboard");
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Failed to sign up with Google.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -69,6 +125,13 @@ export default function SignupPage() {
                 Join our community of mental calculators and master the sutras.
               </p>
             </div>
+
+            {error && (
+              <div className="flex items-center gap-2 p-3 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 text-xs font-semibold">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Username field */}
@@ -169,6 +232,14 @@ export default function SignupPage() {
                   </>
                 )}
               </button>
+
+              <button
+                type="button"
+                onClick={continueAsGuest}
+                className="w-full border-2 border-secondary text-secondary hover:bg-secondary/5 font-extrabold py-3.5 rounded-xl cursor-pointer active:scale-95 transition-all text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 mt-2"
+              >
+                <span>Continue as Guest</span>
+              </button>
             </form>
 
             <div className="relative my-4 flex items-center justify-center">
@@ -183,7 +254,8 @@ export default function SignupPage() {
             {/* Social Signups */}
             <div className="grid grid-cols-2 gap-4">
               <button
-                onClick={() => router.push("/dashboard")}
+                type="button"
+                onClick={handleGoogleLogin}
                 className="flex items-center justify-center gap-2 py-3 border border-primary/10 hover:bg-primary/5 rounded-xl cursor-pointer transition-colors text-xs font-bold text-primary"
               >
                 <img
@@ -195,7 +267,8 @@ export default function SignupPage() {
               </button>
               
               <button
-                onClick={() => router.push("/dashboard")}
+                type="button"
+                onClick={() => alert("Apple Sign Up is currently a prototype.")}
                 className="flex items-center justify-center gap-2 py-3 border border-primary/10 hover:bg-primary/5 rounded-xl cursor-pointer transition-colors text-xs font-bold text-primary"
               >
                 <div className="w-4 h-4 bg-primary text-white text-[9px] rounded flex items-center justify-center font-mono font-bold">

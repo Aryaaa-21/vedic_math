@@ -8,11 +8,14 @@ import { Menu, X, Flame, Trophy, Award, User, Settings, LogOut, BookOpen, Layout
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 
+import { useAuth } from "@/contexts/AuthContext";
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const { user, startChallenge } = useStore();
+  const { logout, isGuest } = useAuth();
 
   const mobileNavItems = [
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -176,14 +179,37 @@ export default function Navbar() {
                 >
                   Start Daily Challenge
                 </button>
-                <Link
-                  href="/login"
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-error hover:bg-error/5 transition-all"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Logout</span>
-                </Link>
+                {isGuest ? (
+                  <div className="flex flex-col gap-1 w-full">
+                    <Link
+                      href="/login"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-primary hover:bg-primary/5 transition-all"
+                    >
+                      <LogOut className="w-4 h-4 rotate-180" />
+                      <span>Sign In</span>
+                    </Link>
+                    <Link
+                      href="/signup"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-primary hover:bg-primary/5 transition-all"
+                    >
+                      <User className="w-4 h-4" />
+                      <span>Create Account</span>
+                    </Link>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      logout();
+                    }}
+                    className="w-full text-left flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-error hover:bg-error/5 transition-all cursor-pointer border-none bg-transparent"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Logout</span>
+                  </button>
+                )}
               </div>
             </motion.aside>
           </>

@@ -16,6 +16,7 @@ import {
   HelpCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { playAudioFeedback, triggerVibrationFeedback } from "@/utils/audio";
 
 export default function ChallengePage() {
   const router = useRouter();
@@ -89,6 +90,10 @@ export default function ChallengePage() {
 
     const isCorrect = submitChallengeAnswer(numericAns);
     setInputVal("");
+
+    // Trigger audio and tactile feedback
+    playAudioFeedback(isCorrect);
+    triggerVibrationFeedback(isCorrect);
 
     if (isCorrect) {
       setShowFeedback("correct");

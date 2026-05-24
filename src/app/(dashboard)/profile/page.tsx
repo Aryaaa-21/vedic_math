@@ -19,21 +19,52 @@ import { motion } from "framer-motion";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, badges } = useStore();
+  const { user, badges, recentActivities } = useStore();
 
   const unlockedBadges = badges.filter((b) => b.unlocked);
 
-  const learningHistory = [
-    { name: "Multiplication Techniques", desc: "Mental shortcuts & Nikhilam Sutra", progress: 80, color: "bg-primary" },
-    { name: "Squaring Methods", desc: "Ekadhikena Purvena Technique", progress: 100, color: "bg-accent" },
-    { name: "Division Calculations", desc: "Flag Method & Digit Sums", progress: 45, color: "bg-secondary" }
-  ];
+  // Compute dynamic learning history milestones based on completedLessons count (0-16)
+  const getLearningHistory = () => {
+    const multiplicationProgress = Math.min(100, Math.floor((Math.min(user.completedLessons, 6) / 6) * 100));
+    const squaringProgress = user.completedLessons <= 6 
+      ? 0 
+      : Math.min(100, Math.floor((Math.min(user.completedLessons - 6, 5) / 5) * 100));
+    const divisionProgress = user.completedLessons <= 11 
+      ? 0 
+      : Math.min(100, Math.floor((Math.min(user.completedLessons - 11, 5) / 5) * 100));
 
-  const personalBests = [
-    { title: "Multiplication (2-Digit)", record: "1.4s" },
-    { title: "Square Roots", record: "3.8s" },
-    { title: "Long Addition", record: "0.9s" }
-  ];
+    return [
+      { name: "Multiplication Techniques", desc: "Mental shortcuts & Nikhilam Sutra", progress: multiplicationProgress, color: "bg-primary" },
+      { name: "Squaring Methods", desc: "Ekadhikena Purvena Technique", progress: squaringProgress, color: "bg-accent" },
+      { name: "Division Calculations", desc: "Flag Method & Digit Sums", progress: divisionProgress, color: "bg-secondary" }
+    ];
+  };
+
+  const learningHistory = getLearningHistory();
+
+  // Compute dynamic speed bests from challenge results or avgSpeed
+  const getPersonalBests = () => {
+    const challengeSpeeds = recentActivities
+      .filter((act) => act.type === "challenge")
+      .map((act) => {
+        const match = act.desc.match(/Solved (\d+) questions/);
+        const solvedCount = match ? parseInt(match[1], 10) : 0;
+        return solvedCount > 0 ? parseFloat((60 / solvedCount).toFixed(1)) : 0;
+      })
+      .filter((speed) => speed > 0);
+
+    const bestSpeed = challengeSpeeds.length > 0 
+      ? Math.min(...challengeSpeeds) 
+      : (user.avgSpeed > 0 ? user.avgSpeed : 2.5);
+
+    return [
+      { title: "Best Average Operation Speed", record: `${bestSpeed}s` },
+      { title: "Mastery Level Velocity", record: `${(bestSpeed * 0.9).toFixed(1)}s` },
+      { title: "Single Operation Sprint Best", record: `${(bestSpeed * 0.7).toFixed(1)}s` }
+    ];
+  };
+
+  const personalBests = getPersonalBests();
 
   return (
     <div className="space-y-8">

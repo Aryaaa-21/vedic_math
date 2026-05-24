@@ -3,6 +3,48 @@ import VEDIC_TECHNIQUES_JSON from "@/data/techniques.json";
 import USER_JSON from "@/data/users.json";
 import LEADERBOARD_JSON from "@/data/leaderboard.json";
 import ACHIEVEMENTS_JSON from "@/data/achievements.json";
+import { auth, db } from "@/firebase/firebase";
+import { doc, setDoc } from "firebase/firestore";
+
+const syncWithDatabase = async (
+  user: any,
+  recentActivities: any[],
+  badges: any[],
+  challengeHighScore: number
+) => {
+  if (typeof window === "undefined") return;
+  const isGuestSaved = localStorage.getItem("guestMode") === "true";
+  const currentUser = auth.currentUser;
+
+  if (currentUser) {
+    try {
+      const userDocRef = doc(db, "users", currentUser.uid);
+      await setDoc(userDocRef, {
+        name: user.name,
+        level: user.level,
+        xp: user.xp,
+        streak: user.streak,
+        accuracy: user.accuracy,
+        avgSpeed: user.avgSpeed,
+        completedLessons: user.completedLessons,
+        avatar: user.avatar,
+        recentActivities: recentActivities,
+        challengeHighScore: challengeHighScore,
+        badges: badges.map(b => ({ id: b.id, unlocked: b.unlocked, unlockedAt: b.unlockedAt || null }))
+      }, { merge: true });
+    } catch (e) {
+      console.error("Error writing to Firestore:", e);
+    }
+  } else if (isGuestSaved) {
+    localStorage.setItem("vedax-guest-state", JSON.stringify({
+      user,
+      recentActivities,
+      badges,
+      challengeHighScore
+    }));
+  }
+};
+
 
 export interface Technique {
   id: string;
@@ -159,47 +201,70 @@ export const useStore = create<StoreState>((set, get) => ({
   vibrationEnabled: true,
   difficulty: "Beginner",
 
-  setUserStats: (stats) => set((state) => ({ user: { ...state.user, ...stats } })),
+  setUserStats: (stats) => {
+    set((state) => ({ user: { ...state.user, ...stats } }));
+    const s = get();
+    syncWithDatabase(s.user, s.recentActivities, s.badges, s.challengeHighScore);
+  },
   
-  addXp: (amount) => set((state) => {
-    const newXp = state.user.xp + amount;
-    // Simple level progression logic: every 500 XP is a level
-    const newLevel = Math.floor(newXp / 500) + 1;
-    const statsUpdated = { xp: newXp, level: newLevel > state.user.level ? newLevel : state.user.level };
-    
-    // Proactively update leaderboard ranking score for the user too
-    const updatedLeaderboard = state.leaderboard.map(user => {
-      if (user.isCurrentUser) {
-        return { ...user, xp: user.xp + amount };
-      }
-      return user;
+  addXp: (amount) => {
+    set((state) => {
+      const newXp = state.user.xp + amount;
+      const newLevel = Math.floor(newXp / 500) + 1;
+      const statsUpdated = { xp: newXp, level: newLevel > state.user.level ? newLevel : state.user.level };
+      
+      const updatedLeaderboard = state.leaderboard.map(user => {
+        if (user.isCurrentUser) {
+          return { ...user, xp: user.xp + amount };
+        }
+        return user;
+      });
+
+      return { 
+        user: { ...state.user, ...statsUpdated },
+        leaderboard: updatedLeaderboard
+      };
     });
+    const s = get();
+    syncWithDatabase(s.user, s.recentActivities, s.badges, s.challengeHighScore);
+  },
 
-    return { 
-      user: { ...state.user, ...statsUpdated },
-      leaderboard: updatedLeaderboard
-    };
-  }),
+  incrementStreak: () => {
+    set((state) => ({ user: { ...state.user, streak: state.user.streak + 1 } }));
+    const s = get();
+    syncWithDatabase(s.user, s.recentActivities, s.badges, s.challengeHighScore);
+  },
 
-  incrementStreak: () => set((state) => ({ user: { ...state.user, streak: state.user.streak + 1 } })),
-  resetStreak: () => set((state) => ({ user: { ...state.user, streak: 0 } })),
+  resetStreak: () => {
+    set((state) => ({ user: { ...state.user, streak: 0 } }));
+    const s = get();
+    syncWithDatabase(s.user, s.recentActivities, s.badges, s.challengeHighScore);
+  },
   
-  addActivity: (activity) => set((state) => ({
-    recentActivities: [
-      {
-        ...activity,
-        id: String(Date.now()),
-        date: "Today"
-      },
-      ...state.recentActivities
-    ]
-  })),
+  addActivity: (activity) => {
+    set((state) => ({
+      recentActivities: [
+        {
+          ...activity,
+          id: String(Date.now()),
+          date: "Today"
+        },
+        ...state.recentActivities
+      ]
+    }));
+    const s = get();
+    syncWithDatabase(s.user, s.recentActivities, s.badges, s.challengeHighScore);
+  },
 
-  unlockBadge: (badgeId) => set((state) => ({
-    badges: state.badges.map((b) =>
-      b.id === badgeId ? { ...b, unlocked: true, unlockedAt: "Today" } : b
-    )
-  })),
+  unlockBadge: (badgeId) => {
+    set((state) => ({
+      badges: state.badges.map((b) =>
+        b.id === badgeId ? { ...b, unlocked: true, unlockedAt: "Today" } : b
+      )
+    }));
+    const s = get();
+    syncWithDatabase(s.user, s.recentActivities, s.badges, s.challengeHighScore);
+  },
 
   selectTechnique: (tech) => set({ activeTechnique: tech }),
 
@@ -403,27 +468,58 @@ export const useStore = create<StoreState>((set, get) => ({
     return correct;
   },
 
-  endChallenge: () => set((state) => {
-    const finalScore = state.challengeScore;
-    const isNewHighScore = finalScore > state.challengeHighScore;
+  endChallenge: () => {
+    set((state) => {
+      const finalScore = state.challengeScore;
+      const isNewHighScore = finalScore > state.challengeHighScore;
 
-    if (finalScore > 0) {
-      // Award XP
-      const xpEarned = Math.floor(finalScore / 10);
-      get().addXp(xpEarned);
-      get().addActivity({
-        type: "challenge",
-        title: "Timed Speed Challenge",
-        desc: `Solved ${state.challengeQuestionsSolved} questions. Score: ${finalScore}.`,
-        xpAwarded: xpEarned
-      });
-    }
+      if (finalScore > 0) {
+        const xpEarned = Math.floor(finalScore / 10);
+        const newXp = state.user.xp + xpEarned;
+        const newLevel = Math.floor(newXp / 500) + 1;
 
-    return {
-      challengeIsPlaying: false,
-      challengeHighScore: isNewHighScore ? finalScore : state.challengeHighScore
-    };
-  }),
+        const sessionAvgSpeed = state.challengeQuestionsSolved > 0 
+          ? parseFloat((60 / state.challengeQuestionsSolved).toFixed(1)) 
+          : 0;
+
+        let newAvgSpeed = state.user.avgSpeed;
+        if (sessionAvgSpeed > 0) {
+          newAvgSpeed = state.user.avgSpeed > 0 
+            ? parseFloat((state.user.avgSpeed * 0.7 + sessionAvgSpeed * 0.3).toFixed(1)) 
+            : sessionAvgSpeed;
+        }
+
+        const statsUpdated = { 
+          xp: newXp, 
+          level: newLevel > state.user.level ? newLevel : state.user.level,
+          avgSpeed: newAvgSpeed
+        };
+
+        const newActivity = {
+          id: String(Date.now()),
+          type: "challenge" as const,
+          title: "Timed Speed Challenge",
+          desc: `Solved ${state.challengeQuestionsSolved} questions. Score: ${finalScore}.`,
+          date: "Today",
+          xpAwarded: xpEarned
+        };
+
+        return {
+          user: { ...state.user, ...statsUpdated },
+          recentActivities: [newActivity, ...state.recentActivities],
+          challengeIsPlaying: false,
+          challengeHighScore: isNewHighScore ? finalScore : state.challengeHighScore
+        };
+      }
+
+      return {
+        challengeIsPlaying: false,
+        challengeHighScore: isNewHighScore ? finalScore : state.challengeHighScore
+      };
+    });
+    const s = get();
+    syncWithDatabase(s.user, s.recentActivities, s.badges, s.challengeHighScore);
+  },
 
   toggleAudio: () => set((state) => ({ audioEnabled: !state.audioEnabled })),
   toggleVibration: () => set((state) => ({ vibrationEnabled: !state.vibrationEnabled })),

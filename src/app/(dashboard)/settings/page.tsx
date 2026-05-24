@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useStore } from "@/store/useStore";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Settings as SettingsIcon,
   Volume2,
@@ -27,9 +28,22 @@ export default function SettingsPage() {
     setUserStats
   } = useStore();
 
+  const { firebaseUser, isGuest } = useAuth();
   const [username, setUsername] = useState(user.name);
-  const [userEmail, setUserEmail] = useState("arjun@vedax.edu");
+  const [userEmail, setUserEmail] = useState("");
   const [saveSuccess, setSaveSuccess] = useState(false);
+
+  useEffect(() => {
+    setUsername(user.name);
+  }, [user.name]);
+
+  useEffect(() => {
+    if (firebaseUser?.email) {
+      setUserEmail(firebaseUser.email);
+    } else if (isGuest) {
+      setUserEmail("guest@vedax.edu");
+    }
+  }, [firebaseUser, isGuest]);
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,13 +90,13 @@ export default function SettingsPage() {
               
               <div className="space-y-1.5">
                 <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1">
-                  Email
+                  Email (Managed by System)
                 </label>
                 <input
                   type="email"
                   value={userEmail}
-                  onChange={(e) => setUserEmail(e.target.value)}
-                  className="w-full bg-background px-4 py-2.5 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"
+                  disabled={true}
+                  className="w-full bg-background/50 px-4 py-2.5 rounded-xl border border-primary/10 text-xs outline-none transition-all font-semibold text-muted-foreground cursor-not-allowed"
                 />
               </div>
             </div>
