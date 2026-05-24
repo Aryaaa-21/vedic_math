@@ -33,7 +33,7 @@ export default function TermsPage() {
             <span>2. Mathlete Account Ownership</span>
           </h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            You are responsible for safeguarding your credentials. If you choose Guest mode, your progress is bound local to your device and may clear if browser caches are wiped. Synced profiles require active Firebase Authentication.
+            You are responsible for safeguarding your credentials. Your progress syncs through the app's own backend authentication flow and may be cleared if local storage is wiped before signing in.
           </p>
         </section>
 

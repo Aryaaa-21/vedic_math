@@ -16,7 +16,7 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function LeaderboardPage() {
-  const { firebaseUser } = useAuth();
+  const { authUser } = useAuth();
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"weekly" | "monthly" | "allTime">("weekly");
@@ -35,7 +35,7 @@ export default function LeaderboardPage() {
           const guestXp = guestUserStore.xp || 0;
           url += `?guestXp=${guestXp}&guestName=${encodeURIComponent(guestUserStore.name || "Guest Mathlete")}&guestAccuracy=${guestUserStore.accuracy || 0}&guestStreak=${guestUserStore.streak || 0}&guestAvatar=${encodeURIComponent(guestUserStore.avatar || "")}`;
         } else if (token) {
-          const currentUserId = firebaseUser?.uid;
+          const currentUserId = authUser?.uid;
           if (currentUserId) {
             url += `?userId=${currentUserId}`;
           }
@@ -62,7 +62,7 @@ export default function LeaderboardPage() {
             accuracy: u.accuracy || 0,
             xp: u.xp || 0,
             streak: u.streak || 0,
-            isCurrentUser: firebaseUser ? u.id === firebaseUser.uid : false
+            isCurrentUser: authUser ? u.id === authUser.uid : false
           };
         });
 
@@ -109,7 +109,7 @@ export default function LeaderboardPage() {
     };
     
     fetchLeaderboard();
-  }, [firebaseUser]);
+  }, [authUser]);
 
   const filteredLeaderboard = leaderboard.filter((user) =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase())

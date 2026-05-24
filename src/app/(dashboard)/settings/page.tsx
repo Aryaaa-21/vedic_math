@@ -28,7 +28,7 @@ export default function SettingsPage() {
     setUserStats
   } = useStore();
 
-  const { firebaseUser, isGuest } = useAuth();
+  const { authUser, isGuest } = useAuth();
   const [username, setUsername] = useState(user.name);
   const [userEmail, setUserEmail] = useState("");
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -38,12 +38,12 @@ export default function SettingsPage() {
   }, [user.name]);
 
   useEffect(() => {
-    if (firebaseUser?.email) {
-      setUserEmail(firebaseUser.email);
+    if (authUser?.email) {
+      setUserEmail(authUser.email);
     } else if (isGuest) {
       setUserEmail("guest@vedax.edu");
     }
-  }, [firebaseUser, isGuest]);
+  }, [authUser, isGuest]);
 
   const handleSaveProfile = (e: React.FormEvent) => {
     e.preventDefault();

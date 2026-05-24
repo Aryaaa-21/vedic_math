@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useStore } from "@/store/useStore";
 
 interface AuthContextType {
-  firebaseUser: any; // Keeps compatibility with other dashboard parts
+  authUser: any; // Keeps compatibility with other dashboard parts
   loading: boolean;
   isGuest: boolean;
   logout: () => Promise<void>;
@@ -16,7 +16,7 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType>({
-  firebaseUser: null,
+  authUser: null,
   loading: true,
   isGuest: false,
   logout: async () => {},
@@ -29,7 +29,7 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [firebaseUser, setFirebaseUser] = useState<any>(null);
+  const [authUser, setAuthUser] = useState<any>(null);
   const [isGuest, setIsGuest] = useState(false);
   const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
@@ -85,7 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (isGuestSaved) {
         url += `?guestXp=${xp}&guestName=${encodeURIComponent(displayName)}&guestAccuracy=${accuracy}&guestStreak=${streak}&guestAvatar=${encodeURIComponent(avatar)}`;
       } else {
-        const currentUserId = firebaseUser?.uid;
+        const currentUserId = authUser?.uid;
         if (currentUserId) {
           url += `?userId=${currentUserId}`;
         }
@@ -292,7 +292,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               email: data.email,
               displayName: data.name
             };
-            setFirebaseUser(profile);
+            setAuthUser(profile);
             setIsGuest(false);
 
             // Sync Zustand
@@ -349,7 +349,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setLoading(false);
         }
       } else {
-        setFirebaseUser(null);
+        setAuthUser(null);
         setIsGuest(false);
         if (isDashboardRoute(pathname)) {
           navigate("/login");
@@ -385,7 +385,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email: data.user.email,
         displayName: data.user.name
       };
-      setFirebaseUser(profile);
+      setAuthUser(profile);
 
       await mergeGuestDataAndSync(data.token, data.user);
       navigate("/dashboard");
@@ -421,7 +421,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email: data.user.email,
         displayName: data.user.name
       };
-      setFirebaseUser(profile);
+      setAuthUser(profile);
 
       await mergeGuestDataAndSync(data.token, data.user);
       navigate("/dashboard");
@@ -436,7 +436,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     setLoading(true);
     setIsGuest(false);
-    setFirebaseUser(null);
+    setAuthUser(null);
     localStorage.removeItem("vedax_token");
     localStorage.removeItem("guestMode");
     navigate("/login");
@@ -462,7 +462,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider value={{
-      firebaseUser,
+      authUser,
       loading,
       isGuest,
       logout,

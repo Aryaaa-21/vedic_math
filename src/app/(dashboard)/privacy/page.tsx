@@ -43,7 +43,7 @@ export default function PrivacyPage() {
             <span>3. Cloud & Browser Storage</span>
           </h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Authenticated profiles sync directly with Firestore under secure security rules that restrict database write privileges exclusively to your individual account ID. Guest user statistics reside entirely inside your browser's sandboxed storage environment.
+            Authenticated profiles sync directly with the app backend under account-scoped authorization. Local progress may still exist in browser storage until you sign in and sync it to your account.
           </p>
         </section>
 
