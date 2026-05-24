@@ -1,0 +1,524 @@
+[
+  {
+    "id": "ekadhikena-purvena",
+    "name": "Ekadhikena Purvena",
+    "title": "Ekadhikena Purvena",
+    "sutra": "Ekadhikena Purvena",
+    "sanskritName": "Ekadhikena Purvena",
+    "difficulty": "Beginner",
+    "category": "Beginner",
+    "tag": "Squaring",
+    "applicationType": "Squaring",
+    "description": "Instant method for squaring numbers that end in 5, or multiplying numbers whose units digits sum to 10 and other digits are identical.",
+    "formula": "Multiply the first digits by (first digits + 1) and append 25.",
+    "level": 1,
+    "unlockedAtStreak": 0,
+    "speedGain": "8.0x faster",
+    "mentalLoad": "Negligible",
+    "memoryLoad": "Negligible",
+    "practiceCount": 15,
+    "estimatedMastery": 80,
+    "example": {
+      "problem": "45 × 45",
+      "steps": [
+        { "step": 1, "title": "First Part", "desc": "Multiply tens digit by (tens digit + 1):", "detail": "4 × (4 + 1) = 4 × 5 = 20" },
+        { "step": 2, "title": "Last Part", "desc": "Square the units digit:", "detail": "5 × 5 = 25" },
+        { "step": 3, "title": "Combine", "desc": "Append the two parts together:", "detail": "20 and 25 = 2025" }
+      ],
+      "answer": 2025
+    },
+    "examples": [
+      { "problem": "45 × 45", "answer": 2025 },
+      { "problem": "75 × 75", "answer": 5625 },
+      { "problem": "115 × 115", "answer": 13225 }
+    ]
+  },
+  {
+    "id": "nikhilam-subtraction",
+    "name": "Nikhilam Navatascaramam Dasatah",
+    "title": "Nikhilam Navatascaramam Dasatah",
+    "sutra": "Nikhilam Navatashcaramam Dashatah",
+    "sanskritName": "Nikhilam Navatashcaramam Dashatah",
+    "difficulty": "Beginner",
+    "category": "Beginner",
+    "tag": "Multiplication",
+    "applicationType": "Multiplication",
+    "description": "The base method for rapid multiplication of numbers close to powers of 10, or subtraction from large bases.",
+    "formula": "Subtract both numbers from the base (10, 100, etc.), cross-subtract deficits, and multiply deficits.",
+    "level": 1,
+    "unlockedAtStreak": 0,
+    "speedGain": "5.2x faster",
+    "mentalLoad": "Low Memory",
+    "memoryLoad": "Low Memory",
+    "practiceCount": 12,
+    "estimatedMastery": 75,
+    "example": {
+      "problem": "94 × 97",
+      "steps": [
+        { "step": 1, "title": "Find Deficits", "desc": "Find deficits from base 100:", "detail": "94 is -6, 97 is -3" },
+        { "step": 2, "title": "Left Part", "desc": "Cross-subtract deficit from either number:", "detail": "94 - 3 = 91 (or 97 - 6 = 91)" },
+        { "step": 3, "title": "Right Part", "desc": "Multiply the deficits:", "detail": "-6 × -3 = 18. Combine left and right: 9118" }
+      ],
+      "answer": 9118
+    },
+    "examples": [
+      { "problem": "94 × 97", "answer": 9118 },
+      { "problem": "88 × 98", "answer": 8624 },
+      { "problem": "95 × 92", "answer": 8740 }
+    ]
+  },
+  {
+    "id": "sankalana-vyavakalanabhyam",
+    "name": "Sankalana–Vyavakalanabhyam",
+    "title": "Sankalana–Vyavakalanabhyam",
+    "sutra": "Sankalana-Vyavakalanabhyam",
+    "sanskritName": "Sankalana-Vyavakalanabhyam",
+    "difficulty": "Beginner",
+    "category": "Beginner",
+    "tag": "Addition/Subtraction",
+    "applicationType": "Addition/Subtraction",
+    "description": "A method to solve simultaneous linear equations whose coefficients are interchanged (e.g. ax + by = c and bx + ay = d).",
+    "formula": "Add the equations to find (x + y), subtract to find (x - y), and solve by simple addition.",
+    "level": 2,
+    "unlockedAtStreak": 0,
+    "speedGain": "3.8x faster",
+    "mentalLoad": "Low Memory",
+    "memoryLoad": "Low Memory",
+    "practiceCount": 0,
+    "estimatedMastery": 0,
+    "example": {
+      "problem": "Solve 45x - 23y = 113 & 23x - 45y = 91",
+      "steps": [
+        { "step": 1, "title": "Add Equations", "desc": "Add the two equations:", "detail": "(45+23)x - (23+45)y = 113 + 91 => 68x - 68y = 204 => x - y = 3" },
+        { "step": 2, "title": "Subtract Equations", "desc": "Subtract the second equation from the first:", "detail": "(45-23)x - (-23 - -45)y = 113 - 91 => 22x + 22y = 22 => x + y = 1" },
+        { "step": 3, "title": "Solve Simple", "desc": "Add the two simplified equations to solve for x & y:", "detail": "(x - y) + (x + y) = 3 + 1 => 2x = 4 => x = 2, y = -1" }
+      ],
+      "answer": 2
+    },
+    "examples": [
+      { "problem": "Solve 45x-23y=113 & 23x-45y=91", "answer": 2 }
+    ]
+  },
+  {
+    "id": "yavadunam",
+    "name": "Yavadunam",
+    "title": "Yavadunam",
+    "sutra": "Yavadunam",
+    "sanskritName": "Yavadunam",
+    "difficulty": "Beginner",
+    "category": "Beginner",
+    "tag": "Squaring",
+    "applicationType": "Squaring",
+    "description": "Rapid squaring method for numbers close to a base (like 10, 100, 1000).",
+    "formula": "Reduce the number by its deficit from the base and append the square of the deficit.",
+    "level": 2,
+    "unlockedAtStreak": 0,
+    "speedGain": "6.5x faster",
+    "mentalLoad": "Low Memory",
+    "memoryLoad": "Low Memory",
+    "practiceCount": 0,
+    "estimatedMastery": 0,
+    "example": {
+      "problem": "96 × 96",
+      "steps": [
+        { "step": 1, "title": "Find Deficiency", "desc": "Find deficit from base 100:", "detail": "100 - 96 = 4" },
+        { "step": 2, "title": "Reduce Multiplicand", "desc": "Subtract deficit from original number:", "detail": "96 - 4 = 92" },
+        { "step": 3, "title": "Square Deficit", "desc": "Square the deficit and append to left part:", "detail": "4² = 16. Combine: 92 and 16 = 9216" }
+      ],
+      "answer": 9216
+    },
+    "examples": [
+      { "problem": "96 × 96", "answer": 9216 },
+      { "problem": "98 × 98", "answer": 9604 },
+      { "problem": "104 × 104", "answer": 10816 }
+    ]
+  },
+  {
+    "id": "ekanyunena-purvena",
+    "name": "Ekanyunena Purvena",
+    "title": "Ekanyunena Purvena",
+    "sutra": "Ekanyunena Purvena",
+    "sanskritName": "Ekanyunena Purvena",
+    "difficulty": "Beginner",
+    "category": "Beginner",
+    "tag": "Multiplication",
+    "applicationType": "Multiplication",
+    "description": "Multiplication of a number by a series of 9s (e.g. 99, 999, 9999).",
+    "formula": "Subtract 1 from the number for the left part; subtract the left part from the 9s for the right part.",
+    "level": 3,
+    "unlockedAtStreak": 2,
+    "speedGain": "7.2x faster",
+    "mentalLoad": "Low Memory",
+    "memoryLoad": "Low Memory",
+    "practiceCount": 0,
+    "estimatedMastery": 0,
+    "example": {
+      "problem": "73 × 99",
+      "steps": [
+        { "step": 1, "title": "Left Part", "desc": "Subtract 1 from multiplicand:", "detail": "73 - 1 = 72" },
+        { "step": 2, "title": "Right Part", "desc": "Subtract left part from multiplier 99:", "detail": "99 - 72 = 27" },
+        { "step": 3, "title": "Combine", "desc": "Join left and right parts:", "detail": "72 and 27 = 7227" }
+      ],
+      "answer": 7227
+    },
+    "examples": [
+      { "problem": "73 × 99", "answer": 7227 },
+      { "problem": "846 × 999", "answer": 845154 }
+    ]
+  },
+  {
+    "id": "vyastisamastih",
+    "name": "Vyastisamastih",
+    "title": "Vyastisamastih",
+    "sutra": "Vyastisamastih",
+    "sanskritName": "Vyastisamastih",
+    "difficulty": "Beginner",
+    "category": "Beginner",
+    "tag": "Equations",
+    "applicationType": "Equations",
+    "description": "Factoring quadratic equations or solving linear equations by looking at parts individually and collectively.",
+    "formula": "Determine independent linear factors by splitting coefficients or constant terms.",
+    "level": 3,
+    "unlockedAtStreak": 0,
+    "speedGain": "4.2x faster",
+    "mentalLoad": "Medium Memory",
+    "memoryLoad": "Medium Memory",
+    "practiceCount": 0,
+    "estimatedMastery": 0,
+    "example": {
+      "problem": "Factor x² + 5x + 6",
+      "steps": [
+        { "step": 1, "title": "Analyze Constants", "desc": "Look at the constant sum (5) and product (6):", "detail": "Sum is 5, product is 6" },
+        { "step": 2, "title": "Find Factors", "desc": "Identify factors of 6 that add up to 5:", "detail": "Factors are 2 and 3 (2 × 3 = 6, 2 + 3 = 5)" },
+        { "step": 3, "title": "Apply Individually", "desc": "Form collective factors:", "detail": "(x + 2)(x + 3)" }
+      ],
+      "answer": 2
+    },
+    "examples": [
+      { "problem": "Factor x² + 5x + 6", "answer": 2 }
+    ]
+  },
+  {
+    "id": "vertically-crosswise",
+    "name": "Urdhva-Tiryagbhyam",
+    "title": "Urdhva-Tiryagbhyam",
+    "sutra": "Urdhva Tiryak",
+    "sanskritName": "Urdhva Tiryak",
+    "difficulty": "Intermediate",
+    "category": "Intermediate",
+    "tag": "Multiplication",
+    "applicationType": "Multiplication",
+    "description": "The universal multiplication method for numbers of any size.",
+    "formula": "Multiply vertically, cross-multiply and add, then multiply vertically.",
+    "level": 4,
+    "unlockedAtStreak": 0,
+    "speedGain": "4.5x faster",
+    "mentalLoad": "Low Memory",
+    "memoryLoad": "Low Memory",
+    "practiceCount": 8,
+    "estimatedMastery": 60,
+    "example": {
+      "problem": "23 × 27",
+      "steps": [
+        { "step": 1, "title": "Vertical (Right)", "desc": "Multiply units digit:", "detail": "3 × 7 = 21 (Write 1, carry 2)" },
+        { "step": 2, "title": "Crosswise", "desc": "Multiply crosswise and add with carry:", "detail": "(2 × 7) + (3 × 2) + 2 (carry) = 14 + 6 + 2 = 22 (Write 2, carry 2)" },
+        { "step": 3, "title": "Vertical (Left)", "desc": "Multiply tens digit with carry:", "detail": "(2 × 2) + 2 (carry) = 6" }
+      ],
+      "answer": 621
+    },
+    "examples": [
+      { "problem": "23 × 27", "answer": 621 },
+      { "problem": "12 × 34", "answer": 408 },
+      { "problem": "41 × 23", "answer": 943 }
+    ]
+  },
+  {
+    "id": "anurupyena",
+    "name": "Anurupyena",
+    "title": "Anurupyena",
+    "sutra": "Anurupyena",
+    "sanskritName": "Anurupyena",
+    "difficulty": "Intermediate",
+    "category": "Intermediate",
+    "tag": "Multiplication",
+    "applicationType": "Multiplication",
+    "description": "Method used for multiplication when numbers are close to a sub-base like 50, 250, etc.",
+    "formula": "Apply Nikhilam from sub-base, scale left part proportionally.",
+    "level": 5,
+    "unlockedAtStreak": 3,
+    "speedGain": "3.5x faster",
+    "mentalLoad": "High Memory",
+    "memoryLoad": "High Memory",
+    "practiceCount": 2,
+    "estimatedMastery": 30,
+    "example": {
+      "problem": "48 × 46",
+      "steps": [
+        { "step": 1, "title": "Find Deficits", "desc": "Deficits from sub-base 50 (100 / 2):", "detail": "48 is -2, 46 is -4" },
+        { "step": 2, "title": "Cross-subtract", "desc": "Cross-subtract deficits:", "detail": "48 - 4 = 44" },
+        { "step": 3, "title": "Scale and Combine", "desc": "Divide left part by 2 (since 50 = 100/2) and append product of deficits:", "detail": "44 / 2 = 22. Deficits product: -2 × -4 = 08. Result: 2208" }
+      ],
+      "answer": 2208
+    },
+    "examples": [
+      { "problem": "48 × 46", "answer": 2208 },
+      { "problem": "49 × 49", "answer": 2401 }
+    ]
+  },
+  {
+    "id": "puranapuranabhyam",
+    "name": "Puranapuranabhyam",
+    "title": "Puranapuranabhyam",
+    "sutra": "Puranapuranabhyam",
+    "sanskritName": "Puranapuranabhyam",
+    "difficulty": "Intermediate",
+    "category": "Intermediate",
+    "tag": "Equations",
+    "applicationType": "Equations",
+    "description": "Solving algebraic expressions by completion (completing squares or cubes).",
+    "formula": "Complete the algebraic terms into perfect algebraic squares/cubes, then find the root.",
+    "level": 5,
+    "unlockedAtStreak": 0,
+    "speedGain": "3.2x faster",
+    "mentalLoad": "Medium Memory",
+    "memoryLoad": "Medium Memory",
+    "practiceCount": 0,
+    "estimatedMastery": 0,
+    "example": {
+      "problem": "Solve x² + 6x = 7",
+      "steps": [
+        { "step": 1, "title": "Complete Square", "desc": "Add square of half the x-coefficient (3² = 9) to both sides:", "detail": "x² + 6x + 9 = 7 + 9 => (x + 3)² = 16" },
+        { "step": 2, "title": "Square Root", "desc": "Take square root on both sides:", "detail": "x + 3 = ±4" },
+        { "step": 3, "title": "Solve for x", "desc": "Find values of x:", "detail": "x = 4 - 3 = 1 or x = -4 - 3 = -7" }
+      ],
+      "answer": 1
+    },
+    "examples": [
+      { "problem": "Solve x² + 6x = 7", "answer": 1 }
+    ]
+  },
+  {
+    "id": "sesanyankena-caramena",
+    "name": "Sesanyankena Caramena",
+    "title": "Sesanyankena Caramena",
+    "sutra": "Sesanyankena Caramena",
+    "sanskritName": "Sesanyankena Caramena",
+    "difficulty": "Intermediate",
+    "category": "Intermediate",
+    "tag": "Division",
+    "applicationType": "Division",
+    "description": "Fractions whose denominators end in 9 (e.g. 1/19, 1/29) expressed instantly as repeating decimals.",
+    "formula": "Divide consecutively by one more than the prefix (e.g. for 19, divide by 2) and track remainders.",
+    "level": 6,
+    "unlockedAtStreak": 0,
+    "speedGain": "4.8x faster",
+    "mentalLoad": "High Memory",
+    "memoryLoad": "High Memory",
+    "practiceCount": 0,
+    "estimatedMastery": 0,
+    "example": {
+      "problem": "Find decimal of 1/19",
+      "steps": [
+        { "step": 1, "title": "Find Divisor", "desc": "Add 1 to the prefix of 19 (1 + 1 = 2):", "detail": "Divisor is 2" },
+        { "step": 2, "title": "First Division", "desc": "Divide 1 by 2:", "detail": "1/2 = 0.5 => write 5 (remainder 1)" },
+        { "step": 3, "title": "Iterate", "desc": "Divide the combined remainder and digit (15) by 2:", "detail": "15/2 = 7 => write 7 (remainder 1) => digits: 0.0526..." }
+      ],
+      "answer": 5
+    },
+    "examples": [
+      { "problem": "Find decimal of 1/19", "answer": 5 }
+    ]
+  },
+  {
+    "id": "sopantyadvayamantyam",
+    "name": "Sopantyadvayamantyam",
+    "title": "Sopantyadvayamantyam",
+    "sutra": "Sopantyadvayamantyam",
+    "sanskritName": "Sopantyadvayamantyam",
+    "difficulty": "Intermediate",
+    "category": "Intermediate",
+    "tag": "Equations",
+    "applicationType": "Equations",
+    "description": "Solving special algebraic rational equations where the sum of constants in denominators on both sides matches.",
+    "formula": "Solve immediately as x = -(Penultimate Constants Sum)/2.",
+    "level": 6,
+    "unlockedAtStreak": 4,
+    "speedGain": "4.0x faster",
+    "mentalLoad": "Medium Memory",
+    "memoryLoad": "Medium Memory",
+    "practiceCount": 0,
+    "estimatedMastery": 0,
+    "example": {
+      "problem": "Solve 1/(x+1) + 1/(x+4) = 1/(x+2) + 1/(x+3)",
+      "steps": [
+        { "step": 1, "title": "Verify Symmetry", "desc": "Check if sum of constants matches (1 + 4 = 2 + 3):", "detail": "5 = 5 (Symmetry holds)" },
+        { "step": 2, "title": "Solve Formula", "desc": "Apply algebraic shortcut:", "detail": "2x + (1 + 4) = 0 => 2x + 5 = 0" },
+        { "step": 3, "title": "Final Value", "desc": "Solve for x:", "detail": "x = -2.5" }
+      ],
+      "answer": -2.5
+    },
+    "examples": [
+      { "problem": "Solve 1/(x+1) + 1/(x+4) = 1/(x+2) + 1/(x+3)", "answer": -2.5 }
+    ]
+  },
+  {
+    "id": "paravartya-yojayet",
+    "name": "Paravartya Yojayet",
+    "title": "Paravartya Yojayet",
+    "sutra": "Paravartya Yojayet",
+    "sanskritName": "Paravartya Yojayet",
+    "difficulty": "Advanced",
+    "category": "Advanced",
+    "tag": "Division",
+    "applicationType": "Division",
+    "description": "Division of numbers or polynomials when the divisor is slightly larger than a base.",
+    "formula": "Transpose the divisor digits' signs and multiply/add progressively.",
+    "level": 7,
+    "unlockedAtStreak": 0,
+    "speedGain": "4.0x faster",
+    "mentalLoad": "High Memory",
+    "memoryLoad": "High Memory",
+    "practiceCount": 0,
+    "estimatedMastery": 0,
+    "example": {
+      "problem": "Divide 1234 by 112",
+      "steps": [
+        { "step": 1, "title": "Transpose Divisor", "desc": "Find deficits from base 100 for divisor digits 1, 2:", "detail": "Transpose to -1, -2" },
+        { "step": 2, "title": "Process Left", "desc": "Bring down first digit (1) and multiply by transpositions:", "detail": "Quotient digit 1. Multiply 1 × (-1, -2) => add to next columns" },
+        { "step": 3, "title": "Solve columns", "desc": "Continue additions and multiplications:", "detail": "Yields Quotient 11, Remainder 2" }
+      ],
+      "answer": 11
+    },
+    "examples": [
+      { "problem": "Divide 1234 by 112", "answer": 11 }
+    ]
+  },
+  {
+    "id": "sunyam-samyasamuccaye",
+    "name": "Sunyam Samyasamuccaye",
+    "title": "Sunyam Samyasamuccaye",
+    "sutra": "Sunyam Samyasamuccaye",
+    "sanskritName": "Sunyam Samyasamuccaye",
+    "difficulty": "Advanced",
+    "category": "Advanced",
+    "tag": "Equations",
+    "applicationType": "Equations",
+    "description": "Solving algebraic equations by equating sum of terms to zero when symmetry is present.",
+    "formula": "Identify equal sums of numerators, denominators, or constant factors, and equate that sum to zero.",
+    "level": 8,
+    "unlockedAtStreak": 5,
+    "speedGain": "4.2x faster",
+    "mentalLoad": "Medium Memory",
+    "memoryLoad": "Medium Memory",
+    "practiceCount": 0,
+    "estimatedMastery": 0,
+    "example": {
+      "problem": "Solve (x+1) + (x+2) = (x+3)",
+      "steps": [
+        { "step": 1, "title": "Equate Constants", "desc": "Symmetric representation:", "detail": "(x + 1) + (x + 2) = x + 3 => 2x + 3 = x + 3" },
+        { "step": 2, "title": "Symmetry Check", "desc": "Observe balance of variables vs constants:", "detail": "Let variable sum be zero => x = 0" },
+        { "step": 3, "title": "Solve Root", "desc": "Find root directly:", "detail": "x = 0" }
+      ],
+      "answer": 0
+    },
+    "examples": [
+      { "problem": "Solve (x+1) + (x+2) = (x+3)", "answer": 0 }
+    ]
+  },
+  {
+    "id": "chalana-kalanabhyam",
+    "name": "Chalana-Kalanabhyam",
+    "title": "Chalana-Kalanabhyam",
+    "sutra": "Chalana-Kalanabhyam",
+    "sanskritName": "Chalana-Kalanabhyam",
+    "difficulty": "Advanced",
+    "category": "Advanced",
+    "tag": "Calculus",
+    "applicationType": "Calculus",
+    "description": "Finding roots, factoring quadratics, and basic polynomial differentiation.",
+    "formula": "Differentiate term-by-term or evaluate differences using differential calculus shortcuts.",
+    "level": 9,
+    "unlockedAtStreak": 0,
+    "speedGain": "5.0x faster",
+    "mentalLoad": "High Memory",
+    "memoryLoad": "High Memory",
+    "practiceCount": 0,
+    "estimatedMastery": 0,
+    "example": {
+      "problem": "Differentiate x² + 3x",
+      "steps": [
+        { "step": 1, "title": "First Term", "desc": "Apply power rule to x²:", "detail": "d/dx(x²) = 2x" },
+        { "step": 2, "title": "Second Term", "desc": "Apply linear rule to 3x:", "detail": "d/dx(3x) = 3" },
+        { "step": 3, "title": "Result", "desc": "Combine the differentiated terms:", "detail": "2x + 3" }
+      ],
+      "answer": 2
+    },
+    "examples": [
+      { "problem": "Differentiate x² + 3x", "answer": 2 }
+    ]
+  },
+  {
+    "id": "gunitasamuccayah",
+    "name": "Gunitasamuccayah",
+    "title": "Gunitasamuccayah",
+    "sutra": "Gunitasamuccayah",
+    "sanskritName": "Gunitasamuccayah",
+    "difficulty": "Advanced",
+    "category": "Advanced",
+    "tag": "Algebra",
+    "applicationType": "Algebra",
+    "description": "Verifying polynomial factorization correctness by comparing coefficient sums.",
+    "formula": "Product of coefficient sums of factors equals coefficient sum of factored polynomial.",
+    "level": 9,
+    "unlockedAtStreak": 6,
+    "speedGain": "3.0x faster",
+    "mentalLoad": "Medium Memory",
+    "memoryLoad": "Medium Memory",
+    "practiceCount": 0,
+    "estimatedMastery": 0,
+    "example": {
+      "problem": "Verify (x+1)(x+2) = x² + 3x + 2",
+      "steps": [
+        { "step": 1, "title": "Sum Factors", "desc": "Find sums of coefficients of individual factor brackets:", "detail": "For (x + 1) -> 1 + 1 = 2; for (x + 2) -> 1 + 2 = 3" },
+        { "step": 2, "title": "Product Sum", "desc": "Multiply the coefficient sums:", "detail": "2 × 3 = 6" },
+        { "step": 3, "title": "Sum Product", "desc": "Find coefficient sum of the expanded expression:", "detail": "For x² + 3x + 2 -> 1 + 3 + 2 = 6. 6 = 6 (Verified)" }
+      ],
+      "answer": 6
+    },
+    "examples": [
+      { "problem": "Verify (x+1)(x+2) = x² + 3x + 2", "answer": 6 }
+    ]
+  },
+  {
+    "id": "gunakasamuccayah",
+    "name": "Gunakasamuccayah",
+    "title": "Gunakasamuccayah",
+    "sutra": "Gunakasamuccayah",
+    "sanskritName": "Gunakasamuccayah",
+    "difficulty": "Advanced",
+    "category": "Advanced",
+    "tag": "Algebra",
+    "applicationType": "Algebra",
+    "description": "Verifying algebraic divisions or factoring higher order polynomials.",
+    "formula": "Sum of coefficients of divisor multiplied by quotient matches sum of coefficients of dividend.",
+    "level": 10,
+    "unlockedAtStreak": 0,
+    "speedGain": "3.5x faster",
+    "mentalLoad": "High Memory",
+    "memoryLoad": "High Memory",
+    "practiceCount": 0,
+    "estimatedMastery": 0,
+    "example": {
+      "problem": "Verify (x²+3x+2)/(x+1) = x+2",
+      "steps": [
+        { "step": 1, "title": "Sum Divisor", "desc": "Find sum of coefficients of divisor (x+1):", "detail": "1 + 1 = 2" },
+        { "step": 2, "title": "Sum Quotient", "desc": "Find sum of coefficients of quotient (x+2):", "detail": "1 + 2 = 3" },
+        { "step": 3, "title": "Check Dividend", "desc": "Compare divisor × quotient sum with dividend coefficient sum:", "detail": "Dividend: 1+3+2 = 6. 2 × 3 = 6. Verified." }
+      ],
+      "answer": 6
+    },
+    "examples": [
+      { "problem": "Verify (x²+3x+2)/(x+1) = x+2", "answer": 6 }
+    ]
+  }
+]
