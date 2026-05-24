@@ -3,8 +3,8 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const dns = require("dns");
 
-// Force IPv4 first for DNS resolution to prevent ECONNREFUSED on MongoDB SRV records
-dns.setDefaultResultOrder("ipv4first");
+// Use public DNS resolvers so MongoDB Atlas SRV lookups do not depend on a flaky local resolver.
+dns.setServers((process.env.DNS_SERVERS || "8.8.8.8,1.1.1.1").split(","));
 
 const connectDB = require("./config/db");
 

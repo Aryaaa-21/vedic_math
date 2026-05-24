@@ -21,12 +21,12 @@ import ResearchPage from "./app/(dashboard)/research/page";
 import { useAuth } from "./contexts/AuthContext";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { authUser, loading } = useAuth();
+  const { authUser, loading, isGuest } = useAuth();
   const hasToken = typeof window !== "undefined" && !!localStorage.getItem("vedax_token");
 
   if (loading) return null;
 
-  if (!hasToken || !authUser) {
+  if (!isGuest && (!hasToken || !authUser)) {
     return <Navigate to="/login" replace />;
   }
 

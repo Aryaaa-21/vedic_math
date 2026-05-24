@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Mail,
   Lock,
@@ -17,7 +17,6 @@ import VedicPattern from "@/components/VedicPattern";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
-  const navigate = useNavigate();
   const { login, loginWithGoogle, continueAsGuest } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +31,6 @@ export default function LoginPage() {
     setError("");
     try {
       await login(email, password);
-      navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Invalid email or password. Please try again.");
@@ -46,7 +44,6 @@ export default function LoginPage() {
     setError("");
     try {
       await loginWithGoogle(displayName || undefined);
-      navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to sign in with Google.");
@@ -211,15 +208,14 @@ export default function LoginPage() {
                 />
                 <span>Google</span>
               </button>
+              <Link
+                to="/signup"
+                className="flex items-center justify-center gap-2 py-3 border border-primary/10 hover:bg-primary/5 rounded-xl cursor-pointer transition-colors text-xs font-bold text-primary"
+              >
+                <span>Create Account</span>
+              </Link>
             </div>
           </motion.div>
-
-          <p className="text-center text-xs font-medium text-muted-foreground">
-            New to VedaX?{" "}
-            <Link to="/signup" className="text-primary font-bold hover:underline">
-              Create an account
-            </Link>
-          </p>
         </div>
       </main>
 

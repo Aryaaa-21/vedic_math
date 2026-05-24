@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Mail,
   Lock,
@@ -17,7 +17,6 @@ import VedicPattern from "@/components/VedicPattern";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function SignupPage() {
-  const navigate = useNavigate();
   const { signup, loginWithGoogle } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -38,7 +37,6 @@ export default function SignupPage() {
     setError("");
     try {
       await signup(name, email, password);
-      navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to create account. Please try again.");
@@ -52,7 +50,6 @@ export default function SignupPage() {
     setError("");
     try {
       await loginWithGoogle(name || undefined);
-      navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to sign up with Google.");
@@ -225,15 +222,14 @@ export default function SignupPage() {
                 />
                 <span>Google</span>
               </button>
+              <Link
+                to="/login"
+                className="flex items-center justify-center gap-2 py-3 border border-primary/10 hover:bg-primary/5 rounded-xl cursor-pointer transition-colors text-xs font-bold text-primary"
+              >
+                <span>Sign In</span>
+              </Link>
             </div>
           </motion.div>
-
-          <p className="text-center text-xs font-medium text-muted-foreground">
-            Already have an account?{" "}
-            <Link to="/login" className="text-primary font-bold hover:underline">
-              Sign in instead
-            </Link>
-          </p>
         </div>
       </main>
 

@@ -1,7 +1,11 @@
 const User = require("../models/User");
 const generateToken = require("../utils/generateToken");
+const mongoose = require("mongoose");
 
 const MIN_PASSWORD_LENGTH = 6;
+const DB_UNAVAILABLE_MESSAGE = "Database unavailable. Check MongoDB Atlas network access and restart the backend.";
+
+const isDatabaseReady = () => mongoose.connection.readyState === 1;
 
 const toSafeUser = (user) => ({
   id: user._id,
@@ -32,6 +36,10 @@ const registerUser = async (req, res) => {
   const password = String(req.body.password || "");
 
   try {
+    if (!isDatabaseReady()) {
+      return res.status(503).json({ message: DB_UNAVAILABLE_MESSAGE });
+    }
+
     if (!name) {
       return res.status(400).json({ message: "Name is required" });
     }
@@ -88,6 +96,10 @@ const authUser = async (req, res) => {
   const password = String(req.body.password || "");
 
   try {
+    if (!isDatabaseReady()) {
+      return res.status(503).json({ message: DB_UNAVAILABLE_MESSAGE });
+    }
+
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required" });
     }
@@ -110,6 +122,10 @@ const authUser = async (req, res) => {
 
 const googleLogin = async (req, res) => {
   try {
+    if (!isDatabaseReady()) {
+      return res.status(503).json({ message: DB_UNAVAILABLE_MESSAGE });
+    }
+
     const rawName = (req.body && req.body.name ? String(req.body.name) : "").trim();
     const name = rawName || "Google Mathlete";
     const email = `google.${name.toLowerCase().replace(/[^a-z0-9]+/g, ".").replace(/^\.|\.$/g, "") || "mathlete"}@vedax.edu`;
