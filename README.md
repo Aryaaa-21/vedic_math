@@ -71,3 +71,7 @@ Open [http://localhost:5173](http://localhost:5173) for the frontend.
 
 * Deploy the Vite app to your static host of choice.
 * Set `VITE_API_URL` to the deployed backend URL, for example `https://vedax-backend.up.railway.app/api`.
+
+
+### hee hee 
+kya mila?
