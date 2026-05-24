@@ -112,6 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setFirebaseUser(user);
+      console.debug("AuthStateChanged - user:", user ? { uid: user.uid, email: user.email } : null);
 
       if (user) {
         // Logged in: Sync Firestore data, disable guest mode
@@ -123,6 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
           const userDocRef = doc(db, "users", user.uid);
           const userDocSnap = await getDoc(userDocRef);
+          console.debug("Fetched user doc for uid", user.uid, "exists:", userDocSnap.exists());
 
           let guestDataToMigrate: any = null;
           if (typeof window !== "undefined") {
@@ -138,6 +140,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           if (userDocSnap.exists()) {
             const data = userDocSnap.data();
+            console.debug("User doc data keys:", Object.keys(data || {}));
             let finalUserStats = {
               name: data.name || user.displayName || "Mathlete",
               level: data.level || 1,
@@ -232,6 +235,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 return b;
               });
               useStore.setState({ badges: updatedBadges });
+              console.debug("Updated badges in store from Firestore:", updatedBadges.filter(b => b.unlocked));
             }
           } else {
             // New user signed up or no firestore doc exists yet
