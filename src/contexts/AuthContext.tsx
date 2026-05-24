@@ -10,7 +10,7 @@ import {
   User as FirebaseUser
 } from "firebase/auth";
 import { auth, db } from "@/firebase/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getCountFromServer, getDoc, query, setDoc, where } from "firebase/firestore";
 import { usePathname, useRouter } from "next/navigation";
 import { useStore } from "@/store/useStore";
 
@@ -61,6 +61,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAuthRoute = (path: string) => {
     return path === "/login" || path === "/signup";
+  };
+
+  const syncCurrentUserLeaderboardEntry = async (
+    displayName: string,
+    xp: number,
+    accuracy: number,
+    streak: number,
+    avatar: string
+  ) => {
+    try {
+      const usersRef = collection(db, "users");
+      const rankQuery = query(usersRef, where("xp", ">", xp));
+      const countSnap = await getCountFromServer(rankQuery);
+      const userRank = countSnap.data().count + 1;
+
+      const initials = displayName
+        .split(" ")
+        .map((part) => part[0])
+        .join("")
+        .substring(0, 2)
+        .toUpperCase() || "M";
+
+      useStore.setState((state) => ({
+        leaderboard: [
+          ...state.leaderboard.filter((entry) => !entry.isCurrentUser),
+          {
+            rank: userRank,
+            name: displayName,
+            initials,
+            avatar,
+            accuracy,
+            xp,
+            streak,
+            isCurrentUser: true
+          }
+        ]
+      }));
+    } catch (error) {
+      console.error("Error syncing leaderboard rank:", error);
+    }
   };
 
   useEffect(() => {
@@ -174,6 +214,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               challengeHighScore: finalChallengeHighScore
             });
 
+            await syncCurrentUserLeaderboardEntry(
+              finalUserStats.name,
+              finalUserStats.xp,
+              finalUserStats.accuracy,
+              finalUserStats.streak,
+              finalUserStats.avatar
+            );
+
             if (finalBadges.length > 0) {
               const currentStoreBadges = useStore.getState().badges;
               const updatedBadges = currentStoreBadges.map(b => {
@@ -220,6 +268,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               recentActivities: defaultUserData.recentActivities,
               challengeHighScore: defaultUserData.challengeHighScore
             });
+
+            await syncCurrentUserLeaderboardEntry(
+              defaultUserData.name,
+              defaultUserData.xp,
+              defaultUserData.accuracy,
+              defaultUserData.streak,
+              defaultUserData.profileImage
+            );
 
             if (defaultUserData.badges.length > 0) {
               const currentStoreBadges = useStore.getState().badges;

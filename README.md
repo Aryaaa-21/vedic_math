@@ -18,17 +18,16 @@ VedaX is an educational web application designed for learning and practicing anc
 
 ## 🚀 Running Locally
 
-1.  Add your Firebase keys to `.env.local`:
+1.  The Firebase keys are expected in `.env.local` at the project root:
     ```env
-    NEXT_PUBLIC_FIREBASE_API_KEY=your_key
-    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
-    NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
-    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-    NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-    NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+  NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyDDcVR92S7W91Ovetjvrv1FZq1kEeE2P10
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=vedax-arithmetic.firebaseapp.com
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID=vedax-arithmetic
+  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=vedax-arithmetic.firebasestorage.app
+  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=260416757006
+  NEXT_PUBLIC_FIREBASE_APP_ID=1:260416757006:web:7f5dcbe572dd10dbad4b5f
     ```
-2.  Start the project:
+2.  Install dependencies and start the app:
     ```bash
     npm install
     npm run dev

@@ -43,7 +43,7 @@ export default function DashboardPage() {
   };
 
   const unlockedBadgesCount = badges.filter((b) => b.unlocked).length;
-  const userRank = leaderboard.find((u) => u.isCurrentUser)?.rank || 1;
+  const userRank = leaderboard.find((u) => u.isCurrentUser)?.rank ?? null;
 
   // Compute dynamic solving speed from recent activities
   const getChartData = () => {
@@ -62,29 +62,15 @@ export default function DashboardPage() {
     // Reverse to chronological order
     const computed = challenges.reverse().filter(c => c.speed > 0);
 
-    const defaultBaselines = [
-      { day: "Mon", speed: 4.2 },
-      { day: "Tue", speed: 3.8 },
-      { day: "Wed", speed: 3.2 },
-      { day: "Thu", speed: 2.8 },
-      { day: "Fri", speed: 2.4 },
-      { day: "Sat", speed: 2.1 }
-    ];
-    
-    if (computed.length === 0) {
-      return defaultBaselines;
+    if (computed.length < 2) {
+      return [];
     }
-    
-    if (computed.length < 5) {
-      const needed = 5 - computed.length;
-      const padding = defaultBaselines.slice(0, needed);
-      return [...padding, ...computed];
-    }
-    
+
     return computed;
   };
 
   const chartData = getChartData();
+  const hasChartData = chartData.length > 0;
 
   // Mini calendar days representation
   const getCalendarDays = () => {
@@ -221,7 +207,7 @@ export default function DashboardPage() {
             <Trophy className="w-5 h-5 text-primary" />
           </div>
           <div className="mt-6">
-            <span className="font-mono text-3xl font-black text-primary">#{userRank}</span>
+            <span className="font-mono text-3xl font-black text-primary">{userRank ? `#${userRank}` : "—"}</span>
             <p className="text-[11px] text-muted-foreground font-semibold mt-1">Top 15% of Vedic Mathletes</p>
           </div>
         </motion.div>
@@ -242,7 +228,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="h-60 mt-4">
-            {mounted ? (
+            {mounted && hasChartData ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                   <defs>
@@ -275,8 +261,8 @@ export default function DashboardPage() {
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className="w-full h-full bg-background/50 rounded-2xl animate-pulse flex items-center justify-center text-xs text-muted-foreground">
-                Loading Speed Analysis Chart...
+              <div className="w-full h-full bg-background/50 rounded-2xl flex items-center justify-center text-center px-6 text-xs text-muted-foreground">
+                {mounted ? "No challenge history yet. Complete a timed challenge to generate your speed trend." : "Loading Speed Analysis Chart..."}
               </div>
             )}
           </div>
