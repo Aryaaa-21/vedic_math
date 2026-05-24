@@ -6,6 +6,7 @@ import {
   signOut,
   sendPasswordResetEmail,
   signInWithPopup,
+  signInWithRedirect,
   GoogleAuthProvider,
   User as FirebaseUser
 } from "firebase/auth";
@@ -375,7 +376,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithGoogle = async () => {
     setLoading(true);
     const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (err) {
+      console.warn("signInWithPopup failed, falling back to signInWithRedirect:", err);
+      try {
+        await signInWithRedirect(auth, provider);
+      } catch (err2) {
+        console.error("signInWithRedirect also failed:", err2);
+        setLoading(false);
+        throw err2;
+      }
+    }
   };
 
   const continueAsGuest = () => {
