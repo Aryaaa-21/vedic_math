@@ -18,6 +18,20 @@ import PrivacyPage from "./app/(dashboard)/privacy/page";
 import TermsPage from "./app/(dashboard)/terms/page";
 import SupportPage from "./app/(dashboard)/support/page";
 import ResearchPage from "./app/(dashboard)/research/page";
+import { useAuth } from "./contexts/AuthContext";
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { authUser, loading } = useAuth();
+  const hasToken = typeof window !== "undefined" && !!localStorage.getItem("vedax_token");
+
+  if (loading) return null;
+
+  if (!hasToken || !authUser) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+}
 
 export default function App() {
   return (
@@ -27,14 +41,14 @@ export default function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/forgot" element={<ForgotPasswordPage />} />
 
-      <Route path="/dashboard" element={<DashboardLayout><DashboardPage /></DashboardLayout>} />
+      <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout><DashboardPage /></DashboardLayout></ProtectedRoute>} />
       <Route path="/learn" element={<DashboardLayout><LearnPage /></DashboardLayout>} />
       <Route path="/practice" element={<DashboardLayout><PracticePage /></DashboardLayout>} />
-      <Route path="/challenge" element={<DashboardLayout><ChallengePage /></DashboardLayout>} />
+      <Route path="/challenge" element={<ProtectedRoute><DashboardLayout><ChallengePage /></DashboardLayout></ProtectedRoute>} />
       <Route path="/leaderboard" element={<DashboardLayout><LeaderboardPage /></DashboardLayout>} />
       <Route path="/achievements" element={<DashboardLayout><AchievementsPage /></DashboardLayout>} />
-      <Route path="/profile" element={<DashboardLayout><ProfilePage /></DashboardLayout>} />
-      <Route path="/settings" element={<DashboardLayout><SettingsPage /></DashboardLayout>} />
+      <Route path="/profile" element={<ProtectedRoute><DashboardLayout><ProfilePage /></DashboardLayout></ProtectedRoute>} />
+      <Route path="/settings" element={<ProtectedRoute><DashboardLayout><SettingsPage /></DashboardLayout></ProtectedRoute>} />
       <Route path="/help" element={<DashboardLayout><HelpPage /></DashboardLayout>} />
       <Route path="/privacy" element={<DashboardLayout><PrivacyPage /></DashboardLayout>} />
       <Route path="/terms" element={<DashboardLayout><TermsPage /></DashboardLayout>} />

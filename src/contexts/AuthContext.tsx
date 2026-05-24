@@ -2,7 +2,9 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuthStore } from "@/store/authStore";
 import { useStore } from "@/store/useStore";
+import { API_URL } from "@/utils/api";
 
 interface AuthContextType {
   authUser: any; // Keeps compatibility with other dashboard parts
@@ -31,6 +33,7 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const authStore = useAuthStore();
   const [authUser, setAuthUser] = useState<any>(null);
   const [isGuest, setIsGuest] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -69,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const getApiUrl = () => {
-    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+    return API_URL;
   };
 
   const syncCurrentUserLeaderboardEntry = async (
@@ -281,14 +284,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setLoading(false);
       } else if (token) {
         try {
-          const res = await fetch(`${getApiUrl()}/user/profile`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
+          const data = await authStore.checkAuth();
 
-          if (res.ok) {
-            const data = await res.json();
+          if (data) {
             const profile = {
               uid: data.id,
               email: data.email,
@@ -330,7 +328,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               data.xp,
               data.accuracy,
               data.streak,
-              data.avatar
+              data.avatar || "https://lh3.googleusercontent.com/a/default-user"
             );
 
             if (isAuthRoute(pathname)) {
@@ -366,30 +364,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`${getApiUrl()}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Failed to sign in");
-      }
-
-      const data = await res.json();
-      localStorage.setItem("vedax_token", data.token);
+      const user = await authStore.login(email, password);
+      const token = localStorage.getItem("vedax_token") || "";
       localStorage.removeItem("guestMode");
       setIsGuest(false);
 
       const profile = {
-        uid: data.user.id,
-        email: data.user.email,
-        displayName: data.user.name
+        uid: user.id,
+        email: user.email,
+        displayName: user.name
       };
       setAuthUser(profile);
 
-      await mergeGuestDataAndSync(data.token, data.user);
+      await mergeGuestDataAndSync(token, user);
       navigate("/dashboard");
     } catch (error) {
       setLoading(false);
@@ -402,30 +389,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signup = async (name: string, email: string, password: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`${getApiUrl()}/auth/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password })
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Failed to sign up");
-      }
-
-      const data = await res.json();
-      localStorage.setItem("vedax_token", data.token);
+      const user = await authStore.signup(name, email, password);
+      const token = localStorage.getItem("vedax_token") || "";
       localStorage.removeItem("guestMode");
       setIsGuest(false);
 
       const profile = {
-        uid: data.user.id,
-        email: data.user.email,
-        displayName: data.user.name
+        uid: user.id,
+        email: user.email,
+        displayName: user.name
       };
       setAuthUser(profile);
 
-      await mergeGuestDataAndSync(data.token, data.user);
+      await mergeGuestDataAndSync(token, user);
       navigate("/dashboard");
     } catch (error) {
       setLoading(false);
@@ -437,6 +413,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     setLoading(true);
+    await authStore.logout();
     setIsGuest(false);
     setAuthUser(null);
     localStorage.removeItem("vedax_token");

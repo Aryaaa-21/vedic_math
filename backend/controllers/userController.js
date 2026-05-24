@@ -18,7 +18,11 @@ const getUserProfile = async (req, res) => {
       avgSpeed: user.avgSpeed,
       completedLessons: user.completedLessons,
       challengeHighScore: user.challengeHighScore,
+      profileImage: user.profileImage,
       avatar: user.avatar,
+      completedTechniques: user.completedTechniques,
+      challengeHistory: user.challengeHistory,
+      joinedDate: user.joinedDate,
       badges: user.badges,
       recentActivities: user.recentActivities
     });
@@ -38,6 +42,9 @@ const updateUserProfile = async (req, res) => {
     if (req.body.avatar) {
       user.avatar = req.body.avatar;
     }
+    if (req.body.profileImage !== undefined) {
+      user.profileImage = req.body.profileImage;
+    }
     const updatedUser = await user.save();
     res.json({
       id: updatedUser._id,
@@ -50,7 +57,11 @@ const updateUserProfile = async (req, res) => {
       avgSpeed: updatedUser.avgSpeed,
       completedLessons: updatedUser.completedLessons,
       challengeHighScore: updatedUser.challengeHighScore,
+      profileImage: updatedUser.profileImage,
       avatar: updatedUser.avatar,
+      completedTechniques: updatedUser.completedTechniques,
+      challengeHistory: updatedUser.challengeHistory,
+      joinedDate: updatedUser.joinedDate,
       badges: updatedUser.badges,
       recentActivities: updatedUser.recentActivities
     });
@@ -71,7 +82,8 @@ const syncUserProfile = async (req, res) => {
       const fields = [
         "name", "level", "xp", "streak", "accuracy",
         "avgSpeed", "completedLessons", "challengeHighScore",
-        "badges", "recentActivities", "avatar"
+        "badges", "recentActivities", "avatar", "profileImage",
+        "completedTechniques", "challengeHistory"
       ];
 
       fields.forEach(field => {
@@ -92,7 +104,11 @@ const syncUserProfile = async (req, res) => {
         avgSpeed: updatedUser.avgSpeed,
         completedLessons: updatedUser.completedLessons,
         challengeHighScore: updatedUser.challengeHighScore,
+        profileImage: updatedUser.profileImage,
         avatar: updatedUser.avatar,
+        completedTechniques: updatedUser.completedTechniques,
+        challengeHistory: updatedUser.challengeHistory,
+        joinedDate: updatedUser.joinedDate,
         badges: updatedUser.badges,
         recentActivities: updatedUser.recentActivities
       });

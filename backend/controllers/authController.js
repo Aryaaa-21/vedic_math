@@ -1,45 +1,75 @@
 const User = require("../models/User");
 const generateToken = require("../utils/generateToken");
 
+const MIN_PASSWORD_LENGTH = 6;
+
+const toSafeUser = (user) => ({
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  joinedDate: user.joinedDate,
+  level: user.level,
+  xp: user.xp,
+  streak: user.streak,
+  accuracy: user.accuracy,
+  badges: user.badges || [],
+  completedTechniques: user.completedTechniques || [],
+  challengeHistory: user.challengeHistory || [],
+  profileImage: user.profileImage || "",
+  avgSpeed: user.avgSpeed || 0,
+  completedLessons: user.completedLessons || 0,
+  challengeHighScore: user.challengeHighScore || 0,
+  avatar: user.avatar || user.profileImage || "https://lh3.googleusercontent.com/a/default-user",
+  recentActivities: user.recentActivities || []
+});
+
 // @desc    Register a new user
 // @route   POST /api/auth/signup
 // @access  Public
 const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const name = String(req.body.name || "").trim();
+  const email = String(req.body.email || "").trim().toLowerCase();
+  const password = String(req.body.password || "");
 
   try {
+    if (!name) {
+      return res.status(400).json({ message: "Name is required" });
+    }
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      return res.status(400).json({ message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters` });
+    }
+
     const userExists = await User.findOne({ email });
 
     if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(409).json({ message: "Email already exists" });
     }
 
     const user = await User.create({
       name,
       email,
       password,
-      joinedDate: new Date().toLocaleDateString(),
+      joinedDate: new Date(),
+      level: 1,
+      xp: 0,
+      streak: 0,
+      accuracy: 0,
+      badges: [],
+      completedTechniques: [],
+      challengeHistory: [],
+      profileImage: "",
       avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}`
     });
 
     if (user) {
       res.status(201).json({
         token: generateToken(user._id),
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          level: user.level,
-          xp: user.xp,
-          streak: user.streak,
-          accuracy: user.accuracy,
-          avgSpeed: user.avgSpeed,
-          completedLessons: user.completedLessons,
-          challengeHighScore: user.challengeHighScore,
-          avatar: user.avatar,
-          badges: user.badges,
-          recentActivities: user.recentActivities
-        }
+        user: toSafeUser(user)
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
@@ -54,29 +84,20 @@ const registerUser = async (req, res) => {
 // @route   POST /api/auth/login
 // @access  Public
 const authUser = async (req, res) => {
-  const { email, password } = req.body;
+  const email = String(req.body.email || "").trim().toLowerCase();
+  const password = String(req.body.password || "");
 
   try {
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
     const user = await User.findOne({ email });
 
     if (user && (await user.matchPassword(password))) {
       res.json({
         token: generateToken(user._id),
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          level: user.level,
-          xp: user.xp,
-          streak: user.streak,
-          accuracy: user.accuracy,
-          avgSpeed: user.avgSpeed,
-          completedLessons: user.completedLessons,
-          challengeHighScore: user.challengeHighScore,
-          avatar: user.avatar,
-          badges: user.badges,
-          recentActivities: user.recentActivities
-        }
+        user: toSafeUser(user)
       });
     } else {
       res.status(401).json({ message: "Invalid email or password" });
@@ -101,28 +122,14 @@ const googleLogin = async (req, res) => {
         name,
         email,
         password,
-        joinedDate: new Date().toLocaleDateString(),
+        joinedDate: new Date(),
         avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}`
       });
     }
 
     res.json({
       token: generateToken(user._id),
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        level: user.level,
-        xp: user.xp,
-        streak: user.streak,
-        accuracy: user.accuracy,
-        avgSpeed: user.avgSpeed,
-        completedLessons: user.completedLessons,
-        challengeHighScore: user.challengeHighScore,
-        avatar: user.avatar,
-        badges: user.badges,
-        recentActivities: user.recentActivities
-      }
+      user: toSafeUser(user)
     });
   } catch (error) {
     console.error("Google login error:", error);
@@ -130,5 +137,25 @@ const googleLogin = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, authUser, googleLogin };
+// @desc    Get current authenticated user
+// @route   GET /api/auth/me
+// @access  Private
+const getCurrentUser = async (req, res) => {
+  res.json({ user: toSafeUser(req.user) });
+};
 
+// @desc    Verify current JWT
+// @route   GET /api/auth/verify
+// @access  Private
+const verifyAuth = async (req, res) => {
+  res.json({ valid: true, user: toSafeUser(req.user) });
+};
+
+// @desc    Logout current user
+// @route   POST /api/auth/logout
+// @access  Private
+const logoutUser = async (req, res) => {
+  res.json({ message: "Logged out successfully" });
+};
+
+module.exports = { registerUser, authUser, googleLogin, getCurrentUser, verifyAuth, logoutUser, toSafeUser };

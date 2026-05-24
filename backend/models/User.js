@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 
 const ActivitySchema = new mongoose.Schema({
   id: { type: String, required: true },
@@ -18,19 +18,24 @@ const BadgeSchema = new mongoose.Schema({
 
 const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
   password: { type: String, required: true },
-  joinedDate: { type: String, default: () => new Date().toLocaleDateString() },
-  avatar: { type: String, default: "https://lh3.googleusercontent.com/a/default-user" },
-  xp: { type: Number, default: 0 },
+  joinedDate: { type: Date, default: Date.now },
   level: { type: Number, default: 1 },
+  xp: { type: Number, default: 0 },
   streak: { type: Number, default: 0 },
   accuracy: { type: Number, default: 0 },
+  badges: { type: Array, default: [] },
+  completedTechniques: { type: Array, default: [] },
+  challengeHistory: { type: Array, default: [] },
+  profileImage: { type: String, default: "" },
+  avatar: { type: String, default: "https://lh3.googleusercontent.com/a/default-user" },
   avgSpeed: { type: Number, default: 0 },
   completedLessons: { type: Number, default: 0 },
   challengeHighScore: { type: Number, default: 0 },
-  badges: { type: [BadgeSchema], default: [] },
   recentActivities: { type: [ActivitySchema], default: [] }
+}, {
+  timestamps: true
 });
 
 // Hash password before saving

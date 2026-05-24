@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
+import { API_URL } from "@/utils/api";
 
 export default function LeaderboardPage() {
   const { authUser } = useAuth();
@@ -28,7 +29,7 @@ export default function LeaderboardPage() {
         const isGuestSaved = typeof window !== "undefined" && localStorage.getItem("guestMode") === "true";
         const token = typeof window !== "undefined" ? localStorage.getItem("vedax_token") : null;
         
-        let url = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/leaderboard`;
+        let url = `${API_URL}/leaderboard`;
         
         if (isGuestSaved) {
           const guestUserStore = useStore.getState().user;

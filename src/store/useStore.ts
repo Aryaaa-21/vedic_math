@@ -3,6 +3,7 @@ import VEDIC_TECHNIQUES_JSON from "@/data/techniques.json";
 import USER_JSON from "@/data/users.json";
 import LEADERBOARD_JSON from "@/data/leaderboard.json";
 import ACHIEVEMENTS_JSON from "@/data/achievements.json";
+import { API_URL } from "@/utils/api";
 
 const syncWithDatabase = async (
   user: any,
@@ -16,7 +17,7 @@ const syncWithDatabase = async (
 
   if (token && !isGuestSaved) {
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+      const apiUrl = API_URL;
       await fetch(`${apiUrl}/user/sync`, {
         method: "POST",
         headers: {
