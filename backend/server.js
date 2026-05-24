@@ -1,6 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const dns = require("dns");
+
+// Force IPv4 first for DNS resolution to prevent ECONNREFUSED on MongoDB SRV records
+dns.setDefaultResultOrder("ipv4first");
+
 const connectDB = require("./config/db");
 
 // Load env vars
