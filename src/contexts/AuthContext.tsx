@@ -11,7 +11,6 @@ interface AuthContextType {
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
-  continueAsGuest: () => void;
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
 }
@@ -23,7 +22,6 @@ const AuthContext = createContext<AuthContextType>({
   logout: async () => {},
   resetPassword: async () => {},
   loginWithGoogle: async () => {},
-  continueAsGuest: () => {},
   login: async () => {},
   signup: async () => {},
 });
@@ -453,71 +451,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithGoogle = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${getApiUrl()}/auth/google-login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" }
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to sign in with simulated Google provider");
-      }
-
-      const data = await res.json();
-      localStorage.setItem("vedax_token", data.token);
-      localStorage.removeItem("guestMode");
-      setIsGuest(false);
-
-      const profile = {
-        uid: data.user.id,
-        email: data.user.email,
-        displayName: data.user.name
-      };
-      setFirebaseUser(profile);
-
-      await mergeGuestDataAndSync(data.token, data.user);
-      navigate("/dashboard");
+      throw new Error("Google sign-in is not configured yet. Use email and password sign-in.");
     } catch (error) {
       setLoading(false);
       throw error;
     } finally {
       setLoading(false);
     }
-  };
-
-  const continueAsGuest = () => {
-    setIsGuest(true);
-    localStorage.setItem("guestMode", "true");
-    
-    let guestUser = {
-      name: "Guest Mathlete",
-      level: 1,
-      xp: 0,
-      streak: 0,
-      accuracy: 0,
-      avgSpeed: 0,
-      completedLessons: 0,
-      avatar: "https://lh3.googleusercontent.com/a/default-user"
-    };
-    
-    const savedStateStr = localStorage.getItem("vedax-guest-state");
-    if (savedStateStr) {
-      try {
-        const savedState = JSON.parse(savedStateStr);
-        if (savedState.user) {
-          guestUser = { ...guestUser, ...savedState.user };
-        }
-        useStore.setState({
-          recentActivities: stripSeedActivities(savedState.recentActivities || []),
-          badges: savedState.badges || useStore.getState().badges,
-          challengeHighScore: savedState.challengeHighScore || 0
-        });
-      } catch (e) {
-        console.error("Error parsing guest state on continue:", e);
-      }
-    }
-    
-    useStore.setState({ user: guestUser });
-    navigate("/dashboard");
   };
 
   return (
@@ -528,7 +468,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       logout,
       resetPassword,
       loginWithGoogle,
-      continueAsGuest,
       login,
       signup
     }}>

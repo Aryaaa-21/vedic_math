@@ -18,7 +18,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { login, loginWithGoogle, continueAsGuest } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -160,13 +160,6 @@ export default function LoginPage() {
                 )}
               </button>
 
-              <button
-                type="button"
-                onClick={continueAsGuest}
-                className="w-full border-2 border-secondary text-secondary hover:bg-secondary/5 font-extrabold py-3.5 rounded-xl cursor-pointer active:scale-95 transition-all text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 mt-2"
-              >
-                <span>Continue as Guest</span>
-              </button>
             </form>
 
             <div className="relative my-4 flex items-center justify-center">
@@ -183,6 +176,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={handleGoogleLogin}
+                title="Google sign-in is not configured yet"
                 className="flex items-center justify-center gap-2 py-3 border border-primary/10 hover:bg-primary/5 rounded-xl cursor-pointer transition-colors text-xs font-bold text-primary"
               >
                 <img
@@ -191,17 +185,6 @@ export default function LoginPage() {
                   className="w-4 h-4"
                 />
                 <span>Google</span>
-              </button>
-              
-              <button
-                type="button"
-                onClick={() => alert("Apple Login is currently a prototype.")}
-                className="flex items-center justify-center gap-2 py-3 border border-primary/10 hover:bg-primary/5 rounded-xl cursor-pointer transition-colors text-xs font-bold text-primary"
-              >
-                <div className="w-4 h-4 bg-primary text-white text-[9px] rounded flex items-center justify-center font-mono font-bold">
-                  A
-                </div>
-                <span>Apple</span>
               </button>
             </div>
           </motion.div>
