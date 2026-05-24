@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link, useNavigate } from "react-router-dom";
 import { useStore } from "@/store/useStore";
 import {
   Flame,
@@ -28,7 +27,7 @@ import {
 import { motion } from "framer-motion";
 
 export default function DashboardPage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { user, recentActivities, badges, leaderboard, startChallenge } = useStore();
   const [mounted, setMounted] = useState(false);
 
@@ -39,7 +38,7 @@ export default function DashboardPage() {
 
   const handleStartDailyChallenge = () => {
     startChallenge();
-    router.push("/challenge");
+    navigate("/challenge");
   };
 
   const unlockedBadgesCount = badges.filter((b) => b.unlocked).length;
@@ -136,7 +135,7 @@ export default function DashboardPage() {
         </div>
         
         <div className="flex gap-3">
-          <Link href="/learn">
+          <Link to="/learn">
             <button className="px-5 py-2.5 bg-card hover:bg-card/85 text-primary border border-primary/25 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all">
               Learn Techniques
             </button>

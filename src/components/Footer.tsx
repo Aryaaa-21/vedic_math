@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { Award, BookOpen, Mail } from "lucide-react";
 
 interface FooterProps {
@@ -28,17 +28,17 @@ export default function Footer({ className = "", isDashboard = false }: FooterPr
         </div>
 
         <div className="flex flex-wrap gap-x-8 gap-y-2 text-xs font-semibold text-muted-foreground">
-          <Link href="/privacy" className="hover:text-primary transition-colors">
+          <Link to="/privacy" className="hover:text-primary transition-colors">
             Privacy Policy
           </Link>
-          <Link href="/terms" className="hover:text-primary transition-colors">
+          <Link to="/terms" className="hover:text-primary transition-colors">
             Terms of Service
           </Link>
-          <Link href="/research" className="hover:text-primary transition-colors flex items-center gap-1">
+          <Link to="/research" className="hover:text-primary transition-colors flex items-center gap-1">
             <BookOpen className="w-3.5 h-3.5" />
             <span>Research & Pedagogy</span>
           </Link>
-          <Link href="/support" className="hover:text-primary transition-colors flex items-center gap-1">
+          <Link to="/support" className="hover:text-primary transition-colors flex items-center gap-1">
             <Mail className="w-3.5 h-3.5" />
             <span>Contact Support</span>
           </Link>
@@ -47,7 +47,7 @@ export default function Footer({ className = "", isDashboard = false }: FooterPr
 
       <div className="max-w-7xl mx-auto mt-6 pt-4 border-t border-primary/5 flex justify-between items-center text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">
         <div className="flex gap-4">
-          <Link href="/leaderboard" className="hover:text-primary flex items-center gap-1">
+          <Link to="/leaderboard" className="hover:text-primary flex items-center gap-1">
             <Award className="w-3 h-3 text-primary/70" />
             <span>Hall of Sages</span>
           </Link>

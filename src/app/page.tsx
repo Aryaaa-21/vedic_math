@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import VedicPattern from "@/components/VedicPattern";
@@ -66,13 +66,13 @@ export default function LandingPage() {
               transition={{ delay: 0.3, duration: 0.6 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
             >
-              <Link href="/dashboard" className="w-full sm:w-auto">
+              <Link to="/dashboard" className="w-full sm:w-auto">
                 <button className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-extrabold rounded-xl shadow-md cursor-pointer pressable-button transition-all hover:brightness-110 flex items-center justify-center text-base tracking-wide border-b-4 border-primary/40">
                   <span>Enter Dashboard</span>
                 </button>
               </Link>
               
-              <Link href="/learn" className="w-full sm:w-auto">
+              <Link to="/learn" className="w-full sm:w-auto">
                 <button className="w-full sm:w-auto px-8 py-4 border-2 border-secondary text-secondary font-extrabold rounded-xl hover:bg-secondary/5 cursor-pointer transition-all active:scale-95 text-base flex items-center justify-center">
                   <span>Explore Modules</span>
                 </button>
@@ -167,7 +167,7 @@ export default function LandingPage() {
               <div className="w-full lg:w-72 h-3.5 bg-background rounded-full overflow-hidden border border-primary/10 shadow-inner">
                 <div className="h-full bg-primary rounded-full" style={{ width: "80%" }} />
               </div>
-              <Link href="/dashboard" className="mt-2">
+              <Link to="/dashboard" className="mt-2">
                 <span className="font-bold text-sm text-primary hover:underline cursor-pointer flex items-center gap-1">
                   <span>View Analytics</span>
                   <ArrowRight className="w-4 h-4" />
@@ -187,7 +187,7 @@ export default function LandingPage() {
                   Featured Techniques
                 </h2>
               </div>
-              <Link href="/learn" className="group font-bold text-sm text-secondary hover:text-primary flex items-center gap-1.5">
+              <Link to="/learn" className="group font-bold text-sm text-secondary hover:text-primary flex items-center gap-1.5">
                 <span>Explore All Modules</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -195,7 +195,7 @@ export default function LandingPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {featuredList.map((tech) => (
-                <Link key={tech.id} href={`/learn?tech=${tech.id}`} className="block group">
+                <Link key={tech.id} to={`/learn?tech=${tech.id}`} className="block group">
                   <motion.div
                     whileHover={{ y: -6 }}
                     className="bg-card rounded-3xl p-5 border border-primary/10 shadow-sm hover:border-primary/30 transition-all flex flex-col h-full justify-between"

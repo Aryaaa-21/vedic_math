@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { useStore } from "@/store/useStore";
 import {
   Timer as TimerIcon,
@@ -19,7 +19,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { playAudioFeedback, triggerVibrationFeedback } from "@/utils/audio";
 
 export default function ChallengePage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const {
     challengeScore,
     challengeStreak,
@@ -325,7 +325,7 @@ export default function ChallengePage() {
               </button>
               
               <button
-                onClick={() => router.push("/dashboard")}
+                onClick={() => navigate("/dashboard")}
                 className="flex-1 py-3.5 bg-primary hover:bg-primary/95 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-md flex items-center justify-center border-b-4 border-primary/40"
               >
                 <span>Go to Dashboard</span>

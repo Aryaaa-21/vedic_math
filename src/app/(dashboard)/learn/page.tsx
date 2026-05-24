@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useStore, VEDIC_TECHNIQUES, Technique } from "@/store/useStore";
 import {
   BookOpen,
@@ -19,8 +19,8 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 function LearnPageContent() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { selectTechnique, startPractice, user } = useStore();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -60,7 +60,7 @@ function LearnPageContent() {
     if (isLocked(tech)) return;
     selectTechnique(tech);
     startPractice();
-    router.push("/practice");
+    navigate("/practice");
   };
 
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { Mail, ArrowLeft, ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import VedicPattern from "@/components/VedicPattern";
@@ -43,7 +43,7 @@ export default function ForgotPasswordPage() {
       <main className="flex-grow flex items-center justify-center px-4 py-16 relative z-10">
         <div className="w-full max-w-[420px] space-y-6">
           <div className="text-center space-y-2">
-            <Link href="/" className="inline-flex items-center gap-2.5 justify-center">
+            <Link to="/" className="inline-flex items-center gap-2.5 justify-center">
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-mono font-bold text-xl shadow-md">
                 V
               </div>
@@ -114,7 +114,7 @@ export default function ForgotPasswordPage() {
           </motion.div>
 
           <p className="text-center text-xs font-medium text-muted-foreground">
-            <Link href="/login" className="inline-flex items-center gap-1 text-primary font-bold hover:underline">
+            <Link to="/login" className="inline-flex items-center gap-1 text-primary font-bold hover:underline">
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Sign In</span>
             </Link>
@@ -125,9 +125,9 @@ export default function ForgotPasswordPage() {
       <footer className="py-6 px-4 border-t border-primary/10 bg-card flex flex-col md:flex-row justify-between items-center text-[10px] text-muted-foreground font-semibold uppercase tracking-wider relative z-10 gap-3">
         <span>© 2026 VedaX Education.</span>
         <div className="flex gap-4">
-          <Link href="/privacy" className="hover:text-primary">Privacy Policy</Link>
-          <Link href="/terms" className="hover:text-primary">Terms of Service</Link>
-          <Link href="/support" className="hover:text-primary">Contact Support</Link>
+          <Link to="/privacy" className="hover:text-primary">Privacy Policy</Link>
+          <Link to="/terms" className="hover:text-primary">Terms of Service</Link>
+          <Link to="/support" className="hover:text-primary">Contact Support</Link>
         </div>
       </footer>
     </div>

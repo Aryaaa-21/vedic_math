@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useStore } from "@/store/useStore";
 import {
   LayoutDashboard,
@@ -23,8 +22,8 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Sidebar() {
-  const pathname = usePathname();
-  const router = useRouter();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { user, startChallenge } = useStore();
   const { logout, isGuest } = useAuth();
 
@@ -41,13 +40,13 @@ export default function Sidebar() {
 
   const handleStartDailyChallenge = () => {
     startChallenge();
-    router.push("/challenge");
+    navigate("/challenge");
   };
 
   return (
     <aside className="hidden lg:flex flex-col h-screen w-66 fixed left-0 top-0 bg-card border-r border-primary/10 p-5 z-40 text-foreground">
       {/* Brand Logo / Back to Landing */}
-      <Link href="/" className="flex items-center gap-3 mb-6 group cursor-pointer">
+      <Link to="/" className="flex items-center gap-3 mb-6 group cursor-pointer">
         <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-all flex-shrink-0 relative">
           <span className="font-mono text-xl font-bold group-hover:opacity-0 transition-opacity">V</span>
           <ArrowLeft className="w-5 h-5 absolute inset-0 m-auto opacity-0 group-hover:opacity-100 transition-opacity text-white" />
@@ -89,7 +88,7 @@ export default function Sidebar() {
           const Icon = item.icon;
 
           return (
-            <Link key={item.path} href={item.path} className="block">
+            <Link key={item.path} to={item.path} className="block">
               <motion.div
                 whileHover={{ x: 4 }}
                 whileTap={{ scale: 0.98 }}
@@ -126,17 +125,17 @@ export default function Sidebar() {
         </motion.button>
         
         <div className="flex flex-col gap-1">
-          <Link href="/help" className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all">
+          <Link to="/help" className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all">
             <HelpCircle className="w-4 h-4 text-primary/60" />
             <span>Help Center</span>
           </Link>
           {isGuest ? (
             <>
-              <Link href="/login" className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-primary hover:bg-primary/5 transition-all">
+              <Link to="/login" className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-primary hover:bg-primary/5 transition-all">
                 <LogOut className="w-4 h-4 rotate-180" />
                 <span>Sign In</span>
               </Link>
-              <Link href="/signup" className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-primary hover:bg-primary/5 transition-all">
+              <Link to="/signup" className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-primary hover:bg-primary/5 transition-all">
                 <User className="w-4 h-4" />
                 <span>Create Account</span>
               </Link>

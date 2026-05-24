@@ -1,13 +1,12 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, useLocation } from "react-router-dom";
 import { LayoutDashboard, BookOpen, Flame, Trophy, User } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function BottomNavigation() {
-  const pathname = usePathname();
+  const { pathname } = useLocation();
 
   const navItems = [
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -24,7 +23,7 @@ export default function BottomNavigation() {
         const Icon = item.icon;
 
         return (
-          <Link key={item.path} href={item.path} className="flex-1 flex flex-col items-center justify-center h-full relative">
+          <Link key={item.path} to={item.path} className="flex-1 flex flex-col items-center justify-center h-full relative">
             <div className="flex flex-col items-center justify-center gap-0.5">
               <div
                 className={`p-1 rounded-xl transition-all relative ${

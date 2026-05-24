@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Mail,
   Lock,
@@ -18,7 +17,7 @@ import VedicPattern from "@/components/VedicPattern";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function SignupPage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { signup, loginWithGoogle, continueAsGuest } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -39,6 +38,7 @@ export default function SignupPage() {
     setError("");
     try {
       await signup(name, email, password);
+      navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to create account. Please try again.");
@@ -52,6 +52,7 @@ export default function SignupPage() {
     setError("");
     try {
       await loginWithGoogle();
+      navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to sign up with Google.");
@@ -70,7 +71,7 @@ export default function SignupPage() {
         <div className="w-full max-w-[420px] space-y-6">
           {/* Logo Heading */}
           <div className="text-center space-y-2">
-            <Link href="/" className="inline-flex items-center gap-2.5 justify-center">
+            <Link to="/" className="inline-flex items-center gap-2.5 justify-center">
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-mono font-bold text-xl shadow-md">
                 V
               </div>
@@ -246,7 +247,7 @@ export default function SignupPage() {
 
           <p className="text-center text-xs font-medium text-muted-foreground">
             Already have an account?{" "}
-            <Link href="/login" className="text-primary font-bold hover:underline">
+            <Link to="/login" className="text-primary font-bold hover:underline">
               Sign in instead
             </Link>
           </p>
@@ -257,9 +258,9 @@ export default function SignupPage() {
       <footer className="py-6 px-4 border-t border-primary/10 bg-card flex flex-col md:flex-row justify-between items-center text-[10px] text-muted-foreground font-semibold uppercase tracking-wider relative z-10 gap-3">
         <span>© 2026 VedaX Education.</span>
         <div className="flex gap-4">
-          <Link href="/privacy" className="hover:text-primary">Privacy Policy</Link>
-          <Link href="/terms" className="hover:text-primary">Terms of Service</Link>
-          <Link href="/support" className="hover:text-primary">Contact Support</Link>
+          <Link to="/privacy" className="hover:text-primary">Privacy Policy</Link>
+          <Link to="/terms" className="hover:text-primary">Terms of Service</Link>
+          <Link to="/support" className="hover:text-primary">Contact Support</Link>
         </div>
       </footer>
     </div>

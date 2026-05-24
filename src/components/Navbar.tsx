@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useStore } from "@/store/useStore";
 import { Menu, X, Flame, Trophy, Award, User, Settings, LogOut, BookOpen, LayoutDashboard, Timer, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,8 +11,8 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
-  const router = useRouter();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
   const { user, startChallenge } = useStore();
   const { logout, isGuest } = useAuth();
 
@@ -31,7 +30,7 @@ export default function Navbar() {
   const handleStartDailyChallenge = () => {
     setIsOpen(false);
     startChallenge();
-    router.push("/challenge");
+    navigate("/challenge");
   };
 
   return (
@@ -44,7 +43,7 @@ export default function Navbar() {
         >
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
-        <Link href="/" className="flex items-center gap-2 group cursor-pointer">
+        <Link to="/" className="flex items-center gap-2 group cursor-pointer">
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-mono font-bold text-lg relative group-hover:scale-105 transition-all">
             <span className="group-hover:opacity-0 transition-opacity">V</span>
             <ArrowLeft className="w-4.5 h-4.5 absolute inset-0 m-auto opacity-0 group-hover:opacity-100 transition-opacity text-white" />
@@ -56,7 +55,7 @@ export default function Navbar() {
       {/* Desktop Quick Nav Links (for landing page / public view) */}
       <nav className="hidden lg:flex items-center gap-8">
         <Link
-          href="/learn"
+          to="/learn"
           className={`font-semibold text-sm transition-all ${
             pathname === "/learn"
               ? "text-primary border-b-2 border-primary pb-1"
@@ -66,7 +65,7 @@ export default function Navbar() {
           Learn
         </Link>
         <Link
-          href="/practice"
+          to="/practice"
           className={`font-semibold text-sm transition-all ${
             pathname === "/practice"
               ? "text-primary border-b-2 border-primary pb-1"
@@ -76,7 +75,7 @@ export default function Navbar() {
           Practice
         </Link>
         <Link
-          href="/leaderboard"
+          to="/leaderboard"
           className={`font-semibold text-sm transition-all ${
             pathname === "/leaderboard"
               ? "text-primary border-b-2 border-primary pb-1"
@@ -102,7 +101,7 @@ export default function Navbar() {
         </div>
 
         {/* User avatar */}
-        <Link href="/profile">
+        <Link to="/profile">
           <img
             src={user.avatar}
             alt={user.name}
@@ -154,7 +153,7 @@ export default function Navbar() {
                     const Icon = item.icon;
 
                     return (
-                      <Link key={item.path} href={item.path} onClick={() => setIsOpen(false)}>
+                      <Link key={item.path} to={item.path} onClick={() => setIsOpen(false)}>
                         <div
                           className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-bold transition-all ${
                             isActive
@@ -182,7 +181,7 @@ export default function Navbar() {
                 {isGuest ? (
                   <div className="flex flex-col gap-1 w-full">
                     <Link
-                      href="/login"
+                      to="/login"
                       onClick={() => setIsOpen(false)}
                       className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-primary hover:bg-primary/5 transition-all"
                     >
@@ -190,7 +189,7 @@ export default function Navbar() {
                       <span>Sign In</span>
                     </Link>
                     <Link
-                      href="/signup"
+                      to="/signup"
                       onClick={() => setIsOpen(false)}
                       className="flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-semibold text-primary hover:bg-primary/5 transition-all"
                     >

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useStore, VEDIC_TECHNIQUES, Technique } from "@/store/useStore";
 import {
   Flame,
@@ -142,7 +142,7 @@ export default function PracticePage() {
     <div className="max-w-2xl mx-auto space-y-8">
       {/* Top Navigation Back Action */}
       <div className="flex justify-between items-center">
-        <Link href="/learn" className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-primary transition-colors">
+        <Link to="/learn" className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-primary transition-colors">
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Library</span>
         </Link>
@@ -332,7 +332,7 @@ export default function PracticePage() {
                 <span>Practice Again</span>
               </button>
               
-              <Link href="/learn" className="flex-grow">
+              <Link to="/learn" className="flex-grow">
                 <button className="w-full py-3.5 bg-primary hover:bg-primary/95 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-md flex items-center justify-center border-b-4 border-primary/40">
                   <span>Learn Another Sutra</span>
                 </button>

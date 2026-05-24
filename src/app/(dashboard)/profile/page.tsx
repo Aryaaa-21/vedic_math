@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import { useStore } from "@/store/useStore";
 import {
   User,
@@ -18,7 +18,7 @@ import {
 import { motion } from "framer-motion";
 
 export default function ProfilePage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { user, badges, recentActivities } = useStore();
 
   const unlockedBadges = badges.filter((b) => b.unlocked);
@@ -89,7 +89,7 @@ export default function ProfilePage() {
           
           <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-4">
             <button
-              onClick={() => router.push("/settings")}
+              onClick={() => navigate("/settings")}
               className="px-5 py-2.5 bg-primary hover:bg-primary/95 text-white font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-sm border-b-4 border-primary/40"
             >
               Edit Profile
@@ -111,7 +111,7 @@ export default function ProfilePage() {
               <span>Learning History</span>
             </h3>
             <span
-              onClick={() => router.push("/learn")}
+              onClick={() => navigate("/learn")}
               className="text-xs font-bold text-secondary hover:underline cursor-pointer"
             >
               View Sutra Library
@@ -164,7 +164,7 @@ export default function ProfilePage() {
           </div>
 
           <button
-            onClick={() => router.push("/challenge")}
+            onClick={() => navigate("/challenge")}
             className="w-full py-2.5 bg-card hover:bg-white text-primary font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all mt-6 shadow-sm"
           >
             Compete Now
@@ -179,7 +179,7 @@ export default function ProfilePage() {
               <span>Earned Badges</span>
             </h3>
             <span
-              onClick={() => router.push("/achievements")}
+              onClick={() => navigate("/achievements")}
               className="text-xs font-bold text-secondary hover:underline cursor-pointer"
             >
               All Badges ({badges.length})
@@ -190,7 +190,7 @@ export default function ProfilePage() {
             {unlockedBadges.slice(0, 8).map((badge) => (
               <div
                 key={badge.id}
-                onClick={() => router.push("/achievements")}
+                onClick={() => navigate("/achievements")}
                 className="flex flex-col items-center gap-2 p-3 bg-background/50 hover:bg-background rounded-2xl border border-primary/5 cursor-pointer transition-all"
               >
                 <div className="w-12 h-12 rounded-full bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary shadow-inner">

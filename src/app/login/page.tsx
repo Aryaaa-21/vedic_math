@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Mail,
   Lock,
@@ -18,7 +17,7 @@ import VedicPattern from "@/components/VedicPattern";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { login, loginWithGoogle, continueAsGuest } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,6 +31,7 @@ export default function LoginPage() {
     setError("");
     try {
       await login(email, password);
+      navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Invalid email or password. Please try again.");
@@ -45,6 +45,7 @@ export default function LoginPage() {
     setError("");
     try {
       await loginWithGoogle();
+      navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Failed to sign in with Google.");
@@ -63,7 +64,7 @@ export default function LoginPage() {
         <div className="w-full max-w-[420px] space-y-6">
           {/* Logo Heading */}
           <div className="text-center space-y-2">
-            <Link href="/" className="inline-flex items-center gap-2.5 justify-center">
+            <Link to="/" className="inline-flex items-center gap-2.5 justify-center">
               <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white font-mono font-bold text-xl shadow-md">
                 V
               </div>
@@ -117,7 +118,7 @@ export default function LoginPage() {
                   <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest" htmlFor="password">
                     Password
                   </label>
-                  <Link href="/forgot" className="text-[10px] text-primary hover:underline font-bold">
+                  <Link to="/forgot" className="text-[10px] text-primary hover:underline font-bold">
                     Forgot Password?
                   </Link>
                 </div>
@@ -207,7 +208,7 @@ export default function LoginPage() {
 
           <p className="text-center text-xs font-medium text-muted-foreground">
             New to VedaX?{" "}
-            <Link href="/signup" className="text-primary font-bold hover:underline">
+            <Link to="/signup" className="text-primary font-bold hover:underline">
               Create an account
             </Link>
           </p>
@@ -218,9 +219,9 @@ export default function LoginPage() {
       <footer className="py-6 px-4 border-t border-primary/10 bg-card flex flex-col md:flex-row justify-between items-center text-[10px] text-muted-foreground font-semibold uppercase tracking-wider relative z-10 gap-3">
         <span>© 2026 VedaX Education.</span>
         <div className="flex gap-4">
-          <Link href="/privacy" className="hover:text-primary">Privacy Policy</Link>
-          <Link href="/terms" className="hover:text-primary">Terms of Service</Link>
-          <Link href="/support" className="hover:text-primary">Contact Support</Link>
+          <Link to="/privacy" className="hover:text-primary">Privacy Policy</Link>
+          <Link to="/terms" className="hover:text-primary">Terms of Service</Link>
+          <Link to="/support" className="hover:text-primary">Contact Support</Link>
         </div>
       </footer>
     </div>

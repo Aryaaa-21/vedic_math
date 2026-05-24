@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useStore } from "@/store/useStore";
 
 interface AuthContextType {
@@ -34,8 +34,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [firebaseUser, setFirebaseUser] = useState<any>(null);
   const [isGuest, setIsGuest] = useState(false);
   const [loading, setLoading] = useState(true);
-  const pathname = usePathname();
-  const router = useRouter();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const isDashboardRoute = (path: string) => {
     const dashboardPaths = [
@@ -321,18 +321,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             );
 
             if (isAuthRoute(pathname)) {
-              router.push("/dashboard");
+              navigate("/dashboard");
             }
           } else {
             localStorage.removeItem("vedax_token");
             if (isDashboardRoute(pathname)) {
-              router.push("/login");
+              navigate("/login");
             }
           }
         } catch (error) {
           console.error("Error verifying profile token:", error);
           if (isDashboardRoute(pathname)) {
-            router.push("/login");
+            navigate("/login");
           }
         } finally {
           setLoading(false);
@@ -341,14 +341,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setFirebaseUser(null);
         setIsGuest(false);
         if (isDashboardRoute(pathname)) {
-          router.push("/login");
+          navigate("/login");
         }
         setLoading(false);
       }
     };
 
     checkAuthStatus();
-  }, [pathname, router]);
+  }, [pathname, navigate]);
 
   const login = async (email: string, password: string) => {
     setLoading(true);
@@ -377,7 +377,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setFirebaseUser(profile);
 
       await mergeGuestDataAndSync(data.token, data.user);
-      router.push("/dashboard");
+      navigate("/dashboard");
     } catch (error) {
       setLoading(false);
       throw error;
@@ -413,7 +413,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setFirebaseUser(profile);
 
       await mergeGuestDataAndSync(data.token, data.user);
-      router.push("/dashboard");
+      navigate("/dashboard");
     } catch (error) {
       setLoading(false);
       throw error;
@@ -428,7 +428,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setFirebaseUser(null);
     localStorage.removeItem("vedax_token");
     localStorage.removeItem("guestMode");
-    router.push("/login");
+    navigate("/login");
     setLoading(false);
   };
 
@@ -462,7 +462,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setFirebaseUser(profile);
 
       await mergeGuestDataAndSync(data.token, data.user);
-      router.push("/dashboard");
+      navigate("/dashboard");
     } catch (error) {
       setLoading(false);
       throw error;
@@ -504,7 +504,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     useStore.setState({ user: guestUser });
-    router.push("/dashboard");
+    navigate("/dashboard");
   };
 
   return (
