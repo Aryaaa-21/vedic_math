@@ -165,8 +165,8 @@ export default function PracticePage() {
   const handleBandSelect = (bandLabel: string) => {
     const band = practiceBands.find((item) => item.label === bandLabel);
     if (!band) return;
-
-    const nextTechnique = VEDIC_TECHNIQUES.find((tech) => tech.level >= band.minLevel && tech.level <= band.maxLevel) || VEDIC_TECHNIQUES[0];
+    const candidates = VEDIC_TECHNIQUES.filter((tech) => tech.level >= band.minLevel && tech.level <= band.maxLevel);
+    const nextTechnique = candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : VEDIC_TECHNIQUES[0];
     setSessionCompleted(false);
     setInputVal("");
     setShowHint(false);

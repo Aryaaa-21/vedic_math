@@ -273,83 +273,100 @@ export const useStore = create<StoreState>((set, get) => ({
 
   startPractice: () => set((state) => {
     const tech = state.activeTechnique || VEDIC_TECHNIQUES[0];
-    
     // Generate questions based on technique
     const questions: StoreState["practiceQuestions"] = [];
     const totalQuestions = 15;
 
+    // If the technique is high level (Super Hard), build a pool of techniques in the same difficulty band
+    const isSuperHard = tech.level >= 9;
+    const pool = isSuperHard
+      ? VEDIC_TECHNIQUES.filter((t) => t.level >= 9)
+      : [tech];
+
+    const seen = new Set<string>();
+
     for (let i = 0; i < totalQuestions; i++) {
-      if (tech.id === "ekadhikena-purvena") {
-        // Numbers ending in 5
-        const tens = Math.floor(Math.random() * 8) + 1; // 1 to 8
+      // pick a technique for this question (rotating/random within pool)
+      const pick = pool.length === 1 ? pool[0] : pool[Math.floor(Math.random() * pool.length)];
+
+      // generator for different technique ids
+      let qText = "";
+      let qAnswer = 0;
+      let qHint = pick.formula || "Apply sutra steps.";
+
+      if (pick.id === "ekadhikena-purvena") {
+        const tens = Math.floor(Math.random() * 8) + 1;
         const num = tens * 10 + 5;
-        questions.push({
-          question: `${num} × ${num}`,
-          answer: num * num,
-          hint: `Multiply ${tens} × (${tens} + 1) and append 25`
-        });
-      } else if (tech.id === "nikhilam-subtraction") {
-        // Multiplication near 100
-        const n1 = Math.floor(Math.random() * 8) + 91; // 91 to 98
+        qText = `${num} × ${num}`;
+        qAnswer = num * num;
+        qHint = `Multiply ${tens} × (${tens} + 1) and append 25`;
+      } else if (pick.id === "nikhilam-subtraction") {
+        const n1 = Math.floor(Math.random() * 8) + 91;
         const n2 = Math.floor(Math.random() * 8) + 91;
-        questions.push({
-          question: `${n1} × ${n2}`,
-          answer: n1 * n2,
-          hint: `Find deficits: ${100 - n1} and ${100 - n2}. Left: ${n1} - ${100 - n2}. Right: deficits product.`
-        });
-      } else if (tech.id === "yavadunam") {
-        const deficiency = Math.floor(Math.random() * 6) + 1; // 1 to 6
+        qText = `${n1} × ${n2}`;
+        qAnswer = n1 * n2;
+        qHint = `Find deficits: ${100 - n1} and ${100 - n2}. Left: ${n1} - ${100 - n2}. Right: deficits product.`;
+      } else if (pick.id === "yavadunam") {
+        const deficiency = Math.floor(Math.random() * 6) + 1;
         const num = 100 - deficiency;
-        questions.push({
-          question: `${num} × ${num}`,
-          answer: num * num,
-          hint: `Deficit is ${deficiency}. Calculate (${num} - ${deficiency}) and append (${deficiency}²)`
-        });
-      } else if (tech.id === "ekanyunena-purvena") {
+        qText = `${num} × ${num}`;
+        qAnswer = num * num;
+        qHint = `Deficit is ${deficiency}. Calculate (${num} - ${deficiency}) and append (${deficiency}²)`;
+      } else if (pick.id === "ekanyunena-purvena") {
         const num = Math.floor(Math.random() * 80) + 11;
-        questions.push({
-          question: `${num} × 99`,
-          answer: num * 99,
-          hint: `Left part: ${num} - 1. Right part: 99 - (${num} - 1)`
-        });
-      } else if (tech.id === "vertically-crosswise") {
+        qText = `${num} × 99`;
+        qAnswer = num * 99;
+        qHint = `Left part: ${num} - 1. Right part: 99 - (${num} - 1)`;
+      } else if (pick.id === "vertically-crosswise") {
         const n1 = Math.floor(Math.random() * 15) + 11;
         const n2 = Math.floor(Math.random() * 15) + 11;
-        questions.push({
-          question: `${n1} × ${n2}`,
-          answer: n1 * n2,
-          hint: "Solve vertically and crosswise."
-        });
-      } else if (tech.id === "anurupyena") {
-        const n1 = Math.floor(Math.random() * 8) + 41; // 41 to 48 (sub-base 50)
+        qText = `${n1} × ${n2}`;
+        qAnswer = n1 * n2;
+        qHint = "Solve vertically and crosswise.";
+      } else if (pick.id === "anurupyena") {
+        const n1 = Math.floor(Math.random() * 8) + 41;
         const n2 = Math.floor(Math.random() * 8) + 41;
-        questions.push({
-          question: `${n1} × ${n2}`,
-          answer: n1 * n2,
-          hint: `Compare to sub-base 50. Deficits are ${50 - n1} and ${50 - n2}.`
-        });
+        qText = `${n1} × ${n2}`;
+        qAnswer = n1 * n2;
+        qHint = `Compare to sub-base 50. Deficits are ${50 - n1} and ${50 - n2}.`;
       } else {
-        // Fallback for algebra and other techniques: load from predefined examples
-        const examplesList = tech.examples || [];
+        const examplesList = pick.examples || [];
         if (examplesList.length > 0) {
-          const ex = examplesList[i % examplesList.length];
-          questions.push({
-            key: i,
-            question: ex.problem,
-            answer: ex.answer,
-            hint: tech.formula
-          } as any);
+          const ex = examplesList[Math.floor(Math.random() * examplesList.length)];
+          qText = ex.problem;
+          qAnswer = ex.answer;
+          qHint = pick.formula || qHint;
         } else {
-          // Absolute fallback
           const n1 = Math.floor(Math.random() * 10) + 2;
           const n2 = Math.floor(Math.random() * 10) + 2;
-          questions.push({
-            question: `${n1} × ${n2}`,
-            answer: n1 * n2,
-            hint: tech.formula || "Solve step-by-step."
-          });
+          qText = `${n1} × ${n2}`;
+          qAnswer = n1 * n2;
+          qHint = pick.formula || qHint;
         }
       }
+
+      // ensure we don't push duplicates; if duplicate, alter numbers slightly
+      let attempt = 0;
+      while (seen.has(qText) && attempt < 6) {
+        attempt++;
+        // Slight mutation: change multiplicands by +/-1
+        const parts = qText.split("×").map((s) => s.trim());
+        if (parts.length === 2) {
+          const a = parseInt(parts[0]) || 0;
+          const b = parseInt(parts[1]) || 0;
+          const na = Math.max(2, a + (Math.random() > 0.5 ? 1 : -1));
+          const nb = Math.max(2, b + (Math.random() > 0.5 ? 1 : -1));
+          qText = `${na} × ${nb}`;
+          qAnswer = na * nb;
+        } else {
+          // append index
+          qText = `${qText} (${i})`;
+        }
+      }
+
+      seen.add(qText);
+
+      questions.push({ question: qText, answer: qAnswer, hint: qHint });
     }
 
     return {
