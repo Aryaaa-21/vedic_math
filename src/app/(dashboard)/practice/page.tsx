@@ -284,7 +284,7 @@ export default function PracticePage() {
                   <div ref={questionWrapRef} className="w-full overflow-hidden">
                     <div
                       ref={questionTextRef}
-                      className="inline-block whitespace-nowrap font-mono text-6xl md:text-7xl font-black text-primary tracking-wide leading-none origin-center"
+                      className="inline-block whitespace-nowrap font-mono text-5xl md:text-6xl font-black text-primary tracking-wide leading-none origin-center"
                       style={{ transform: `scale(${questionScale})` }}
                     >
                       {currentQ.question}

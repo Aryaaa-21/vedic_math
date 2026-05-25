@@ -26,6 +26,7 @@ function LearnPageContent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterDifficulty, setFilterDifficulty] = useState<string>("All");
   const [selectedTech, setSelectedTech] = useState<Technique | null>(null);
+  const [showExamples, setShowExamples] = useState(false);
 
   // Check URL query parameters to auto-open a technique (e.g. from landing page)
   useEffect(() => {
@@ -255,6 +256,14 @@ function LearnPageContent() {
                   <h3 className="text-xs text-primary font-bold uppercase tracking-wider flex items-center gap-1">
                     <BookOpen className="w-4 h-4" />
                     <span>Step-by-Step Example: {selectedTech.example.problem}</span>
+                    {selectedTech.examples && selectedTech.examples.length > 1 && (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setShowExamples(!showExamples); }}
+                        className={`ml-3 text-[11px] px-2 py-1 rounded-full font-bold transition-all ${showExamples ? "bg-primary text-white" : "bg-card text-muted-foreground border border-primary/10 hover:bg-primary/5"}`}
+                      >
+                        {showExamples ? "Hide Examples" : `More Examples (${selectedTech.examples.length})`}
+                      </button>
+                    )}
                   </h3>
 
                   <div className="space-y-3">
@@ -273,6 +282,28 @@ function LearnPageContent() {
                       </div>
                     ))}
                   </div>
+                  {/* Additional examples list */}
+                  {showExamples && selectedTech.examples && selectedTech.examples.length > 0 && (
+                    <div className="mt-4 space-y-2">
+                      <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Additional Examples</h4>
+                      <div className="grid grid-cols-1 gap-2">
+                        {selectedTech.examples.map((ex, idx) => (
+                          <div key={idx} className="p-3 bg-background/50 rounded-lg border border-primary/5 flex items-center justify-between">
+                            <div>
+                              <div className="text-sm font-extrabold text-primary">{ex.problem}</div>
+                              <div className="text-xs text-muted-foreground">Answer: <span className="font-mono font-black">{ex.answer}</span></div>
+                            </div>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleStartPractice(selectedTech); setShowExamples(false); }}
+                              className="ml-4 px-3 py-2 bg-primary text-white rounded-lg text-xs font-bold"
+                            >
+                              Try Sutra
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
