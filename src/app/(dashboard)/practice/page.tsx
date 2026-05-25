@@ -50,8 +50,11 @@ export default function PracticePage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [sessionCompleted, setSessionCompleted] = useState(false);
   const [avgSpeed, setAvgSpeed] = useState(2.3); // mock speed for display
+  const [questionScale, setQuestionScale] = useState(1);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const questionWrapRef = useRef<HTMLDivElement>(null);
+  const questionTextRef = useRef<HTMLDivElement>(null);
   const startTimeRef = useRef<number>(0);
   const activeBand = practiceBands.find((band) => activeTechnique && activeTechnique.level >= band.minLevel && activeTechnique.level <= band.maxLevel)?.label || "Easy";
 
@@ -76,6 +79,28 @@ export default function PracticePage() {
   }, [practiceIndex, sessionCompleted]);
 
   const currentQ = practiceQuestions[practiceIndex];
+
+  useEffect(() => {
+    const fitQuestion = () => {
+      const wrap = questionWrapRef.current;
+      const text = questionTextRef.current;
+      if (!wrap || !text) return;
+
+      setQuestionScale(1);
+      requestAnimationFrame(() => {
+        const availableWidth = wrap.clientWidth;
+        const requiredWidth = text.scrollWidth;
+        if (!availableWidth || !requiredWidth) return;
+
+        const nextScale = Math.min(1, Math.max(0.42, availableWidth / requiredWidth));
+        setQuestionScale(nextScale);
+      });
+    };
+
+    fitQuestion();
+    window.addEventListener("resize", fitQuestion);
+    return () => window.removeEventListener("resize", fitQuestion);
+  }, [currentQ?.question]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -256,8 +281,14 @@ export default function PracticePage() {
                 {/* Equation Math Display */}
                 <div className="space-y-2">
                   <span className="text-xs font-mono font-bold text-muted-foreground uppercase">Evaluate</span>
-                  <div className="font-mono text-6xl md:text-7xl font-black text-primary tracking-wide leading-none">
-                    {currentQ.question}
+                  <div ref={questionWrapRef} className="w-full overflow-hidden">
+                    <div
+                      ref={questionTextRef}
+                      className="inline-block whitespace-nowrap font-mono text-6xl md:text-7xl font-black text-primary tracking-wide leading-none origin-center"
+                      style={{ transform: `scale(${questionScale})` }}
+                    >
+                      {currentQ.question}
+                    </div>
                   </div>
                 </div>
 
