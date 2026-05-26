@@ -69,8 +69,9 @@ Open [http://localhost:5173](http://localhost:5173) for the frontend.
 
 ### Frontend
 
-* Deploy the Vite app to your static host of choice.
+* Deploy the Vite app to Netlify or another static host.
 * Set `VITE_API_URL` to the deployed backend URL, for example `https://vedax-backend.up.railway.app/api`.
+* Netlify is configured via [netlify.toml](netlify.toml) to build with `npm run build`, publish `dist`, and rewrite SPA routes to `index.html`.
 
 
 ### hee hee 
