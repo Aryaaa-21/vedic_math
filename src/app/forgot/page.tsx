@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Mail, ArrowLeft, ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Mail, ArrowLeft, ArrowRight, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import VedicPattern from "@/components/VedicPattern";
 import { useAuth } from "@/contexts/AuthContext";
@@ -12,25 +12,16 @@ export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
-    setSuccess(false);
     try {
       await resetPassword(email);
-      setSuccess(true);
     } catch (err: any) {
       console.error(err);
-      if (err.code === "auth/user-not-found") {
-        setError("No user found with this email address.");
-      } else if (err.code === "auth/invalid-email") {
-        setError("Please enter a valid email address.");
-      } else {
-        setError(err.message || "Failed to send reset email. Please try again.");
-      }
+      setError(err.message || "Password reset is not available yet.");
     } finally {
       setIsLoading(false);
     }
@@ -59,7 +50,7 @@ export default function ForgotPasswordPage() {
             <div className="text-center space-y-1">
               <h2 className="font-sans text-xl font-extrabold text-primary">Reset Password</h2>
               <p className="text-xs text-muted-foreground font-semibold">
-                Enter your email address and we'll send you a recovery link.
+                Enter your email address to start account recovery.
               </p>
             </div>
 
@@ -67,13 +58,6 @@ export default function ForgotPasswordPage() {
               <div className="flex items-center gap-2 p-3 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 text-xs font-semibold">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
-              </div>
-            )}
-
-            {success && (
-              <div className="flex items-center gap-2 p-3 bg-green-500/10 text-green-600 rounded-2xl border border-green-500/20 text-xs font-semibold">
-                <CheckCircle2 className="w-4 h-4 shrink-0" />
-                <span>Recovery link sent! Check your inbox.</span>
               </div>
             )}
 

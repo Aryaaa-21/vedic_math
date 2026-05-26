@@ -12,7 +12,6 @@ interface AuthContextType {
   isGuest: boolean;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
-  loginWithGoogle: (name?: string) => Promise<void>;
   continueAsGuest: (name?: string) => void;
   login: (email: string, password: string) => Promise<void>;
   signup: (name: string, email: string, password: string) => Promise<void>;
@@ -24,7 +23,6 @@ const AuthContext = createContext<AuthContextType>({
   isGuest: false,
   logout: async () => {},
   resetPassword: async () => {},
-  loginWithGoogle: async () => {},
   continueAsGuest: () => {},
   login: async () => {},
   signup: async () => {},
@@ -423,44 +421,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const resetPassword = async (email: string) => {
-    console.log("Simulating password reset email to:", email);
-    await new Promise((resolve) => setTimeout(resolve, 800));
-  };
+    const normalizedEmail = email.trim();
 
-  const loginWithGoogle = async (name?: string) => {
-    setLoading(true);
-    try {
-      const res = await fetch(`${getApiUrl()}/auth/google-login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name?.trim() || "Google Mathlete" })
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Failed to sign in with Google");
-      }
-
-      const data = await res.json();
-      localStorage.setItem("vedax_token", data.token);
-      localStorage.removeItem("guestMode");
-      setIsGuest(false);
-
-      const profile = {
-        uid: data.user.id,
-        email: data.user.email,
-        displayName: data.user.name
-      };
-      setAuthUser(profile);
-
-      await mergeGuestDataAndSync(data.token, data.user);
-      navigate("/dashboard");
-    } catch (error) {
-      setLoading(false);
-      throw error;
-    } finally {
-      setLoading(false);
+    if (!normalizedEmail) {
+      throw new Error("Email is required.");
     }
+
+    throw new Error("Password reset is not available yet. Please contact support to reset your JWT account password.");
   };
 
   const continueAsGuest = (name?: string) => {
@@ -506,7 +473,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isGuest,
       logout,
       resetPassword,
-      loginWithGoogle,
       continueAsGuest,
       login,
       signup

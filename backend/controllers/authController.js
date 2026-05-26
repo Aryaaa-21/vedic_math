@@ -120,39 +120,6 @@ const authUser = async (req, res) => {
   }
 };
 
-const googleLogin = async (req, res) => {
-  try {
-    if (!isDatabaseReady()) {
-      return res.status(503).json({ message: DB_UNAVAILABLE_MESSAGE });
-    }
-
-    const rawName = (req.body && req.body.name ? String(req.body.name) : "").trim();
-    const name = rawName || "Google Mathlete";
-    const email = `google.${name.toLowerCase().replace(/[^a-z0-9]+/g, ".").replace(/^\.|\.$/g, "") || "mathlete"}@vedax.edu`;
-
-    let user = await User.findOne({ email });
-
-    if (!user) {
-      const password = Math.random().toString(36).substring(7);
-      user = await User.create({
-        name,
-        email,
-        password,
-        joinedDate: new Date(),
-        avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}`
-      });
-    }
-
-    res.json({
-      token: generateToken(user._id),
-      user: toSafeUser(user)
-    });
-  } catch (error) {
-    console.error("Google login error:", error);
-    res.status(500).json({ message: "Server error during Google sign-in" });
-  }
-};
-
 // @desc    Get current authenticated user
 // @route   GET /api/auth/me
 // @access  Private
@@ -174,4 +141,4 @@ const logoutUser = async (req, res) => {
   res.json({ message: "Logged out successfully" });
 };
 
-module.exports = { registerUser, authUser, googleLogin, getCurrentUser, verifyAuth, logoutUser, toSafeUser };
+module.exports = { registerUser, authUser, getCurrentUser, verifyAuth, logoutUser, toSafeUser };

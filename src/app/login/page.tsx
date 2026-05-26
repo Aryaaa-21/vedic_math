@@ -8,8 +8,6 @@ import {
   ArrowRight,
   Eye,
   EyeOff,
-  Sparkles,
-  Info,
   AlertCircle
 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -17,7 +15,7 @@ import VedicPattern from "@/components/VedicPattern";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
-  const { login, loginWithGoogle, continueAsGuest } = useAuth();
+  const { login, continueAsGuest } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -34,19 +32,6 @@ export default function LoginPage() {
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Invalid email or password. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    setIsLoading(true);
-    setError("");
-    try {
-      await loginWithGoogle(displayName || undefined);
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Failed to sign in with Google.");
     } finally {
       setIsLoading(false);
     }
@@ -189,25 +174,11 @@ export default function LoginPage() {
                 <div className="w-full border-t border-primary/10"></div>
               </div>
               <span className="relative px-3 bg-card text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                Or continue with
+                New here?
               </span>
             </div>
 
-            {/* Social Logins */}
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                type="button"
-                onClick={handleGoogleLogin}
-                title="Continue with Google name"
-                className="flex items-center justify-center gap-2 py-3 border border-primary/10 hover:bg-primary/5 rounded-xl cursor-pointer transition-colors text-xs font-bold text-primary"
-              >
-                <img
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrRE0_2UU2nsKTnCdX2WBwTaeZvTGlBUo4CNzF7zpedSeuUXhnaCZ-qdZKXhAwek-hGoR2jTXzdcCT12zmWxuk1Ql-qiOLi6sTah3W-kPqXU_7bZrOgrusLj18WqWp85AsckaqGd1SXYr7_jIlNiloWujUd3T1jzqxnJKuhX5j4DsxL1BB0xuWzF3QTtWWaah9HR2kCHhNMyaMxh8F-3_QhmhIWslX_a6LMueJlrPz1P9taLFdXA93YLIBXeyO6hkg0vfGBVinahcR"
-                  alt="Google Logo"
-                  className="w-4 h-4"
-                />
-                <span>Google</span>
-              </button>
+            <div className="grid grid-cols-1 gap-4">
               <Link
                 to="/signup"
                 className="flex items-center justify-center gap-2 py-3 border border-primary/10 hover:bg-primary/5 rounded-xl cursor-pointer transition-colors text-xs font-bold text-primary"
