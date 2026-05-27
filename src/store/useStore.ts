@@ -51,6 +51,99 @@ const syncWithDatabase = async (
   }
 };
 
+export const calculateLevelFromXp = (xp: number): number => {
+  let level = 1;
+  let xpNeededForNext = 250;
+  let tempXp = xp;
+
+  while (tempXp >= xpNeededForNext) {
+    tempXp -= xpNeededForNext;
+    level += 1;
+    const band = Math.floor((level - 1) / 5);
+    xpNeededForNext = 250 + band * 50;
+  }
+
+  return level;
+};
+
+export const getXpProgressForLevel = (xp: number) => {
+  let level = 1;
+  let xpNeededForNext = 250;
+  let tempXp = xp;
+
+  while (tempXp >= xpNeededForNext) {
+    tempXp -= xpNeededForNext;
+    level += 1;
+    const band = Math.floor((level - 1) / 5);
+    xpNeededForNext = 250 + band * 50;
+  }
+
+  return {
+    currentLevelXp: tempXp,
+    nextLevelXpRequired: xpNeededForNext,
+    percent: Math.floor((tempXp / xpNeededForNext) * 100)
+  };
+};
+
+const recordDailyActivityAttempt = (set: any, get: any) => {
+  if (typeof window === "undefined") return;
+
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const today = `${year}-${month}-${day}`;
+
+  let tracker = { lastAttemptDate: today, todayAttempts: 0, streakAwardedToday: false };
+  const saved = localStorage.getItem("vedax-streak-tracker");
+  if (saved) {
+    try {
+      tracker = JSON.parse(saved);
+    } catch (e) {}
+  }
+
+  if (tracker.lastAttemptDate !== today) {
+    const lastDate = new Date(tracker.lastAttemptDate);
+    const todayDate = new Date(today);
+    lastDate.setHours(0, 0, 0, 0);
+    todayDate.setHours(0, 0, 0, 0);
+
+    const diffTime = todayDate.getTime() - lastDate.getTime();
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+    const state = get();
+    let currentStreak = state.user.streak;
+
+    if (diffDays === 1) {
+      if (tracker.todayAttempts < 2) {
+        currentStreak = 0;
+      }
+    } else {
+      currentStreak = 0;
+    }
+
+    tracker.lastAttemptDate = today;
+    tracker.todayAttempts = 0;
+    tracker.streakAwardedToday = false;
+
+    set((state: any) => ({ user: { ...state.user, streak: currentStreak } }));
+  }
+
+  tracker.todayAttempts += 1;
+
+  if (tracker.todayAttempts >= 2 && !tracker.streakAwardedToday) {
+    tracker.streakAwardedToday = true;
+    set((state: any) => {
+      const newStreak = state.user.streak + 1;
+      return { user: { ...state.user, streak: newStreak } };
+    });
+    const s = get();
+    syncWithDatabase(s.user, s.recentActivities, s.badges, s.challengeHighScore);
+  }
+
+  localStorage.setItem("vedax-streak-tracker", JSON.stringify(tracker));
+};
+
 
 export interface Technique {
   id: string;
@@ -213,7 +306,7 @@ export const useStore = create<StoreState>((set, get) => ({
   addXp: (amount) => {
     set((state) => {
       const newXp = state.user.xp + amount;
-      const newLevel = Math.floor(newXp / 500) + 1;
+      const newLevel = calculateLevelFromXp(newXp);
       const statsUpdated = { xp: newXp, level: newLevel > state.user.level ? newLevel : state.user.level };
       
       const updatedLeaderboard = state.leaderboard.map(user => {
@@ -465,6 +558,7 @@ export const useStore = create<StoreState>((set, get) => ({
   }),
 
   submitPracticeAnswer: (userAns) => {
+    recordDailyActivityAttempt(set, get);
     let result = { isCorrect: false, correctAnswer: 0 };
     set((state) => {
       const q = state.practiceQuestions[state.practiceIndex];
@@ -532,6 +626,7 @@ export const useStore = create<StoreState>((set, get) => ({
   }),
 
   submitChallengeAnswer: (userAns) => {
+    recordDailyActivityAttempt(set, get);
     let correct = false;
     set((state) => {
       const q = state.challengeCurrentQuestion;
@@ -583,7 +678,7 @@ export const useStore = create<StoreState>((set, get) => ({
       if (finalScore > 0) {
         const xpEarned = Math.floor(finalScore / 10);
         const newXp = state.user.xp + xpEarned;
-        const newLevel = Math.floor(newXp / 500) + 1;
+        const newLevel = calculateLevelFromXp(newXp);
 
         const sessionAvgSpeed = state.challengeQuestionsSolved > 0 
           ? parseFloat((60 / state.challengeQuestionsSolved).toFixed(1)) 

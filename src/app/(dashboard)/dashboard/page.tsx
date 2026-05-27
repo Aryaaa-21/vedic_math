@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useStore } from "@/store/useStore";
+import { useStore, getXpProgressForLevel } from "@/store/useStore";
 import {
   Flame,
   Zap,
@@ -139,8 +139,9 @@ export default function DashboardPage() {
     }
   };
 
-  // Level progress percentage calculations
-  const levelProgressPercent = Math.floor(((user.xp % 500) / 500) * 100);
+  // Level progress percentage calculations using dynamic level intervals
+  const xpProgress = getXpProgressForLevel(user.xp);
+  const levelProgressPercent = xpProgress.percent;
 
   return (
     <div className="space-y-8">
@@ -349,7 +350,7 @@ export default function DashboardPage() {
                 <div className="h-full bg-primary" style={{ width: `${levelProgressPercent}%` }} />
               </div>
               <p className="text-[10px] text-muted-foreground font-semibold text-right">
-                {user.xp % 500} / 500 XP ({levelProgressPercent}% toward next level)
+                {xpProgress.currentLevelXp} / {xpProgress.nextLevelXpRequired} XP ({levelProgressPercent}% toward next level)
               </p>
             </div>
 
