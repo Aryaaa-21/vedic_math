@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/store/authStore";
+import VedaXLoader from "@/components/VedaXLoader";
 import { useStore } from "@/store/useStore";
 import { API_URL } from "@/utils/api";
 
@@ -477,16 +478,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       login,
       signup
     }}>
-      {loading ? (
-        <div className="min-h-screen bg-background flex flex-col items-center justify-center space-y-4">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm font-semibold text-muted-foreground uppercase tracking-widest">
-            VedaX Arithmetic Loading...
-          </p>
-        </div>
-      ) : (
-        children
-      )}
+      {loading ? <VedaXLoader /> : children}
     </AuthContext.Provider>
   );
 }
