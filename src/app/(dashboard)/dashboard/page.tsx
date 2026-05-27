@@ -30,24 +30,9 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const { user, recentActivities, badges, leaderboard, startChallenge } = useStore();
   const [mounted, setMounted] = useState(false);
-  const [typedGreeting, setTypedGreeting] = useState("");
-  const [greetingPhase, setGreetingPhase] = useState<"typing-en" | "holding-en" | "deleting-en" | "typing-hi" | "holding-hi" | "deleting-hi">("typing-en");
 
   const firstName = user.name.split(" ")[0] || user.name || "Mathlete";
   const hindiName = transliterateToHindi(firstName);
-  const englishGreeting = `Namaste, ${firstName}`;
-  const hindiGreeting = `Namaste, ${hindiName}`;
-  const englishSegments = getNameSegments(englishGreeting);
-  const hindiSegments = getNameSegments(hindiGreeting);
-
-  function getNameSegments(value: string) {
-    if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
-      const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
-      return Array.from(segmenter.segment(value), (segment) => segment.segment);
-    }
-
-    return Array.from(value);
-  }
 
   function transliterateToHindi(value: string) {
     const cleaned = value.trim();
@@ -186,46 +171,6 @@ export default function DashboardPage() {
     setMounted(true);
   }, []);
 
-  useEffect(() => {
-    const activeSegments = greetingPhase === "typing-hi" ? hindiSegments : englishSegments;
-    const typedSegments = getNameSegments(typedGreeting);
-    const typingDelay = 42;
-    const holdDelay = greetingPhase === "holding-hi" ? 2000 : 850;
-    const transitionDelay = 18;
-
-    const timer = window.setTimeout(() => {
-      if (greetingPhase === "typing-en" || greetingPhase === "typing-hi") {
-        if (typedSegments.length < activeSegments.length) {
-          setTypedGreeting(activeSegments.slice(0, typedSegments.length + 1).join(""));
-          return;
-        }
-
-        setGreetingPhase(greetingPhase === "typing-en" ? "holding-en" : "holding-hi");
-        return;
-      }
-
-      if (greetingPhase === "holding-en" || greetingPhase === "holding-hi") {
-        setGreetingPhase(greetingPhase === "holding-en" ? "deleting-en" : "deleting-hi");
-        return;
-      }
-
-      if (typedSegments.length > 0) {
-        setTypedGreeting(activeSegments.slice(0, typedSegments.length - 1).join(""));
-        return;
-      }
-
-      setGreetingPhase(greetingPhase === "deleting-en" ? "typing-hi" : "typing-en");
-    },
-      greetingPhase === "typing-en" || greetingPhase === "typing-hi"
-        ? typingDelay
-        : greetingPhase.startsWith("holding")
-          ? holdDelay
-          : transitionDelay
-    );
-
-    return () => window.clearTimeout(timer);
-  }, [englishSegments, greetingPhase, hindiSegments, typedGreeting]);
-
   const handleStartDailyChallenge = () => {
     startChallenge();
     navigate("/challenge");
@@ -319,9 +264,6 @@ export default function DashboardPage() {
   // Level progress percentage calculations using dynamic level intervals
   const xpProgress = getXpProgressForLevel(user.xp);
   const levelProgressPercent = xpProgress.percent;
-  const greetingSegments = getNameSegments(typedGreeting);
-  const greetingGrowth = englishSegments.length > 0 ? Math.min(greetingSegments.length / englishSegments.length, 1) : 1;
-  const greetingScale = 0.94 + greetingGrowth * 0.08;
 
   return (
     <div className="space-y-8">
@@ -329,13 +271,7 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h1 className="font-sans text-3xl font-extrabold text-primary tracking-tight min-h-[2.5rem] flex items-end">
-            <span
-              className="inline-flex items-center gap-0.5 whitespace-nowrap origin-left transition-transform duration-100 ease-out"
-              style={{ transform: `scale(${greetingScale})` }}
-            >
-              {typedGreeting}
-              <span className="inline-block w-[0.1em] h-[1.1em] ml-0.5 bg-primary rounded-full animate-pulse align-middle" />
-            </span>
+            Namaste, {hindiName}
           </h1>
           <p className="text-muted-foreground font-medium">
             Welcome back to VedaX. Your mental calculation speeds are sharpening!
