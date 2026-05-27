@@ -34,8 +34,9 @@ export default function DashboardPage() {
   const [greetingPhase, setGreetingPhase] = useState<"typing-en" | "holding-en" | "deleting-en" | "typing-hi" | "holding-hi" | "deleting-hi">("typing-en");
 
   const firstName = user.name.split(" ")[0] || user.name || "Mathlete";
+  const hindiName = transliterateToHindi(firstName);
   const englishGreeting = `Namaste, ${firstName}`;
-  const hindiGreeting = `नमस्ते, ${transliterateToHindi(firstName)}`;
+  const hindiGreeting = `Namaste, ${hindiName}`;
   const englishSegments = getNameSegments(englishGreeting);
   const hindiSegments = getNameSegments(hindiGreeting);
 
@@ -49,39 +50,122 @@ export default function DashboardPage() {
   }
 
   function transliterateToHindi(value: string) {
-    const map: Record<string, string> = {
-      a: "अ",
-      b: "ब",
-      c: "क",
-      d: "द",
-      e: "ए",
-      f: "फ",
-      g: "ग",
-      h: "ह",
-      i: "इ",
-      j: "ज",
+    const cleaned = value.trim();
+    if (!cleaned) return cleaned;
+
+    const digraphs: Record<string, string> = {
+      kh: "ख",
+      gh: "घ",
+      ch: "च",
+      sh: "श",
+      th: "थ",
+      dh: "ध",
+      ph: "फ",
+      bh: "भ",
+      jh: "झ",
+      ng: "ङ",
+      ny: "ञ",
+      ai: "ऐ",
+      au: "औ",
+      aa: "आ",
+      ee: "ई",
+      ii: "ई",
+      oo: "ऊ"
+    };
+
+    const consonants: Record<string, string> = {
       k: "क",
-      l: "ल",
-      m: "म",
-      n: "न",
-      o: "ओ",
-      p: "प",
-      q: "क",
-      r: "र",
-      s: "स",
+      g: "ग",
+      c: "क",
+      j: "ज",
       t: "त",
-      u: "उ",
+      d: "द",
+      n: "न",
+      p: "प",
+      b: "ब",
+      m: "म",
+      y: "य",
+      r: "र",
+      l: "ल",
       v: "व",
       w: "व",
+      s: "स",
+      h: "ह",
+      f: "फ",
+      q: "क",
       x: "क्स",
-      y: "य",
       z: "ज"
     };
 
-    return value
-      .split("")
-      .map((character) => map[character.toLowerCase()] || character)
-      .join("");
+    const vowelMarks: Record<string, string> = {
+      a: "",
+      i: "ि",
+      u: "ु",
+      e: "े",
+      o: "ो"
+    };
+
+    const standaloneVowels: Record<string, string> = {
+      a: "अ",
+      i: "इ",
+      u: "उ",
+      e: "ए",
+      o: "ओ"
+    };
+
+    const letters = cleaned.toLowerCase();
+    let result = "";
+    let index = 0;
+
+    while (index < letters.length) {
+      const current = letters[index];
+
+      if (/[^a-z]/.test(current)) {
+        result += cleaned[index];
+        index += 1;
+        continue;
+      }
+
+      const pair = letters.slice(index, index + 2);
+      if (digraphs[pair]) {
+        result += digraphs[pair];
+        index += 2;
+        continue;
+      }
+
+      if (standaloneVowels[current]) {
+        result += standaloneVowels[current];
+        index += 1;
+        continue;
+      }
+
+      const consonant = consonants[current];
+      if (consonant) {
+        const next = letters[index + 1];
+        const nextPair = letters.slice(index + 1, index + 3);
+
+        if (next && digraphs[nextPair]) {
+          result += consonant + digraphs[nextPair];
+          index += 3;
+          continue;
+        }
+
+        if (next && vowelMarks[next] !== undefined) {
+          result += consonant + vowelMarks[next];
+          index += 2;
+          continue;
+        }
+
+        result += consonant + "्";
+        index += 1;
+        continue;
+      }
+
+      result += cleaned[index];
+      index += 1;
+    }
+
+    return result.replace(/्$/, "");
   }
 
   const isSeedActivity = (activity: any) => {
@@ -106,7 +190,7 @@ export default function DashboardPage() {
     const activeSegments = greetingPhase === "typing-hi" ? hindiSegments : englishSegments;
     const typedSegments = getNameSegments(typedGreeting);
     const typingDelay = 42;
-    const holdDelay = 850;
+    const holdDelay = greetingPhase === "holding-hi" ? 2000 : 850;
     const transitionDelay = 18;
 
     const timer = window.setTimeout(() => {
