@@ -24,6 +24,8 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showGuestPrompt, setShowGuestPrompt] = useState(false);
+  const [guestName, setGuestName] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,146 +70,199 @@ export default function SignupPage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-card rounded-3xl p-6 md:p-8 border border-primary/10 shadow-lg space-y-6"
           >
-            <div className="text-center space-y-1">
-              <h2 className="font-sans text-xl font-extrabold text-primary">Create Your Account</h2>
-              <p className="text-xs text-muted-foreground font-semibold">
-                Join our community of mental calculators and master the sutras.
-              </p>
-            </div>
-
-            {error && (
-              <div className="flex items-center gap-2 p-3 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 text-xs font-semibold">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{error}</span>
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Username field */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1" htmlFor="username">
-                  Username
-                </label>
-                <div className="relative">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
-                  <input
-                    id="username"
-                    type="text"
-                    required
-                    placeholder="Arjun Sharma"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-background pl-10 pr-4 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"
-                  />
+            {showGuestPrompt ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  continueAsGuest(guestName || undefined);
+                }}
+                className="space-y-4"
+              >
+                <div className="text-center space-y-1">
+                  <h2 className="font-sans text-xl font-extrabold text-primary font-black">Enter Guest Name</h2>
+                  <p className="text-xs text-muted-foreground font-semibold">
+                    What should we call you during your practice session?
+                  </p>
                 </div>
-              </div>
 
-              {/* Email field */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1" htmlFor="email">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    placeholder="arjun@vedax.edu"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-background pl-10 pr-4 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"
-                  />
+                <div className="space-y-1.5">
+                  <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1" htmlFor="guestName">
+                    Your Name
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
+                    <input
+                      id="guestName"
+                      type="text"
+                      required
+                      placeholder="e.g. Arjun"
+                      value={guestName}
+                      onChange={(e) => setGuestName(e.target.value)}
+                      className="w-full bg-background pl-10 pr-4 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Password field */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1" htmlFor="password">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
-                  <input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-background pl-10 pr-10 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"
-                  />
+                <button
+                  type="submit"
+                  className="w-full bg-primary hover:bg-primary/95 text-white font-extrabold py-3.5 rounded-xl cursor-pointer active:scale-95 transition-all text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 border-b-4 border-primary/40 mt-6"
+                >
+                  <span>Start Training</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setShowGuestPrompt(false)}
+                  className="w-full border-2 border-secondary text-secondary hover:bg-secondary/5 font-extrabold py-3.5 rounded-xl cursor-pointer active:scale-95 transition-all text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 mt-2"
+                >
+                  <span>Back to Sign Up</span>
+                </button>
+              </form>
+            ) : (
+              <>
+                <div className="text-center space-y-1">
+                  <h2 className="font-sans text-xl font-extrabold text-primary">Create Your Account</h2>
+                  <p className="text-xs text-muted-foreground font-semibold">
+                    Join our community of mental calculators and master the sutras.
+                  </p>
+                </div>
+
+                {error && (
+                  <div className="flex items-center gap-2 p-3 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 text-xs font-semibold">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{error}</span>
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  {/* Username field */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1" htmlFor="username">
+                      Username
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
+                      <input
+                        id="username"
+                        type="text"
+                        required
+                        placeholder="Arjun Sharma"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full bg-background pl-10 pr-4 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Email field */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1" htmlFor="email">
+                      Email Address
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
+                      <input
+                        id="email"
+                        type="email"
+                        required
+                        placeholder="arjun@vedax.edu"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full bg-background pl-10 pr-4 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Password field */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1" htmlFor="password">
+                      Password
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
+                      <input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        required
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full bg-background pl-10 pr-10 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-primary/60 hover:text-primary transition-colors cursor-pointer"
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Confirm Password field */}
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1" htmlFor="confirmPassword">
+                      Confirm Password
+                    </label>
+                    <div className="relative">
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
+                      <input
+                        id="confirmPassword"
+                        type={showPassword ? "text" : "password"}
+                        required
+                        placeholder="••••••••"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="w-full bg-background pl-10 pr-4 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Submit CTA */}
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full bg-primary hover:bg-primary/95 text-white font-extrabold py-3.5 rounded-xl cursor-pointer active:scale-95 transition-all text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 border-b-4 border-primary/40 mt-6"
+                  >
+                    {isLoading ? (
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <span>Create Account</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-primary/60 hover:text-primary transition-colors cursor-pointer"
+                    onClick={() => setShowGuestPrompt(true)}
+                    className="w-full border-2 border-secondary text-secondary hover:bg-secondary/5 font-extrabold py-3.5 rounded-xl cursor-pointer active:scale-95 transition-all text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 mt-2"
                   >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    <span>Continue as Guest</span>
                   </button>
+                </form>
+
+                <div className="relative my-4 flex items-center justify-center">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-primary/10"></div>
+                  </div>
+                  <span className="relative px-3 bg-card text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                    Already have an account?
+                  </span>
                 </div>
-              </div>
 
-              {/* Confirm Password field */}
-              <div className="space-y-1.5">
-                <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1" htmlFor="confirmPassword">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/60" />
-                  <input
-                    id="confirmPassword"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    placeholder="••••••••"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full bg-background pl-10 pr-4 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"
-                  />
+                <div className="grid grid-cols-1 gap-4">
+                  <Link
+                    to="/login"
+                    className="flex items-center justify-center gap-2 py-3 border border-primary/10 hover:bg-primary/5 rounded-xl cursor-pointer transition-colors text-xs font-bold text-primary"
+                  >
+                    <span>Sign In</span>
+                  </Link>
                 </div>
-              </div>
-
-              {/* Submit CTA */}
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-primary hover:bg-primary/95 text-white font-extrabold py-3.5 rounded-xl cursor-pointer active:scale-95 transition-all text-xs uppercase tracking-wider shadow-md flex items-center justify-center gap-1.5 border-b-4 border-primary/40 mt-6"
-              >
-                {isLoading ? (
-                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <span>Create Account</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => continueAsGuest(name || undefined)}
-                className="w-full border-2 border-secondary text-secondary hover:bg-secondary/5 font-extrabold py-3.5 rounded-xl cursor-pointer active:scale-95 transition-all text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 mt-2"
-              >
-                <span>Continue as Guest</span>
-              </button>
-            </form>
-
-            <div className="relative my-4 flex items-center justify-center">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-primary/10"></div>
-              </div>
-              <span className="relative px-3 bg-card text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                Already have an account?
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4">
-              <Link
-                to="/login"
-                className="flex items-center justify-center gap-2 py-3 border border-primary/10 hover:bg-primary/5 rounded-xl cursor-pointer transition-colors text-xs font-bold text-primary"
-              >
-                <span>Sign In</span>
-              </Link>
-            </div>
+              </>
+            )}
           </motion.div>
         </div>
       </main>

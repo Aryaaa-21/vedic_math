@@ -15,10 +15,9 @@ import VedicPattern from "@/components/VedicPattern";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
-  const { login, continueAsGuest } = useAuth();
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -76,21 +75,6 @@ export default function LoginPage() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest pl-1" htmlFor="displayName">
-                  Display Name for Guest / Google
-                </label>
-                <div className="relative">
-                  <input
-                    id="displayName"
-                    type="text"
-                    placeholder="Your name"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    className="w-full bg-background px-4 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"
-                  />
-                </div>
-              </div>
 
               {/* Email / Username field */}
               <div className="space-y-1.5">
@@ -158,15 +142,6 @@ export default function LoginPage() {
                   </>
                 )}
               </button>
-
-              <button
-                type="button"
-                onClick={() => continueAsGuest(displayName || undefined)}
-                className="w-full border-2 border-secondary text-secondary hover:bg-secondary/5 font-extrabold py-3.5 rounded-xl cursor-pointer active:scale-95 transition-all text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 mt-2"
-              >
-                <span>Continue as Guest</span>
-              </button>
-
             </form>
 
             <div className="relative my-4 flex items-center justify-center">
