@@ -92,7 +92,7 @@ export default function PracticePage() {
         const requiredWidth = text.scrollWidth;
         if (!availableWidth || !requiredWidth) return;
 
-        const nextScale = Math.min(1, Math.max(0.42, availableWidth / requiredWidth));
+        const nextScale = Math.min(1, Math.max(0.6, availableWidth / requiredWidth));
         setQuestionScale(nextScale);
       });
     };
@@ -106,7 +106,7 @@ export default function PracticePage() {
     e.preventDefault();
     if (!currentQ || sessionCompleted) return;
 
-    const numericAns = parseInt(inputVal.trim());
+    const numericAns = parseFloat(inputVal.trim());
     if (isNaN(numericAns)) return;
 
     const { isCorrect } = submitPracticeAnswer(numericAns);
@@ -281,11 +281,11 @@ export default function PracticePage() {
                 {/* Equation Math Display */}
                 <div className="space-y-2">
                   <span className="text-xs font-mono font-bold text-muted-foreground uppercase">Evaluate</span>
-                  <div ref={questionWrapRef} className="w-full overflow-hidden">
+                  <div ref={questionWrapRef} className="w-full max-h-64 overflow-y-auto overflow-x-auto py-4 px-2 bg-background/30 rounded-2xl border border-primary/5 flex items-center justify-center">
                     <div
                       ref={questionTextRef}
-                      className="inline-block whitespace-nowrap font-mono text-5xl md:text-6xl font-black text-primary tracking-wide leading-none origin-center"
-                      style={{ transform: `scale(${questionScale})` }}
+                      className="inline-block whitespace-pre-line font-mono text-3xl sm:text-4xl md:text-5xl font-black text-primary tracking-wide leading-relaxed text-center"
+                      style={{ transform: `scale(${questionScale})`, transformOrigin: 'center' }}
                     >
                       {currentQ.question}
                     </div>
@@ -297,11 +297,11 @@ export default function PracticePage() {
                   <input
                     ref={inputRef}
                     type="text"
-                    pattern="[0-9]*"
-                    inputMode="numeric"
+                    pattern="[0-9.-]*"
+                    inputMode="decimal"
                     placeholder="Enter answer"
                     value={inputVal}
-                    onChange={(e) => setInputVal(e.target.value.replace(/\D/g, ""))}
+                    onChange={(e) => setInputVal(e.target.value.replace(/[^0-9.-]/g, ""))}
                     className="w-full bg-background text-center py-4 rounded-2xl border-2 border-primary/20 text-3xl font-mono font-black focus:border-primary focus:outline-none transition-all placeholder:text-muted-foreground/30"
                   />
                   <button

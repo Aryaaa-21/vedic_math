@@ -14,7 +14,9 @@ export default function Navbar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { user, startChallenge } = useStore();
-  const { logout, isGuest } = useAuth();
+  const { logout, isGuest, authUser } = useAuth();
+
+  const isLoggedIn = !!authUser || isGuest;
 
   const mobileNavItems = [
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -88,26 +90,45 @@ export default function Navbar() {
 
       {/* Right Stats & User Info */}
       <div className="flex items-center gap-3">
-        {/* Streak counter */}
-        <div className="flex items-center gap-1 bg-primary/5 text-primary px-3 py-1 rounded-full border border-primary/10">
-          <Flame className="w-4 h-4 fill-primary text-primary" />
-          <span className="font-mono text-xs font-extrabold">{user.streak} Days</span>
-        </div>
+        {isLoggedIn ? (
+          <>
+            {/* Streak counter */}
+            <div className="flex items-center gap-1 bg-primary/5 text-primary px-3 py-1 rounded-full border border-primary/10">
+              <Flame className="w-4 h-4 fill-primary text-primary" />
+              <span className="font-mono text-xs font-extrabold">{user.streak} Days</span>
+            </div>
 
-        {/* XP badge */}
-        <div className="hidden sm:flex items-center gap-1 bg-accent/15 text-primary px-3 py-1 rounded-full border border-accent/25">
-          <Trophy className="w-3.5 h-3.5 text-primary" />
-          <span className="font-mono text-xs font-extrabold">{user.xp} XP</span>
-        </div>
+            {/* XP badge */}
+            <div className="hidden sm:flex items-center gap-1 bg-accent/15 text-primary px-3 py-1 rounded-full border border-accent/25">
+              <Trophy className="w-3.5 h-3.5 text-primary" />
+              <span className="font-mono text-xs font-extrabold">{user.xp} XP</span>
+            </div>
 
-        {/* User avatar */}
-        <Link to="/profile">
-          <img
-            src={user.avatar}
-            alt={user.name}
-            className="w-9 h-9 rounded-full object-cover border border-primary/20 hover:scale-105 transition-transform"
-          />
-        </Link>
+            {/* User avatar */}
+            <Link to="/profile">
+              <img
+                src={user.avatar}
+                alt={user.name}
+                className="w-9 h-9 rounded-full object-cover border border-primary/20 hover:scale-105 transition-transform"
+              />
+            </Link>
+          </>
+        ) : (
+          <div className="hidden lg:flex items-center gap-4">
+            <Link
+              to="/login"
+              className="text-xs font-bold text-muted-foreground hover:text-primary transition-all"
+            >
+              Sign In
+            </Link>
+            <Link
+              to="/signup"
+              className="bg-primary hover:bg-primary/90 text-white text-xs font-extrabold px-4 py-2 rounded-xl transition-all shadow-sm"
+            >
+              Create Account
+            </Link>
+          </div>
+        )}
 
         <ThemeToggle compact />
       </div>
@@ -134,17 +155,19 @@ export default function Navbar() {
             >
               <div className="space-y-6">
                 {/* User quick stats info */}
-                <div className="flex items-center gap-3 p-2 bg-background/50 rounded-xl border border-primary/5">
-                  <img
-                    src={user.avatar}
-                    alt={user.name}
-                    className="w-10 h-10 rounded-full object-cover border border-primary/10"
-                  />
-                  <div>
-                    <p className="text-xs text-primary font-bold">{user.name}</p>
-                    <p className="text-[10px] text-muted-foreground font-semibold">Level {user.level} Mathlete</p>
+                {isLoggedIn && (
+                  <div className="flex items-center gap-3 p-2 bg-background/50 rounded-xl border border-primary/5">
+                    <img
+                      src={user.avatar}
+                      alt={user.name}
+                      className="w-10 h-10 rounded-full object-cover border border-primary/10"
+                    />
+                    <div>
+                      <p className="text-xs text-primary font-bold">{user.name}</p>
+                      <p className="text-[10px] text-muted-foreground font-semibold">Level {user.level} Mathlete</p>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Nav links */}
                 <nav className="space-y-1">
@@ -178,7 +201,7 @@ export default function Navbar() {
                 >
                   Start Daily Challenge
                 </button>
-                {isGuest ? (
+                {!authUser ? (
                   <div className="flex flex-col gap-1 w-full">
                     <Link
                       to="/login"

@@ -16,7 +16,7 @@ import VedicPattern from "@/components/VedicPattern";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function SignupPage() {
-  const { signup } = useAuth();
+  const { signup, continueAsGuest } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -182,6 +182,13 @@ export default function SignupPage() {
                 )}
               </button>
 
+              <button
+                type="button"
+                onClick={() => continueAsGuest(name || undefined)}
+                className="w-full border-2 border-secondary text-secondary hover:bg-secondary/5 font-extrabold py-3.5 rounded-xl cursor-pointer active:scale-95 transition-all text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 mt-2"
+              >
+                <span>Continue as Guest</span>
+              </button>
             </form>
 
             <div className="relative my-4 flex items-center justify-center">

@@ -90,21 +90,22 @@ export default function DashboardPage() {
 
     if (challenges.length === 1) {
       return [
-        { day: "Prev", speed: parseFloat((baseline + 0.4).toFixed(1)) },
+        { day: "Prev", speed: 0 },
         { day: challenges[0].day, speed: challenges[0].speed },
-        { day: "Now", speed: parseFloat(Math.max(1, baseline - 0.2).toFixed(1)) }
+        { day: "Now", speed: 0 }
       ];
     }
 
     return [
-      { day: "Mon", speed: parseFloat((baseline + 0.5).toFixed(1)) },
-      { day: "Wed", speed: baseline },
-      { day: "Fri", speed: parseFloat(Math.max(1, baseline - 0.3).toFixed(1)) }
+      { day: "Mon", speed: 0 },
+      { day: "Wed", speed: 0 },
+      { day: "Fri", speed: 0 }
     ];
   };
 
   const chartData = getChartData();
   const hasChartData = chartData.length > 0;
+  const maxChartSpeed = Math.max(5, ...chartData.map((d) => d.speed || 0));
 
   // Mini calendar days representation
   const getCalendarDays = () => {
@@ -260,7 +261,7 @@ export default function DashboardPage() {
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#D1BE8E" opacity={0.3} />
                   <XAxis dataKey="day" stroke="#534439" fontSize={11} fontWeight={600} />
-                  <YAxis stroke="#534439" fontSize={11} fontWeight={600} unit="s" />
+                  <YAxis stroke="#534439" fontSize={11} fontWeight={600} unit="s" domain={[0, maxChartSpeed]} />
                   <Tooltip
                     contentStyle={{
                       backgroundColor: "#FAF6E8",
