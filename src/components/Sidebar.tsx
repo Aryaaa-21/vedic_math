@@ -14,7 +14,8 @@ import {
   HelpCircle,
   LogOut,
   Flame,
-  ArrowLeft
+  ArrowLeft,
+  Sparkles
 } from "lucide-react";
 import { motion } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -30,6 +31,7 @@ export default function Sidebar() {
   const menuItems = [
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
     { name: "Learn Techniques", path: "/learn", icon: BookOpen },
+    { name: "Sutra Practice", path: "/sutra-practice", icon: Sparkles },
     { name: "Practice Arena", path: "/practice", icon: Flame },
     { name: "Timed Challenge", path: "/challenge", icon: Timer },
     { name: "Leaderboard", path: "/leaderboard", icon: Trophy },

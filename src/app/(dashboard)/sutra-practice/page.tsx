@@ -14,46 +14,61 @@ import {
   BookOpen,
   ArrowLeft,
   Award,
-  Lock
+  Zap,
+  Calendar,
+  Crown,
+  ChevronDown,
+  Lock,
+  Check
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { playAudioFeedback, triggerVibrationFeedback } from "@/utils/audio";
 
-const practiceBands = [
-  { label: "Easy", minLevel: 1, maxLevel: 4 },
-  { label: "Medium", minLevel: 5, maxLevel: 8 },
-  { label: "Hard", minLevel: 7, maxLevel: 8 },
-  { label: "Super Hard", minLevel: 9, maxLevel: 10 }
-];
+const iconMap: Record<string, React.ComponentType<any>> = {
+  Award: Award,
+  Zap: Zap,
+  Flame: Flame,
+  Calendar: Calendar,
+  CheckCircle: CheckCircle,
+  Crown: Crown,
+  BookOpen: BookOpen
+};
 
-export default function PracticePage() {
+export default function SutraPracticePage() {
   const {
     user,
+    activeTechnique,
     practiceQuestions,
     practiceIndex,
     practiceTotal,
     practiceStreak,
     practiceCorrect,
+    practiceHistory,
     startPractice,
     submitPracticeAnswer,
     nextPracticeQuestion,
     addXp,
-    addActivity
+    addActivity,
+    selectTechnique,
+    setUserStats,
+    badges,
+    unlockBadge
   } = useStore();
 
-  const [activeBand, setActiveBand] = useState<string>("Easy");
   const [inputVal, setInputVal] = useState("");
   const [showHint, setShowHint] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [sessionCompleted, setSessionCompleted] = useState(false);
-  const [avgSpeed, setAvgSpeed] = useState(2.3); // mock speed for display
+  const [avgSpeed, setAvgSpeed] = useState(2.3); // mock speed
   const [questionScale, setQuestionScale] = useState(1);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const questionWrapRef = useRef<HTMLDivElement>(null);
   const questionTextRef = useRef<HTMLDivElement>(null);
   const startTimeRef = useRef<number>(0);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const isLocked = (tech: Technique) => {
     if (tech.difficulty === "Intermediate" && user.level < 5) return true;
@@ -61,47 +76,28 @@ export default function PracticePage() {
     return false;
   };
 
-  const getBandPool = (bandLabel: string) => {
-    const unlockedTechs = VEDIC_TECHNIQUES.filter(tech => !isLocked(tech));
-
-    if (bandLabel === "Easy") {
-      // mix of Beginner questions
-      return unlockedTechs.filter(tech => tech.difficulty === "Beginner");
-    } else if (bandLabel === "Medium") {
-      // mix of Intermediate and Beginner
-      return unlockedTechs.filter(tech => tech.difficulty === "Beginner" || tech.difficulty === "Intermediate");
-    } else if (bandLabel === "Hard") {
-      // mix of all sutras
-      return unlockedTechs;
-    } else if (bandLabel === "Super Hard") {
-      // only Intermediate and Advanced (no Beginner)
-      return unlockedTechs.filter(tech => tech.difficulty === "Intermediate" || tech.difficulty === "Advanced");
-    }
-    return unlockedTechs;
-  };
-
-  const isBandLocked = (bandLabel: string) => {
-    return getBandPool(bandLabel).length === 0;
-  };
-
-  // Initialize practice questions based on active band
+  // Close dropdown on click outside
   useEffect(() => {
-    let targetBand = activeBand;
-    if (isBandLocked(targetBand)) {
-      const unlockedBand = practiceBands.find(b => !isBandLocked(b.label));
-      targetBand = unlockedBand ? unlockedBand.label : "Easy";
-      setActiveBand(targetBand);
-    }
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-    const pool = getBandPool(targetBand);
-    if (pool.length > 0) {
-      startPractice(pool);
+  // Initialize practice questions when technique changes
+  useEffect(() => {
+    if (!activeTechnique) {
+      selectTechnique(VEDIC_TECHNIQUES[0]);
     }
+    startPractice();
     setSessionCompleted(false);
     setInputVal("");
     setShowHint(false);
     startTimeRef.current = Date.now();
-  }, [activeBand]);
+  }, [activeTechnique]);
 
   // Focus input field
   useEffect(() => {
@@ -160,10 +156,23 @@ export default function PracticePage() {
           const xpEarned = latestCorrect * 5 + 10;
           addXp(xpEarned);
 
+          // Unlock badge for this specific technique
+          if (activeTechnique && latestCorrect >= 7) {
+            unlockBadge(activeTechnique.id);
+          }
+
+          // Increment completed lessons if accuracy is at least 70%
+          if (latestCorrect >= 7) {
+            const nextCompleted = Math.min(16, user.completedLessons + 1);
+            if (nextCompleted > user.completedLessons) {
+              setUserStats({ completedLessons: nextCompleted });
+            }
+          }
+
           addActivity({
             type: "practice",
-            title: `Practice Arena: ${activeBand} Mode`,
-            desc: `Solved ${latestCorrect}/${practiceTotal} mixed questions successfully.`,
+            title: `Sutra Practice: ${activeTechnique?.name || "Vedic Math"}`,
+            desc: `Mastered ${latestCorrect}/${practiceTotal} questions.`,
             xpAwarded: xpEarned
           });
         }
@@ -178,77 +187,133 @@ export default function PracticePage() {
   };
 
   const handleRetry = () => {
-    const pool = getBandPool(activeBand);
-    if (pool.length > 0) {
-      startPractice(pool);
-    }
+    startPractice();
     setSessionCompleted(false);
     setInputVal("");
     setShowHint(false);
     startTimeRef.current = Date.now();
   };
 
-  const handleBandSelect = (bandLabel: string) => {
-    if (isBandLocked(bandLabel)) return;
-    setActiveBand(bandLabel);
-  };
-
-  if (!currentQ) {
+  if (!activeTechnique || !currentQ) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
         <BookOpen className="w-12 h-12 text-primary/30" />
-        <h2 className="font-sans text-xl font-bold text-primary">Loading Practice Arena...</h2>
+        <h2 className="font-sans text-xl font-bold text-primary">Loading Practice Suite...</h2>
       </div>
     );
   }
 
+  const currentBadge = badges.find((b) => b.id === activeTechnique.id);
+  const BadgeIcon = currentBadge ? (iconMap[currentBadge.icon] || Award) : Award;
+
   return (
     <div className="max-w-2xl mx-auto space-y-8">
-      {/* Top Navigation Back Action */}
+      {/* Navigation & Streak */}
       <div className="flex justify-between items-center">
         <Link to="/learn" className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground hover:text-primary transition-colors">
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Library</span>
         </Link>
 
-        {/* Current Active Streak */}
         <div className="flex items-center gap-1 bg-primary/10 text-primary px-3.5 py-1.5 rounded-full border border-primary/20 text-xs font-bold font-mono">
           <Flame className="w-4 h-4 fill-primary text-primary" />
           <span>Streak: {practiceStreak}</span>
         </div>
       </div>
 
-      {/* Title Header */}
-      <div>
-        <h1 className="font-sans text-3xl font-extrabold text-primary">Practice Arena</h1>
-        <p className="text-xs text-muted-foreground font-semibold mt-1">
-          Challenge yourself with a mix of questions from your unlocked categories.
-        </p>
-      </div>
+      {/* Selector Dropdown */}
+      <div ref={dropdownRef} className="relative">
+        <label className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-wider block mb-2">
+          Select Sutra to Practice
+        </label>
+        <button
+          type="button"
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+          className="w-full bg-card hover:bg-card/90 border border-primary/10 hover:border-primary/20 px-5 py-3.5 rounded-2xl flex items-center justify-between text-left cursor-pointer transition-all shadow-xs"
+        >
+          <div>
+            <span className="font-sans text-sm font-black text-primary flex items-center gap-1.5">
+              {activeTechnique.name}
+              <span className="text-xs text-primary/60 font-bold italic font-mono">({activeTechnique.sutra})</span>
+            </span>
+          </div>
+          <ChevronDown className={`w-5 h-5 text-primary/70 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`} />
+        </button>
 
-      {/* Difficulty Bands */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        {practiceBands.map((band) => {
-          const locked = isBandLocked(band.label);
-          return (
-            <button
-              key={band.label}
-              disabled={locked}
-              type="button"
-              onClick={() => handleBandSelect(band.label)}
-              className={`rounded-xl border px-3 py-2 text-[10px] font-extrabold uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${
-                locked
-                  ? "opacity-50 cursor-not-allowed bg-card/45 text-muted-foreground border-primary/5"
-                  : activeBand === band.label
-                  ? "bg-primary text-white border-primary shadow-sm"
-                  : "bg-card text-muted-foreground border-primary/10 hover:text-primary hover:border-primary/25 cursor-pointer"
-              }`}
+        <AnimatePresence>
+          {dropdownOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.15 }}
+              className="absolute left-0 w-full mt-2 bg-card border border-primary/15 rounded-2xl shadow-xl z-20 overflow-hidden max-h-96 flex flex-col"
             >
-              {locked && <Lock className="w-3 h-3" />}
-              <span>{band.label}</span>
-            </button>
-          );
-        })}
+              <div className="overflow-y-auto p-2 space-y-3">
+                {["Beginner", "Intermediate", "Advanced"].map((difficulty) => {
+                  const techs = VEDIC_TECHNIQUES.filter(t => t.difficulty === difficulty);
+                  return (
+                    <div key={difficulty} className="space-y-1">
+                      <div className="px-3 py-1 text-[9px] font-extrabold uppercase tracking-wider text-muted-foreground/60 border-b border-primary/5">
+                        {difficulty}
+                      </div>
+                      <div className="space-y-0.5">
+                        {techs.map((tech) => {
+                          const locked = isLocked(tech);
+                          const isSelected = tech.id === activeTechnique.id;
+                          const techBadge = badges.find(b => b.id === tech.id);
+                          
+                          return (
+                            <button
+                              key={tech.id}
+                              disabled={locked}
+                              type="button"
+                              onClick={() => {
+                                selectTechnique(tech);
+                                setDropdownOpen(false);
+                              }}
+                              className={`w-full px-3 py-2.5 rounded-xl flex items-center justify-between text-left transition-all ${
+                                locked
+                                  ? "opacity-45 cursor-not-allowed"
+                                  : isSelected
+                                  ? "bg-primary text-white"
+                                  : "hover:bg-primary/5 text-foreground cursor-pointer"
+                              }`}
+                            >
+                              <div className="overflow-hidden mr-2">
+                                <div className={`text-xs font-black truncate ${isSelected ? "text-white" : "text-primary"}`}>
+                                  {tech.name}
+                                </div>
+                                <div className={`text-[10px] font-semibold italic font-mono truncate mt-0.5 ${isSelected ? "text-white/80" : "text-muted-foreground"}`}>
+                                  {tech.sutra}
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-1.5 flex-shrink-0">
+                                {techBadge?.unlocked && (
+                                  <span className={`px-1.5 py-0.5 text-[8px] font-extrabold rounded uppercase tracking-wider ${isSelected ? "bg-white/20 text-white" : "bg-secondary/15 text-secondary"}`}>
+                                    Mastered
+                                  </span>
+                                )}
+                                {locked ? (
+                                  <span className="flex items-center gap-0.5 text-[9px] font-bold text-muted-foreground">
+                                    <Lock className="w-3 h-3" />
+                                    <span>Lvl {difficulty === "Intermediate" ? "5" : "10"}</span>
+                                  </span>
+                                ) : isSelected ? (
+                                  <Check className="w-4 h-4 text-white" />
+                                ) : null}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <AnimatePresence mode="wait">
@@ -260,19 +325,25 @@ export default function PracticePage() {
             exit={{ opacity: 0, scale: 0.98 }}
             className="space-y-6"
           >
-            {/* Technique Header */}
+            {/* Header */}
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-secondary font-bold uppercase tracking-wider font-mono">
-                  Mixed Practice • {activeBand} Mode
+                  Sutra Practice: {activeTechnique.sutra}
                 </span>
+                {currentBadge?.unlocked && (
+                  <span className="inline-flex items-center gap-0.5 px-2 py-0.5 bg-secondary/15 text-secondary text-[9px] font-extrabold rounded-full uppercase tracking-wider">
+                    <Sparkles className="w-2.5 h-2.5 fill-current" />
+                    <span>Mastered</span>
+                  </span>
+                )}
               </div>
-              <h2 className="font-sans text-xl font-extrabold text-primary mt-1">
-                Sutra: {currentQ.sutraName || "General Method"}
+              <h2 className="font-sans text-2xl font-extrabold text-primary mt-1">
+                {activeTechnique.name}
               </h2>
             </div>
 
-            {/* Progress bar */}
+            {/* Progress Bar */}
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-bold text-muted-foreground">
                 <span>Progress</span>
@@ -288,7 +359,7 @@ export default function PracticePage() {
               </div>
             </div>
 
-            {/* Main Interactive Card */}
+            {/* Arena Card */}
             <motion.div
               className={`bg-card rounded-3xl p-8 border-2 shadow-sm text-center relative overflow-hidden transition-all duration-300 ${
                 isError
@@ -298,7 +369,6 @@ export default function PracticePage() {
                   : "border-primary/10"
               }`}
             >
-              {/* Overlay feedbacks */}
               <AnimatePresence>
                 {isSuccess && (
                   <motion.div
@@ -316,7 +386,6 @@ export default function PracticePage() {
               </AnimatePresence>
 
               <div className="space-y-8">
-                {/* Equation Math Display */}
                 <div className="space-y-2">
                   <span className="text-xs font-mono font-bold text-muted-foreground uppercase">Evaluate</span>
                   <div ref={questionWrapRef} className="w-full max-h-64 overflow-y-auto overflow-x-auto py-4 px-2 bg-background/30 rounded-2xl border border-primary/5 flex items-center justify-center">
@@ -330,7 +399,6 @@ export default function PracticePage() {
                   </div>
                 </div>
 
-                {/* Input box */}
                 <form onSubmit={handleSubmit} className="max-w-xs mx-auto space-y-4">
                   <input
                     ref={inputRef}
@@ -352,7 +420,7 @@ export default function PracticePage() {
               </div>
             </motion.div>
 
-            {/* Hint Box Section */}
+            {/* Hint Box */}
             <div className="bg-card rounded-2xl border border-primary/10 p-5 space-y-3">
               <button
                 onClick={() => setShowHint(!showHint)}
@@ -374,11 +442,9 @@ export default function PracticePage() {
                       <p className="text-xs text-muted-foreground font-semibold">
                         {currentQ.hint}
                       </p>
-                      {currentQ.sutraFormula && (
-                        <div className="text-[10px] text-primary font-bold italic font-mono">
-                          Rule: {currentQ.sutraFormula}
-                        </div>
-                      )}
+                      <div className="text-[10px] text-primary font-bold italic font-mono">
+                        Rule: {activeTechnique.formula}
+                      </div>
                     </div>
                   </motion.div>
                 )}
@@ -386,14 +452,13 @@ export default function PracticePage() {
             </div>
           </motion.div>
         ) : (
-          /* Practice Session Complete Summary Card */
+          /* Summary Card */
           <motion.div
             key="summary-card"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="bg-card rounded-3xl p-8 border border-primary/10 shadow-lg text-center space-y-8 relative overflow-hidden"
           >
-            {/* Mandala/Crown effect */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 p-6 opacity-[0.03] pointer-events-none text-primary">
               <Award className="w-48 h-48" />
             </div>
@@ -404,11 +469,11 @@ export default function PracticePage() {
               </div>
               <h2 className="font-sans text-2xl font-extrabold text-primary">Practice Complete!</h2>
               <p className="text-sm text-muted-foreground font-medium max-w-sm mx-auto">
-                Excellent. You have successfully finished the mixed session in <strong>{activeBand} Mode</strong>.
+                Excellent. Your neural pathways are forming new connections for <strong>{activeTechnique.name}</strong>.
               </p>
             </div>
 
-            {/* Performance Stats */}
+            {/* Stats */}
             <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
               <div className="bg-background p-4 rounded-2xl border border-primary/5 text-center">
                 <span className="text-[9px] text-muted-foreground uppercase font-bold tracking-wider">Accuracy</span>
@@ -430,7 +495,29 @@ export default function PracticePage() {
               </div>
             </div>
 
-            {/* Navigation Actions */}
+            {/* Badge Unlocked */}
+            {currentBadge && practiceCorrect >= 7 && (
+              <div className="bg-secondary/10 border border-secondary/20 p-5 rounded-2xl max-w-md mx-auto space-y-3 relative overflow-hidden">
+                <div className="absolute -right-3 -bottom-3 text-secondary opacity-[0.08] pointer-events-none">
+                  <BadgeIcon className="w-20 h-20" />
+                </div>
+                <div className="flex items-center gap-1.5 justify-center text-[9px] font-extrabold text-secondary uppercase tracking-widest">
+                  <Sparkles className="w-3.5 h-3.5 fill-current" />
+                  <span>Sutra Badge Unlocked</span>
+                </div>
+                <div className="flex items-center gap-4 justify-center">
+                  <div className="w-12 h-12 rounded-full bg-secondary/20 border border-secondary/30 text-secondary flex items-center justify-center shadow-inner flex-shrink-0">
+                    <BadgeIcon className="w-6 h-6" />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="text-sm font-black text-primary leading-tight">{currentBadge.name}</h4>
+                    <p className="text-[11px] text-muted-foreground font-semibold mt-0.5 leading-snug">{currentBadge.desc}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <button
                 onClick={handleRetry}

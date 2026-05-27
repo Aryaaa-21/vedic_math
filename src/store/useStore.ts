@@ -134,7 +134,7 @@ interface StoreState {
   practiceStreak: number;
   practiceCorrect: number;
   practiceHistory: { question: string; userAnswer: number; correctAnswer: number; isCorrect: boolean }[];
-  practiceQuestions: { question: string; answer: number; hint: string }[];
+  practiceQuestions: { question: string; answer: number; hint: string; sutraName?: string; sutraFormula?: string }[];
   
   // Timed challenge state
   challengeScore: number;
@@ -160,7 +160,7 @@ interface StoreState {
   
   // Practice actions
   selectTechnique: (tech: Technique | null) => void;
-  startPractice: () => void;
+  startPractice: (customPool?: Technique[]) => void;
   submitPracticeAnswer: (userAns: number) => { isCorrect: boolean; correctAnswer: number };
   nextPracticeQuestion: () => boolean; // returns true if there is a next question, false if ended
   
@@ -271,15 +271,15 @@ export const useStore = create<StoreState>((set, get) => ({
 
   selectTechnique: (tech) => set({ activeTechnique: tech }),
 
-  startPractice: () => set((state) => {
-    const tech = state.activeTechnique || VEDIC_TECHNIQUES[0];
+  startPractice: (customPool) => set((state) => {
+    const defaultPool = [state.activeTechnique || VEDIC_TECHNIQUES[0]];
+    const pool = customPool && customPool.length > 0 ? customPool : defaultPool;
     const questions: StoreState["practiceQuestions"] = [];
     const totalQuestions = 15;
-    const pool = [tech];
     const seen = new Set<string>();
 
     for (let i = 0; i < totalQuestions; i++) {
-      const pick = pool[0];
+      const pick = pool[Math.floor(Math.random() * pool.length)];
       let qText = "";
       let qAnswer = 0;
       let qHint = pick.formula || "Apply sutra steps.";
@@ -445,7 +445,13 @@ export const useStore = create<StoreState>((set, get) => ({
       } while (seen.has(qText) && attempt < 10);
 
       seen.add(qText);
-      questions.push({ question: qText, answer: qAnswer, hint: qHint });
+      questions.push({
+        question: qText,
+        answer: qAnswer,
+        hint: qHint,
+        sutraName: pick.name,
+        sutraFormula: pick.formula
+      });
     }
 
     return {

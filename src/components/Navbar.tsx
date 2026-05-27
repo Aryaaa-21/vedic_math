@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useStore } from "@/store/useStore";
-import { Menu, X, Flame, Trophy, Award, User, Settings, LogOut, BookOpen, LayoutDashboard, Timer, ArrowLeft } from "lucide-react";
+import { Menu, X, Flame, Trophy, Award, User, Settings, LogOut, BookOpen, LayoutDashboard, Timer, ArrowLeft, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -21,6 +21,7 @@ export default function Navbar() {
   const mobileNavItems = [
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
     { name: "Learn", path: "/learn", icon: BookOpen },
+    { name: "Sutra Practice", path: "/sutra-practice", icon: Sparkles },
     { name: "Practice", path: "/practice", icon: Flame },
     { name: "Timed Challenge", path: "/challenge", icon: Timer },
     { name: "Leaderboard", path: "/leaderboard", icon: Trophy },
@@ -65,6 +66,16 @@ export default function Navbar() {
           }`}
         >
           Learn
+        </Link>
+        <Link
+          to="/sutra-practice"
+          className={`font-semibold text-sm transition-all ${
+            pathname === "/sutra-practice"
+              ? "text-primary border-b-2 border-primary pb-1"
+              : "text-muted-foreground hover:text-primary"
+          }`}
+        >
+          Sutra Practice
         </Link>
         <Link
           to="/practice"

@@ -7,6 +7,7 @@ import ForgotPasswordPage from "./app/forgot/page";
 import DashboardLayout from "./app/(dashboard)/layout";
 import DashboardPage from "./app/(dashboard)/dashboard/page";
 import LearnPage from "./app/(dashboard)/learn/page";
+import SutraPracticePage from "./app/(dashboard)/sutra-practice/page";
 import PracticePage from "./app/(dashboard)/practice/page";
 import ChallengePage from "./app/(dashboard)/challenge/page";
 import LeaderboardPage from "./app/(dashboard)/leaderboard/page";
@@ -43,6 +44,7 @@ export default function App() {
 
       <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout><DashboardPage /></DashboardLayout></ProtectedRoute>} />
       <Route path="/learn" element={<DashboardLayout><LearnPage /></DashboardLayout>} />
+      <Route path="/sutra-practice" element={<DashboardLayout><SutraPracticePage /></DashboardLayout>} />
       <Route path="/practice" element={<DashboardLayout><PracticePage /></DashboardLayout>} />
       <Route path="/challenge" element={<ProtectedRoute><DashboardLayout><ChallengePage /></DashboardLayout></ProtectedRoute>} />
       <Route path="/leaderboard" element={<DashboardLayout><LeaderboardPage /></DashboardLayout>} />

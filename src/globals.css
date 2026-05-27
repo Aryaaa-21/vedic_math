@@ -175,3 +175,8 @@ body {
     transform: translateY(-40px);
   }
 }
+
+/* Speed up hover effect transitions globally */
+a, button, [role="button"], input, select, textarea, .hover-snappy {
+  transition-duration: 85ms !important;
+}

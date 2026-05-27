@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, BookOpen, Flame, Trophy, User } from "lucide-react";
+import { LayoutDashboard, BookOpen, Flame, Trophy, User, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function BottomNavigation() {
@@ -11,7 +11,8 @@ export default function BottomNavigation() {
   const navItems = [
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
     { name: "Learn", path: "/learn", icon: BookOpen },
-    { name: "Practice", path: "/practice", icon: Flame },
+    { name: "Sutra", path: "/sutra-practice", icon: Sparkles },
+    { name: "Arena", path: "/practice", icon: Flame },
     { name: "Leaderboard", path: "/leaderboard", icon: Trophy },
     { name: "Profile", path: "/profile", icon: User },
   ];
