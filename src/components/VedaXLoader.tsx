@@ -42,7 +42,7 @@ export default function VedaXLoader() {
         el.style.left = `calc(50% + ${x}px)`;
         el.style.top = `calc(50% + ${y}px)`;
 
-        const size = 2 + (radius / 12);
+        const size = 4 + (radius / 7.5);
         el.style.fontSize = `${size}px`;
         el.style.opacity = String(1 - (radius / 750));
 
