@@ -308,7 +308,7 @@ function LearnPageContent() {
               </div>
 
               {/* Drawer Action */}
-              <div className="p-4 sm:p-6 border-t border-primary/10 bg-background/90 backdrop-blur-sm flex flex-col sm:flex-row gap-3 sticky bottom-0 z-10">
+              <div className="p-4 sm:p-6 border-t border-primary/10 bg-background/90 backdrop-blur-sm flex flex-row gap-3 sticky bottom-0 z-10">
                 <button
                   onClick={() => setSelectedTech(null)}
                   className="flex-1 py-3 border border-primary/20 hover:bg-primary/5 text-primary font-extrabold rounded-xl text-xs uppercase tracking-wider cursor-pointer transition-all"

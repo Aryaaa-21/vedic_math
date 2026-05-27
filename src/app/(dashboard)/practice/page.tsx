@@ -322,7 +322,7 @@ export default function PracticePage() {
                   <div ref={questionWrapRef} className="w-full max-h-64 overflow-y-auto overflow-x-auto py-4 px-2 bg-background/30 rounded-2xl border border-primary/5 flex items-center justify-center">
                     <div
                       ref={questionTextRef}
-                      className="inline-block whitespace-pre-line font-mono text-3xl sm:text-4xl md:text-5xl font-black text-primary tracking-wide leading-relaxed text-center"
+                      className="inline-block whitespace-pre-line font-mono text-[clamp(1.1rem,5.5vw,2.5rem)] font-black text-primary tracking-wide leading-relaxed text-center"
                       style={{ transform: `scale(${questionScale})`, transformOrigin: 'center' }}
                     >
                       {currentQ.question}
@@ -353,37 +353,39 @@ export default function PracticePage() {
             </motion.div>
 
             {/* Hint Box Section */}
-            <div className="bg-card rounded-2xl border border-primary/10 p-5 space-y-3">
-              <button
-                onClick={() => setShowHint(!showHint)}
-                className="flex items-center gap-2 text-xs font-bold text-secondary hover:text-primary transition-colors cursor-pointer"
-              >
-                <Lightbulb className={`w-4.5 h-4.5 ${showHint ? "text-accent fill-accent" : ""}`} />
-                <span>Need a hint? Reveal Sutra guidelines</span>
-              </button>
+            {activeBand && (
+              <div className="bg-card rounded-2xl border border-primary/10 p-5 space-y-3">
+                <button
+                  onClick={() => setShowHint(!showHint)}
+                  className="flex items-center gap-2 text-xs font-bold text-secondary hover:text-primary transition-colors cursor-pointer"
+                >
+                  <Lightbulb className={`w-4.5 h-4.5 ${showHint ? "text-accent fill-accent" : ""}`} />
+                  <span>Need a hint? Reveal Sutra guidelines</span>
+                </button>
 
-              <AnimatePresence>
-                {showHint && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="border-t border-primary/5 pt-3 mt-1.5 space-y-1.5">
-                      <p className="text-xs text-muted-foreground font-semibold">
-                        {currentQ.hint}
-                      </p>
-                      {currentQ.sutraFormula && (
-                        <div className="text-[10px] text-primary font-bold italic font-mono">
-                          Rule: {currentQ.sutraFormula}
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                <AnimatePresence>
+                  {showHint && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="border-t border-primary/5 pt-3 mt-1.5 space-y-1.5">
+                        <p className="text-xs text-muted-foreground font-semibold">
+                          {currentQ.hint}
+                        </p>
+                        {currentQ.sutraFormula && (
+                          <div className="text-[10px] text-primary font-bold italic font-mono">
+                            Formula: {currentQ.sutraFormula}
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
           </motion.div>
         ) : (
           /* Practice Session Complete Summary Card */
@@ -431,7 +433,7 @@ export default function PracticePage() {
             </div>
 
             {/* Navigation Actions */}
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+            <div className="flex flex-row gap-3 max-w-md mx-auto">
               <button
                 onClick={handleRetry}
                 className="flex-1 py-3.5 bg-card hover:bg-card/90 text-primary border border-primary/20 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all flex items-center justify-center"

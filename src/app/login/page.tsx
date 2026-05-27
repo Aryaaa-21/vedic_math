@@ -87,7 +87,7 @@ export default function LoginPage() {
                     id="email"
                     type="text"
                     required
-                    placeholder="arjun@vedax.edu"
+                    placeholder="aryabhagat@vedax.edu"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-background pl-10 pr-4 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"

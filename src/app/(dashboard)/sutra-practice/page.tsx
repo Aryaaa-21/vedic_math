@@ -391,14 +391,14 @@ export default function SutraPracticePage() {
                   <div ref={questionWrapRef} className="w-full max-h-64 overflow-y-auto overflow-x-auto py-4 px-2 bg-background/30 rounded-2xl border border-primary/5 flex items-center justify-center">
                     <div
                       ref={questionTextRef}
-                      className="inline-block whitespace-pre-line font-mono text-3xl sm:text-4xl md:text-5xl font-black text-primary tracking-wide leading-relaxed text-center"
+                      className="inline-block whitespace-pre-line font-mono text-[clamp(1.1rem,5.5vw,2.5rem)] font-black text-primary tracking-wide leading-relaxed text-center"
                       style={{ transform: `scale(${questionScale})`, transformOrigin: 'center' }}
                     >
                       {currentQ.question}
                     </div>
                   </div>
                 </div>
-
+ 
                 <form onSubmit={handleSubmit} className="max-w-xs mx-auto space-y-4">
                   <input
                     ref={inputRef}
@@ -419,7 +419,7 @@ export default function SutraPracticePage() {
                 </form>
               </div>
             </motion.div>
-
+ 
             {/* Hint Box */}
             <div className="bg-card rounded-2xl border border-primary/10 p-5 space-y-3">
               <button
@@ -429,7 +429,7 @@ export default function SutraPracticePage() {
                 <Lightbulb className={`w-4.5 h-4.5 ${showHint ? "text-accent fill-accent" : ""}`} />
                 <span>Need a hint? Reveal Sutra guidelines</span>
               </button>
-
+ 
               <AnimatePresence>
                 {showHint && (
                   <motion.div
@@ -462,7 +462,7 @@ export default function SutraPracticePage() {
             <div className="absolute top-0 left-1/2 -translate-x-1/2 p-6 opacity-[0.03] pointer-events-none text-primary">
               <Award className="w-48 h-48" />
             </div>
-
+ 
             <div className="space-y-3">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary">
                 <Sparkles className="w-8 h-8 text-secondary fill-secondary" />
@@ -472,7 +472,7 @@ export default function SutraPracticePage() {
                 Excellent. Your neural pathways are forming new connections for <strong>{activeTechnique.name}</strong>.
               </p>
             </div>
-
+ 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
               <div className="bg-background p-4 rounded-2xl border border-primary/5 text-center">
@@ -494,7 +494,7 @@ export default function SutraPracticePage() {
                 </p>
               </div>
             </div>
-
+ 
             {/* Badge Unlocked */}
             {currentBadge && practiceCorrect >= 7 && (
               <div className="bg-secondary/10 border border-secondary/20 p-5 rounded-2xl max-w-md mx-auto space-y-3 relative overflow-hidden">
@@ -516,9 +516,9 @@ export default function SutraPracticePage() {
                 </div>
               </div>
             )}
-
+ 
             {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+            <div className="flex flex-row gap-3 max-w-md mx-auto">
               <button
                 onClick={handleRetry}
                 className="flex-1 py-3.5 bg-card hover:bg-card/90 text-primary border border-primary/20 font-bold rounded-xl text-xs uppercase tracking-wider cursor-pointer active:scale-95 transition-all flex items-center justify-center"
