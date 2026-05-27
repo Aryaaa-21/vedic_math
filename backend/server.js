@@ -7,8 +7,10 @@ const path = require("path");
 // Load env vars before reading deployment config.
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
-// Use public DNS resolvers so MongoDB Atlas SRV lookups do not depend on a flaky local resolver.
-dns.setServers((process.env.DNS_SERVERS || "8.8.8.8,1.1.1.1").split(","));
+// Use public DNS resolvers only if explicitly configured in environment variables
+if (process.env.DNS_SERVERS) {
+  dns.setServers(process.env.DNS_SERVERS.split(","));
+}
 
 const connectDB = require("./config/db");
 
