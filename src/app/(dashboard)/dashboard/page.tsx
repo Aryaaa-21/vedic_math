@@ -530,8 +530,7 @@ export default function DashboardPage() {
           </div>
           <h3 className="font-sans text-xl font-extrabold text-accent">Unlock the Master Sutra</h3>
           <p className="text-xs text-white/90 font-medium leading-relaxed">
-            Strengthen your daily streak and earn achievements to unlock the Vedic Grandmaster trials. Combine all calculation shortcuts into a hyper-speed game state.
-          </p>
+            Strengthen your daily streak and earn achievements.
         </div>
         <button
           onClick={handleStartDailyChallenge}
