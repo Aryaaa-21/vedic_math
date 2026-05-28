@@ -95,7 +95,7 @@ export default function SignupPage() {
                       id="guestName"
                       type="text"
                       required
-                      placeholder="e.g. Arya"
+                      placeholder="e.g. DNACoded"
                       value={guestName}
                       onChange={(e) => setGuestName(e.target.value)}
                       className="w-full bg-background pl-10 pr-4 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"
@@ -147,7 +147,7 @@ export default function SignupPage() {
                         id="username"
                         type="text"
                         required
-                        placeholder="Arya Bhagat"
+                        placeholder="DNACoded"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full bg-background pl-10 pr-4 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"
@@ -166,7 +166,7 @@ export default function SignupPage() {
                         id="email"
                         type="email"
                         required
-                        placeholder="aryabhagat@vedax.edu"
+                        placeholder="DNACoded@gmail.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full bg-background pl-10 pr-4 py-3 rounded-xl border border-primary/10 text-xs outline-none focus:border-primary/30 transition-all font-semibold"

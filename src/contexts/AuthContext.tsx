@@ -31,7 +31,7 @@ const AuthContext = createContext<AuthContextType>({
 
 export const useAuth = () => useContext(AuthContext);
 
-const CHAMPION_EMAIL = "arya21@gmail.com";
+const CHAMPION_EMAIL = "DNACoded@gmail.com";
 const CHAMPION_LEVEL = 16;
 const CHAMPION_XP = 4500;
 const CHAMPION_ACCURACY = 100;
